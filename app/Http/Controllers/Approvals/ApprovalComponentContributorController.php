@@ -16,8 +16,7 @@ class ApprovalComponentContributorController extends Controller
      * Approval Component Contributor Index
      *
      * Display a listing of the resource.
-     */
-    /**
+     *
      * @return ApprovalContributor[]|Collection<int, ApprovalContributor>|LengthAwarePaginator<int, ApprovalContributor>
      */
     public function index(Request $request)
@@ -42,8 +41,7 @@ class ApprovalComponentContributorController extends Controller
      * Store a newly created resource in storage.
      *
      * @noinspection DuplicatedCode
-     */
-    /**
+     *
      * @return array<string, string>
      */
     public function store(Request $request)
@@ -68,8 +66,7 @@ class ApprovalComponentContributorController extends Controller
      * Approval Component Contributor Show
      *
      * Show the specified resource.
-     */
-    /**
+     *
      * @return ApprovalContributor|Collection<int, ApprovalContributor>
      */
     public function show(Request $request)
@@ -86,8 +83,6 @@ class ApprovalComponentContributorController extends Controller
      * Update the specified resource in storage.
      *
      * @noinspection DuplicatedCode
-     */
-    /**
      * @return array<string, string>
      */
     public function update(Request $request)
@@ -114,8 +109,7 @@ class ApprovalComponentContributorController extends Controller
      * Approval Component Contributor Delete
      *
      * Remove the specified resource from storage.
-     */
-    /**
+     *
      * @return array<string, string>
      */
     public function delete(Request $request)

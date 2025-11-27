@@ -16,8 +16,7 @@ class GroupController extends Controller
      * Group Index
      *
      * Display a listing of the resource.
-     */
-    /**
+     *
      * @return ApprovalGroup[]|Collection<int, ApprovalGroup>|LengthAwarePaginator<int, ApprovalGroup>
      */
     public function index(Request $request)
@@ -37,8 +36,7 @@ class GroupController extends Controller
      * Group Store
      *
      * Store a newly created resource in storage.
-     */
-    /**
+     *
      * @return array<string, string>
      */
     public function store(Request $request)
@@ -60,8 +58,7 @@ class GroupController extends Controller
      * ApprovalGroup Show
      *
      * Show the specified resource.
-     */
-    /**
+     *
      * @return ApprovalGroup|Collection<int, ApprovalGroup>
      */
     public function show(Request $request)
@@ -76,8 +73,7 @@ class GroupController extends Controller
      * ApprovalGroup Update
      *
      * Update the specified resource in storage.
-     */
-    /**
+     *
      * @return array<string, string>
      */
     public function update(Request $request)
@@ -103,8 +99,7 @@ class GroupController extends Controller
      * ApprovalGroup Delete
      *
      * Remove the specified resource from storage.
-     */
-    /**
+     *
      * @return array<string, string>
      */
     public function delete(Request $request)

@@ -16,8 +16,7 @@ class FlowController extends Controller
      * Flow Index
      *
      * Display a listing of the resource.
-     */
-    /**
+     *
      * @return ApprovalFlow[]|Collection<int, ApprovalFlow>|LengthAwarePaginator<int, ApprovalFlow>
      */
     public function index(Request $request)
@@ -37,8 +36,7 @@ class FlowController extends Controller
      * Flow Store
      *
      * Store a newly created resource in storage.
-     */
-    /**
+     *
      * @return array<string, string>
      */
     public function store(Request $request)
@@ -60,8 +58,7 @@ class FlowController extends Controller
      * ApprovalFlow Show
      *
      * Show the specified resource.
-     */
-    /**
+     *
      * @return ApprovalFlow|Collection<int, ApprovalFlow>
      */
     public function show(Request $request)
@@ -75,8 +72,7 @@ class FlowController extends Controller
      * ApprovalFlow Update
      *
      * Update the specified resource in storage.
-     */
-    /**
+     *
      * @return array<string, string>
      */
     public function update(Request $request)
@@ -102,8 +98,7 @@ class FlowController extends Controller
      * ApprovalFlow Delete
      *
      * Remove the specified resource from storage.
-     */
-    /**
+     *
      * @return array<string, string>
      */
     public function delete(Request $request)

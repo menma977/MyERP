@@ -17,8 +17,7 @@ class GroupContributorController extends Controller
      * Group Contributor Index
      *
      * Display a listing of the resource.
-     */
-    /**
+     *
      * @return ApprovalGroupContributor[]|Collection<int, ApprovalGroupContributor>|LengthAwarePaginator<int, ApprovalGroupContributor>
      */
     public function index(Request $request)
@@ -45,8 +44,7 @@ class GroupContributorController extends Controller
      * Group Contributor Store
      *
      * Store a newly created resource in storage.
-     */
-    /**
+     *
      * @return array<string, string>
      */
     public function store(Request $request)
@@ -81,8 +79,7 @@ class GroupContributorController extends Controller
      * Group Contributor Show
      *
      * Show the specified resource.
-     */
-    /**
+     *
      * @return ApprovalGroupContributor|Collection<int, ApprovalGroupContributor>
      */
     public function show(Request $request)
@@ -97,8 +94,7 @@ class GroupContributorController extends Controller
      * Group Contributor Update
      *
      * Update the specified resource in storage.
-     */
-    /**
+     *
      * @return array<string, string>
      */
     public function update(Request $request)
@@ -126,8 +122,7 @@ class GroupContributorController extends Controller
      * Group Contributor Delete
      *
      * Remove the specified resource from storage.
-     */
-    /**
+     *
      * @return array<string, string>
      */
     public function delete(Request $request)

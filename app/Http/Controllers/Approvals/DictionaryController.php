@@ -16,8 +16,7 @@ class DictionaryController extends Controller
      * ApprovalDictionary Index
      *
      * Display a listing of the resource.
-     */
-    /**
+     *
      * @return ApprovalDictionary[]|Collection<int, ApprovalDictionary>|LengthAwarePaginator<int, ApprovalDictionary>
      */
     public function index(Request $request)
@@ -37,8 +36,7 @@ class DictionaryController extends Controller
      * ApprovalDictionary Store
      *
      * Store a newly created resource in storage.
-     */
-    /**
+     *
      * @return array<string, string>
      */
     public function store(Request $request)
@@ -62,8 +60,7 @@ class DictionaryController extends Controller
      * ApprovalDictionary Show
      *
      * Show the specified resource.
-     */
-    /**
+     *
      * @return ApprovalDictionary|Collection<int, ApprovalDictionary>
      */
     public function show(Request $request)
@@ -77,8 +74,7 @@ class DictionaryController extends Controller
      * ApprovalDictionary Update
      *
      * Update the specified resource in storage.
-     */
-    /**
+     *
      * @return array<string, string>
      */
     public function update(Request $request)
@@ -106,8 +102,7 @@ class DictionaryController extends Controller
      * ApprovalDictionary Delete
      *
      * Remove the specified resource from storage.
-     */
-    /**
+     *
      * @return array<string, string>
      */
     public function delete(Request $request)

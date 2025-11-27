@@ -40,8 +40,7 @@ class ApprovalComponentController extends Controller
      * Approval Component Store
      *
      * Store a newly created resource in storage.
-     */
-    /**
+     *
      * @return array<string, mixed>
      */
     public function store(Request $request): array
@@ -74,8 +73,7 @@ class ApprovalComponentController extends Controller
      * Approval Component Show
      *
      * Show the specified resource.
-     */
-    /**
+     *
      * @return ApprovalComponent|Collection<int, ApprovalComponent>
      */
     public function show(Request $request): ApprovalComponent|Collection
@@ -90,8 +88,7 @@ class ApprovalComponentController extends Controller
      * Approval Component Update
      *
      * Update the specified resource in storage.
-     */
-    /**
+     *
      * @return array<string, mixed>
      */
     public function update(Request $request): array
@@ -126,8 +123,7 @@ class ApprovalComponentController extends Controller
      * Approval Component Delete
      *
      * Remove the specified resource from storage.
-     */
-    /**
+     *
      * @return array<string, mixed>
      */
     public function delete(Request $request): array

@@ -40,8 +40,7 @@ class ApprovalController extends Controller
      * Approval Store
      *
      * Store a newly created resource in storage.
-     */
-    /**
+     *
      * @return array<string, string>
      */
     public function store(Request $request)
