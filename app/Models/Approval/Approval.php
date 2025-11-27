@@ -32,14 +32,15 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, \App\Models\Approval\ApprovalComponent> $components
+ * @property-read Collection<int, ApprovalComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read Collection<int, \App\Models\Approval\ApprovalEvent> $events
+ * @property-read Collection<int, ApprovalEvent> $events
  * @property-read int|null $events_count
- * @property-read \App\Models\Approval\ApprovalFlow $flow
+ * @property-read ApprovalFlow $flow
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|Approval newModelQuery()
  * @method static Builder<static>|Approval newQuery()
  * @method static Builder<static>|Approval onlyTrashed()
@@ -57,59 +58,60 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Approval whereUpdatedBy($value)
  * @method static Builder<static>|Approval withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|Approval withoutTrashed()
+ *
  * @mixin Eloquent
  */
 #[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
 class Approval extends Model
 {
-	use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
-	use SoftDeletes;
+    use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
+    use SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 */
-	protected $fillable = [
-		'approval_flow_id',
-		'name',
-		'type',
-		'can_change',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-	];
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'approval_flow_id',
+        'name',
+        'type',
+        'can_change',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+    ];
 
-	protected $casts = [
-		'type' => ApprovalTypeEnum::class,
-		'can_change' => 'boolean',
-	];
+    protected $casts = [
+        'type' => ApprovalTypeEnum::class,
+        'can_change' => 'boolean',
+    ];
 
-	/**
-	 * Get the approval flow associated with the approval.
-	 *
-	 * @return BelongsTo<ApprovalFlow, $this>
-	 */
-	public function flow(): BelongsTo
-	{
-		return $this->belongsTo(ApprovalFlow::class, 'approval_flow_id', 'id');
-	}
+    /**
+     * Get the approval flow associated with the approval.
+     *
+     * @return BelongsTo<ApprovalFlow, $this>
+     */
+    public function flow(): BelongsTo
+    {
+        return $this->belongsTo(ApprovalFlow::class, 'approval_flow_id', 'id');
+    }
 
-	/**
-	 * Get the components associated with the approval.
-	 *
-	 * @return HasMany<ApprovalComponent, $this>
-	 */
-	public function components(): HasMany
-	{
-		return $this->hasMany(ApprovalComponent::class);
-	}
+    /**
+     * Get the components associated with the approval.
+     *
+     * @return HasMany<ApprovalComponent, $this>
+     */
+    public function components(): HasMany
+    {
+        return $this->hasMany(ApprovalComponent::class);
+    }
 
-	/**
-	 * Get the events associated with the approval.
-	 *
-	 * @return HasMany<ApprovalEvent, $this>
-	 */
-	public function events(): HasMany
-	{
-		return $this->hasMany(ApprovalEvent::class);
-	}
+    /**
+     * Get the events associated with the approval.
+     *
+     * @return HasMany<ApprovalEvent, $this>
+     */
+    public function events(): HasMany
+    {
+        return $this->hasMany(ApprovalEvent::class);
+    }
 }

@@ -31,15 +31,16 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, \App\Models\Purchases\PurchaseOrderComponent> $component
+ * @property-read Collection<int, PurchaseOrderComponent> $component
  * @property-read int|null $component_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
- * @property-read \App\Models\Purchases\PurchaseProcurement|null $procurement
- * @property-read \App\Models\Purchases\PurchaseRequest|null $request
- * @property-read \App\Models\Purchases\PurchaseReturn|null $return
+ * @property-read PurchaseProcurement|null $procurement
+ * @property-read PurchaseRequest|null $request
+ * @property-read PurchaseReturn|null $return
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|PurchaseOrder newModelQuery()
  * @method static Builder<static>|PurchaseOrder newQuery()
  * @method static Builder<static>|PurchaseOrder onlyTrashed()
@@ -59,59 +60,60 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|PurchaseOrder whereUpdatedBy($value)
  * @method static Builder<static>|PurchaseOrder withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|PurchaseOrder withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class PurchaseOrder extends ApprovalAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'purchase_request_id',
-		'purchase_procurement_id',
-		'code',
-		'request_total',
-		'total',
-		'note',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'purchase_request_id',
+        'purchase_procurement_id',
+        'code',
+        'request_total',
+        'total',
+        'note',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<PurchaseRequest, $this>
-	 */
-	public function request(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseRequest::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseRequest, $this>
+     */
+    public function request(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseRequest::class);
+    }
 
-	/**
-	 * @return BelongsTo<PurchaseProcurement, $this>
-	 */
-	public function procurement(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseProcurement::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseProcurement, $this>
+     */
+    public function procurement(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseProcurement::class);
+    }
 
-	/**
-	 * @return HasOne<PurchaseReturn, $this>
-	 */
-	public function return(): HasOne
-	{
-		return $this->hasOne(PurchaseReturn::class);
-	}
+    /**
+     * @return HasOne<PurchaseReturn, $this>
+     */
+    public function return(): HasOne
+    {
+        return $this->hasOne(PurchaseReturn::class);
+    }
 
-	/**
-	 * @return HasMany<PurchaseOrderComponent, $this>
-	 */
-	public function component(): HasMany
-	{
-		return $this->hasMany(PurchaseOrderComponent::class);
-	}
+    /**
+     * @return HasMany<PurchaseOrderComponent, $this>
+     */
+    public function component(): HasMany
+    {
+        return $this->hasMany(PurchaseOrderComponent::class);
+    }
 }

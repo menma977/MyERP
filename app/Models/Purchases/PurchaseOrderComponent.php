@@ -34,10 +34,11 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read Item $item
- * @property-read \App\Models\Purchases\PurchaseOrder|null $order
- * @property-read \App\Models\Purchases\PurchaseProcurementComponent|null $procurementComponent
- * @property-read \App\Models\Purchases\PurchaseRequestComponent|null $requestComponent
+ * @property-read PurchaseOrder|null $order
+ * @property-read PurchaseProcurementComponent|null $procurementComponent
+ * @property-read PurchaseRequestComponent|null $requestComponent
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|PurchaseOrderComponent newModelQuery()
  * @method static Builder<static>|PurchaseOrderComponent newQuery()
  * @method static Builder<static>|PurchaseOrderComponent onlyTrashed()
@@ -62,64 +63,65 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|PurchaseOrderComponent whereUpdatedBy($value)
  * @method static Builder<static>|PurchaseOrderComponent withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|PurchaseOrderComponent withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class PurchaseOrderComponent extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'purchase_order_id',
-		'purchase_request_component_id',
-		'purchase_procurement_component_id',
-		'item_id',
-		'request_quantity',
-		'request_price',
-		'request_total',
-		'quantity',
-		'price',
-		'total',
-		'note',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'purchase_order_id',
+        'purchase_request_component_id',
+        'purchase_procurement_component_id',
+        'item_id',
+        'request_quantity',
+        'request_price',
+        'request_total',
+        'quantity',
+        'price',
+        'total',
+        'note',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<PurchaseOrder, $this>
-	 */
-	public function order(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseOrder::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseOrder, $this>
+     */
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseOrder::class);
+    }
 
-	/**
-	 * @return BelongsTo<PurchaseRequestComponent, $this>
-	 */
-	public function requestComponent(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseRequestComponent::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseRequestComponent, $this>
+     */
+    public function requestComponent(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseRequestComponent::class);
+    }
 
-	/**
-	 * @return BelongsTo<PurchaseProcurementComponent, $this>
-	 */
-	public function procurementComponent(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseProcurementComponent::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseProcurementComponent, $this>
+     */
+    public function procurementComponent(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseProcurementComponent::class);
+    }
 
-	/**
-	 * @return BelongsTo<Item, $this>
-	 */
-	public function item(): BelongsTo
-	{
-		return $this->belongsTo(Item::class);
-	}
+    /**
+     * @return BelongsTo<Item, $this>
+     */
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class);
+    }
 }

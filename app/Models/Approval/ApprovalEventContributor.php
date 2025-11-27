@@ -33,7 +33,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read \App\Models\Approval\ApprovalEventComponent|null $component
+ * @property-read ApprovalEventComponent|null $component
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read mixed $is_approved
@@ -42,6 +42,7 @@ use Illuminate\Support\Carbon;
  * @property-read mixed $is_rollback
  * @property-read User|null $updatedBy
  * @property-read User $user
+ *
  * @method static Builder<static>|ApprovalEventContributor newModelQuery()
  * @method static Builder<static>|ApprovalEventContributor newQuery()
  * @method static Builder<static>|ApprovalEventContributor onlyTrashed()
@@ -61,116 +62,117 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalEventContributor whereUserId($value)
  * @method static Builder<static>|ApprovalEventContributor withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|ApprovalEventContributor withoutTrashed()
+ *
  * @mixin Eloquent
  */
 #[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
 class ApprovalEventContributor extends Model
 {
-	use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
-	use HasUlids, SoftDeletes;
+    use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
+    use HasUlids, SoftDeletes;
 
-	protected $appends = [
-		'is_approved',
-		'is_rejected',
-		'is_cancelled',
-		'is_rollback',
-	];
+    protected $appends = [
+        'is_approved',
+        'is_rejected',
+        'is_cancelled',
+        'is_rollback',
+    ];
 
-	/**
-	 * The attributes that are mass assignable.
-	 */
-	protected $fillable = [
-		'approval_event_component_id',
-		'user_id',
-		'approved_at',
-		'rejected_at',
-		'cancelled_at',
-		'rollback_at',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-	];
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'approval_event_component_id',
+        'user_id',
+        'approved_at',
+        'rejected_at',
+        'cancelled_at',
+        'rollback_at',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+    ];
 
-	protected $casts = [
-		'approved_at' => 'datetime',
-		'rejected_at' => 'datetime',
-		'cancelled_at' => 'datetime',
-		'rollback_at' => 'datetime',
-	];
+    protected $casts = [
+        'approved_at' => 'datetime',
+        'rejected_at' => 'datetime',
+        'cancelled_at' => 'datetime',
+        'rollback_at' => 'datetime',
+    ];
 
-	/**
-	 * Get the component associated with this contributor.
-	 *
-	 * @return BelongsTo<ApprovalEventComponent, $this>
-	 */
-	public function component(): BelongsTo
-	{
-		return $this->belongsTo(ApprovalEventComponent::class);
-	}
+    /**
+     * Get the component associated with this contributor.
+     *
+     * @return BelongsTo<ApprovalEventComponent, $this>
+     */
+    public function component(): BelongsTo
+    {
+        return $this->belongsTo(ApprovalEventComponent::class);
+    }
 
-	/**
-	 * Get the user associated with this contributor.
-	 *
-	 * @return BelongsTo<User, $this>
-	 */
-	public function user(): BelongsTo
-	{
-		return $this->belongsTo(User::class);
-	}
+    /**
+     * Get the user associated with this contributor.
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
-	/**
-	 * Get the approval status of the event.
-	 *
-	 * @return Attribute<bool, never>
-	 *
-	 * @noinspection PhpUnused
-	 */
-	protected function isApproved(): Attribute
-	{
-		return Attribute::make(
-			get: fn(mixed $value, array $attributes) => isset($attributes['approved_at']),
-		);
-	}
+    /**
+     * Get the approval status of the event.
+     *
+     * @return Attribute<bool, never>
+     *
+     * @noinspection PhpUnused
+     */
+    protected function isApproved(): Attribute
+    {
+        return Attribute::make(
+            get: fn(mixed $value, array $attributes) => isset($attributes['approved_at']),
+        );
+    }
 
-	/**
-	 * Get the approval status of the event.
-	 *
-	 * @return Attribute<bool, never>
-	 *
-	 * @noinspection PhpUnused
-	 */
-	protected function isRejected(): Attribute
-	{
-		return Attribute::make(
-			get: fn(mixed $value, array $attributes) => isset($attributes['rejected_at']),
-		);
-	}
+    /**
+     * Get the approval status of the event.
+     *
+     * @return Attribute<bool, never>
+     *
+     * @noinspection PhpUnused
+     */
+    protected function isRejected(): Attribute
+    {
+        return Attribute::make(
+            get: fn(mixed $value, array $attributes) => isset($attributes['rejected_at']),
+        );
+    }
 
-	/**
-	 * Get the approval status of the event.
-	 *
-	 * @return Attribute<bool, never>
-	 *
-	 * @noinspection PhpUnused
-	 */
-	protected function isCancelled(): Attribute
-	{
-		return Attribute::make(
-			get: fn(mixed $value, array $attributes) => isset($attributes['cancelled_at']),
-		);
-	}
+    /**
+     * Get the approval status of the event.
+     *
+     * @return Attribute<bool, never>
+     *
+     * @noinspection PhpUnused
+     */
+    protected function isCancelled(): Attribute
+    {
+        return Attribute::make(
+            get: fn(mixed $value, array $attributes) => isset($attributes['cancelled_at']),
+        );
+    }
 
-	/**
-	 * Get the approval status of the event.
-	 *
-	 * @return Attribute<bool, never>
-	 *
-	 * @noinspection PhpUnused
-	 */
-	protected function isRollback(): Attribute
-	{
-		return Attribute::make(
-			get: fn(mixed $value, array $attributes) => isset($attributes['rollback_at']),
-		);
-	}
+    /**
+     * Get the approval status of the event.
+     *
+     * @return Attribute<bool, never>
+     *
+     * @noinspection PhpUnused
+     */
+    protected function isRollback(): Attribute
+    {
+        return Attribute::make(
+            get: fn(mixed $value, array $attributes) => isset($attributes['rollback_at']),
+        );
+    }
 }

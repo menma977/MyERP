@@ -27,9 +27,10 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read \App\Models\Vendors\VendorInvoice|null $invoice
+ * @property-read VendorInvoice|null $invoice
  * @property-read User|null $updatedBy
- * @property-read \App\Models\Vendors\VendorComponent $vendorComponent
+ * @property-read VendorComponent $vendorComponent
+ *
  * @method static Builder<static>|VendorInvoiceComponent newModelQuery()
  * @method static Builder<static>|VendorInvoiceComponent newQuery()
  * @method static Builder<static>|VendorInvoiceComponent onlyTrashed()
@@ -49,43 +50,44 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|VendorInvoiceComponent whereVendorInvoiceId($value)
  * @method static Builder<static>|VendorInvoiceComponent withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|VendorInvoiceComponent withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class VendorInvoiceComponent extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'vendor_invoice_id',
-		'vendor_component_id',
-		'item_id',
-		'quantity',
-		'price',
-		'total',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'vendor_invoice_id',
+        'vendor_component_id',
+        'item_id',
+        'quantity',
+        'price',
+        'total',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<VendorInvoice, $this>
-	 */
-	public function invoice(): BelongsTo
-	{
-		return $this->belongsTo(VendorInvoice::class);
-	}
+    /**
+     * @return BelongsTo<VendorInvoice, $this>
+     */
+    public function invoice(): BelongsTo
+    {
+        return $this->belongsTo(VendorInvoice::class);
+    }
 
-	/**
-	 * @return BelongsTo<VendorComponent, $this>
-	 */
-	public function vendorComponent(): BelongsTo
-	{
-		return $this->belongsTo(VendorComponent::class);
-	}
+    /**
+     * @return BelongsTo<VendorComponent, $this>
+     */
+    public function vendorComponent(): BelongsTo
+    {
+        return $this->belongsTo(VendorComponent::class);
+    }
 }

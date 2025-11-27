@@ -29,7 +29,8 @@ use Illuminate\Support\Carbon;
  * @property-read ApprovalEvent|null $event
  * @property-read Item $item
  * @property-read User|null $updatedBy
- * @property-read \App\Models\Vendors\Vendor $vendor
+ * @property-read Vendor $vendor
+ *
  * @method static Builder<static>|VendorComponent newModelQuery()
  * @method static Builder<static>|VendorComponent newQuery()
  * @method static Builder<static>|VendorComponent onlyTrashed()
@@ -46,40 +47,41 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|VendorComponent whereVendorId($value)
  * @method static Builder<static>|VendorComponent withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|VendorComponent withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class VendorComponent extends ApprovalAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'vendor_id',
-		'item_id',
-		'price',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'vendor_id',
+        'item_id',
+        'price',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<Vendor, $this>
-	 */
-	public function vendor(): BelongsTo
-	{
-		return $this->belongsTo(Vendor::class, 'vendor_id');
-	}
+    /**
+     * @return BelongsTo<Vendor, $this>
+     */
+    public function vendor(): BelongsTo
+    {
+        return $this->belongsTo(Vendor::class, 'vendor_id');
+    }
 
-	/**
-	 * @return BelongsTo<Item, $this>
-	 */
-	public function item(): BelongsTo
-	{
-		return $this->belongsTo(Item::class, 'item_id');
-	}
+    /**
+     * @return BelongsTo<Item, $this>
+     */
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class, 'item_id');
+    }
 }

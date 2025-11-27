@@ -45,12 +45,12 @@ use Illuminate\Support\Facades\Auth;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read \App\Models\Approval\Approval|null $approval
+ * @property-read Approval|null $approval
  * @property-read mixed $can_approve
  * @property-read mixed $component
- * @property-read Collection<int, \App\Models\Approval\ApprovalEventComponent> $components
+ * @property-read Collection<int, ApprovalEventComponent> $components
  * @property-read int|null $components_count
- * @property-read Collection<int, \App\Models\Approval\ApprovalEventContributor> $contributors
+ * @property-read Collection<int, ApprovalEventContributor> $contributors
  * @property-read int|null $contributors_count
  * @property-read User|null $createdBy
  * @property-read mixed $current_component
@@ -59,8 +59,9 @@ use Illuminate\Support\Facades\Auth;
  * @property-read mixed $is_cancelled
  * @property-read mixed $is_rejected
  * @property-read mixed $is_rollback
- * @property-read \Illuminate\Database\Eloquent\Model $requestable
+ * @property-read Model $requestable
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|ApprovalEvent newModelQuery()
  * @method static Builder<static>|ApprovalEvent newQuery()
  * @method static Builder<static>|ApprovalEvent onlyTrashed()
@@ -85,223 +86,224 @@ use Illuminate\Support\Facades\Auth;
  * @method static Builder<static>|ApprovalEvent whereUpdatedBy($value)
  * @method static Builder<static>|ApprovalEvent withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|ApprovalEvent withoutTrashed()
+ *
  * @mixin Eloquent
  */
 #[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
 class ApprovalEvent extends Model
 {
-	use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
-	use HasUlids, SoftDeletes;
+    use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
+    use HasUlids, SoftDeletes;
 
-	protected $appends = [
-		'is_approved',
-		'is_rejected',
-		'is_cancelled',
-		'is_rollback',
-		'can_approve',
-		'component',
-		'current_component',
-	];
+    protected $appends = [
+        'is_approved',
+        'is_rejected',
+        'is_cancelled',
+        'is_rollback',
+        'can_approve',
+        'component',
+        'current_component',
+    ];
 
-	/**
-	 * The attributes that are mass assignable.
-	 */
-	protected $fillable = [
-		'approval_id',
-		'step',
-		'target',
-		'requestable_type',
-		'requestable_id',
-		'type',
-		'status',
-		'approved_at',
-		'rejected_at',
-		'cancelled_at',
-		'rollback_at',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-	];
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'approval_id',
+        'step',
+        'target',
+        'requestable_type',
+        'requestable_id',
+        'type',
+        'status',
+        'approved_at',
+        'rejected_at',
+        'cancelled_at',
+        'rollback_at',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+    ];
 
-	protected $casts = [
-		'type' => ApprovalTypeEnum::class,
-		'status' => ApprovalStatusEnum::class,
-		'approved_at' => 'datetime',
-		'rejected_at' => 'datetime',
-		'cancelled_at' => 'datetime',
-		'rollback_at' => 'datetime',
-	];
+    protected $casts = [
+        'type' => ApprovalTypeEnum::class,
+        'status' => ApprovalStatusEnum::class,
+        'approved_at' => 'datetime',
+        'rejected_at' => 'datetime',
+        'cancelled_at' => 'datetime',
+        'rollback_at' => 'datetime',
+    ];
 
-	/**
-	 * Get the approval associated with this event.
-	 *
-	 * @return BelongsTo<Approval, $this>
-	 */
-	public function approval(): BelongsTo
-	{
-		return $this->belongsTo(Approval::class);
-	}
+    /**
+     * Get the approval associated with this event.
+     *
+     * @return BelongsTo<Approval, $this>
+     */
+    public function approval(): BelongsTo
+    {
+        return $this->belongsTo(Approval::class);
+    }
 
-	/**
-	 * Get the parent requestable model.
-	 *
-	 * @return MorphTo<Model, $this>
-	 */
-	public function requestable(): BelongsTo
-	{
-		return $this->morphTo();
-	}
+    /**
+     * Get the parent requestable model.
+     *
+     * @return MorphTo<Model, $this>
+     */
+    public function requestable(): BelongsTo
+    {
+        return $this->morphTo();
+    }
 
-	/**
-	 * Get the components associated with this event.
-	 *
-	 * @return HasMany<ApprovalEventComponent, $this>
-	 */
-	public function components(): HasMany
-	{
-		return $this->hasMany(ApprovalEventComponent::class);
-	}
+    /**
+     * Get the components associated with this event.
+     *
+     * @return HasMany<ApprovalEventComponent, $this>
+     */
+    public function components(): HasMany
+    {
+        return $this->hasMany(ApprovalEventComponent::class);
+    }
 
-	/**
-	 * Get the contributors through the components.
-	 *
-	 * @return HasManyThrough<ApprovalEventContributor, ApprovalEventComponent, $this>
-	 */
-	public function contributors(): HasManyThrough
-	{
-		return $this->hasManyThrough(ApprovalEventContributor::class, ApprovalEventComponent::class);
-	}
+    /**
+     * Get the contributors through the components.
+     *
+     * @return HasManyThrough<ApprovalEventContributor, ApprovalEventComponent, $this>
+     */
+    public function contributors(): HasManyThrough
+    {
+        return $this->hasManyThrough(ApprovalEventContributor::class, ApprovalEventComponent::class);
+    }
 
-	/**
-	 * Get the approval status of the event.
-	 *
-	 *
-	 * @noinspection PhpUnused
-	 */
-	/**
-	 * @return Attribute<bool, never>
-	 */
-	protected function isApproved(): Attribute
-	{
-		return Attribute::make(
-			get: fn(mixed $value, array $attributes) => isset($attributes['approved_at']),
-		);
-	}
+    /**
+     * Get the approval status of the event.
+     *
+     *
+     * @noinspection PhpUnused
+     */
+    /**
+     * @return Attribute<bool, never>
+     */
+    protected function isApproved(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => isset($attributes['approved_at']),
+        );
+    }
 
-	/**
-	 * Get the approval status of the event.
-	 *
-	 *
-	 * @noinspection PhpUnused
-	 */
-	/**
-	 * @return Attribute<bool, never>
-	 */
-	protected function isRejected(): Attribute
-	{
-		return Attribute::make(
-			get: fn(mixed $value, array $attributes) => isset($attributes['rejected_at']),
-		);
-	}
+    /**
+     * Get the approval status of the event.
+     *
+     *
+     * @noinspection PhpUnused
+     */
+    /**
+     * @return Attribute<bool, never>
+     */
+    protected function isRejected(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => isset($attributes['rejected_at']),
+        );
+    }
 
-	/**
-	 * Get the approval status of the event.
-	 *
-	 *
-	 * @noinspection PhpUnused
-	 */
-	/**
-	 * @return Attribute<bool, never>
-	 */
-	protected function isCancelled(): Attribute
-	{
-		return Attribute::make(
-			get: fn(mixed $value, array $attributes) => isset($attributes['cancelled_at']),
-		);
-	}
+    /**
+     * Get the approval status of the event.
+     *
+     *
+     * @noinspection PhpUnused
+     */
+    /**
+     * @return Attribute<bool, never>
+     */
+    protected function isCancelled(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => isset($attributes['cancelled_at']),
+        );
+    }
 
-	/**
-	 * Get the approval status of the event.
-	 *
-	 *
-	 * @noinspection PhpUnused
-	 */
-	/**
-	 * @return Attribute<bool, never>
-	 */
-	protected function isRollback(): Attribute
-	{
-		return Attribute::make(
-			get: fn(mixed $value, array $attributes) => isset($attributes['rollback_at']),
-		);
-	}
+    /**
+     * Get the approval status of the event.
+     *
+     *
+     * @noinspection PhpUnused
+     */
+    /**
+     * @return Attribute<bool, never>
+     */
+    protected function isRollback(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => isset($attributes['rollback_at']),
+        );
+    }
 
-	/**
-	 * Get the approval status of the event.
-	 *
-	 *
-	 * @noinspection PhpUnused
-	 */
-	/**
-	 * @return Attribute<bool, never>
-	 */
-	protected function canApprove(): Attribute
-	{
-		return Attribute::get(function (mixed $value, array $attributes) {
-			if ($this->is_approved || $this->is_cancelled || $this->is_rejected) {
-				return false;
-			}
+    /**
+     * Get the approval status of the event.
+     *
+     *
+     * @noinspection PhpUnused
+     */
+    /**
+     * @return Attribute<bool, never>
+     */
+    protected function canApprove(): Attribute
+    {
+        return Attribute::get(function (mixed $value, array $attributes) {
+            if ($this->is_approved || $this->is_cancelled || $this->is_rejected) {
+                return false;
+            }
 
-			if ($this->components()->whereRaw('(step & ?) = 0', [$attributes['step']])->orderBy('step')->count() <= 0) {
-				return false;
-			}
+            if ($this->components()->whereRaw('(step & ?) = 0', [$attributes['step']])->orderBy('step')->count() <= 0) {
+                return false;
+            }
 
-			$component = $this->components()->whereRaw('(step & ?) = 0', [$attributes['step']])->orderBy('step')->first();
-			if ($component && ($component->is_approved || $component->is_cancelled || $component->is_rejected)) {
-				return false;
-			}
+            $component = $this->components()->whereRaw('(step & ?) = 0', [$attributes['step']])->orderBy('step')->first();
+            if ($component && ($component->is_approved || $component->is_cancelled || $component->is_rejected)) {
+                return false;
+            }
 
-			$contributors = $component->contributors ?? collect();
-			if ($contributors->isEmpty()) {
-				return true;
-			}
+            $contributors = $component->contributors ?? collect();
+            if ($contributors->isEmpty()) {
+                return true;
+            }
 
-			foreach ($contributors as $contributor) {
-				if ((int)$contributor->user_id === (int)Auth::id()) {
-					return true;
-				}
-			}
+            foreach ($contributors as $contributor) {
+                if ((int) $contributor->user_id === (int) Auth::id()) {
+                    return true;
+                }
+            }
 
-			return false;
-		});
-	}
+            return false;
+        });
+    }
 
-	/**
-	 * Get the approval status of the event.
-	 */
-	/**
-	 * @return Attribute<ApprovalEventComponent|null, never>
-	 */
-	protected function component(): Attribute
-	{
-		return Attribute::get(function (mixed $value, array $attributes) {
-			return $this->components()->whereRaw('(step & ?) = 0', [$attributes['step']])->orderBy('step')->first() ?? null;
-		});
-	}
+    /**
+     * Get the approval status of the event.
+     */
+    /**
+     * @return Attribute<ApprovalEventComponent|null, never>
+     */
+    protected function component(): Attribute
+    {
+        return Attribute::get(function (mixed $value, array $attributes) {
+            return $this->components()->whereRaw('(step & ?) = 0', [$attributes['step']])->orderBy('step')->first() ?? null;
+        });
+    }
 
-	/**
-	 * Get the approval status of the event.
-	 *
-	 *
-	 * @noinspection PhpUnused
-	 */
-	/**
-	 * @return Attribute<ApprovalEventComponent|null, never>
-	 */
-	protected function currentComponent(): Attribute
-	{
-		return Attribute::get(function (mixed $value, array $attributes) {
-			return $this->components()->whereRaw('(step & ~?) = 0', [$attributes['step']])->latest('id')->first() ?? null;
-		});
-	}
+    /**
+     * Get the approval status of the event.
+     *
+     *
+     * @noinspection PhpUnused
+     */
+    /**
+     * @return Attribute<ApprovalEventComponent|null, never>
+     */
+    protected function currentComponent(): Attribute
+    {
+        return Attribute::get(function (mixed $value, array $attributes) {
+            return $this->components()->whereRaw('(step & ~?) = 0', [$attributes['step']])->latest('id')->first() ?? null;
+        });
+    }
 }

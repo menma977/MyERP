@@ -32,10 +32,11 @@ use Illuminate\Support\Carbon;
  * @property-read ItemBatch|null $batch
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read \App\Models\Sales\SalesInvoice|null $invoice
+ * @property-read SalesInvoice|null $invoice
  * @property-read Item $item
  * @property-read ItemStock|null $stock
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|SalesInvoiceComponent newModelQuery()
  * @method static Builder<static>|SalesInvoiceComponent newQuery()
  * @method static Builder<static>|SalesInvoiceComponent onlyTrashed()
@@ -56,60 +57,61 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|SalesInvoiceComponent whereUpdatedBy($value)
  * @method static Builder<static>|SalesInvoiceComponent withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|SalesInvoiceComponent withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class SalesInvoiceComponent extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'sales_invoice_id',
-		'item_id',
-		'item_batch_id',
-		'item_stock_id',
-		'quantity',
-		'price',
-		'total',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'sales_invoice_id',
+        'item_id',
+        'item_batch_id',
+        'item_stock_id',
+        'quantity',
+        'price',
+        'total',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<SalesInvoice, $this>
-	 */
-	public function invoice(): BelongsTo
-	{
-		return $this->belongsTo(SalesInvoice::class);
-	}
+    /**
+     * @return BelongsTo<SalesInvoice, $this>
+     */
+    public function invoice(): BelongsTo
+    {
+        return $this->belongsTo(SalesInvoice::class);
+    }
 
-	/**
-	 * @return BelongsTo<Item, $this>
-	 */
-	public function item(): BelongsTo
-	{
-		return $this->belongsTo(Item::class);
-	}
+    /**
+     * @return BelongsTo<Item, $this>
+     */
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class);
+    }
 
-	/**
-	 * @return BelongsTo<ItemStock, $this>
-	 */
-	public function stock(): BelongsTo
-	{
-		return $this->belongsTo(ItemStock::class);
-	}
+    /**
+     * @return BelongsTo<ItemStock, $this>
+     */
+    public function stock(): BelongsTo
+    {
+        return $this->belongsTo(ItemStock::class);
+    }
 
-	/**
-	 * @return BelongsTo<ItemBatch, $this>
-	 */
-	public function batch(): BelongsTo
-	{
-		return $this->belongsTo(ItemBatch::class);
-	}
+    /**
+     * @return BelongsTo<ItemBatch, $this>
+     */
+    public function batch(): BelongsTo
+    {
+        return $this->belongsTo(ItemBatch::class);
+    }
 }

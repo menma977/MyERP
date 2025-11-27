@@ -30,10 +30,11 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read \App\Models\Transactions\PaymentRequest $paymentRequest
+ * @property-read PaymentRequest $paymentRequest
  * @property-read PurchaseInvoiceComponent $purchaseInvoiceComponent
  * @property-read PurchaseOrderComponent $purchaseOrderComponent
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|PaymentRequestComponent newModelQuery()
  * @method static Builder<static>|PaymentRequestComponent newQuery()
  * @method static Builder<static>|PaymentRequestComponent onlyTrashed()
@@ -54,52 +55,53 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|PaymentRequestComponent whereUpdatedBy($value)
  * @method static Builder<static>|PaymentRequestComponent withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|PaymentRequestComponent withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class PaymentRequestComponent extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'payment_request_id',
-		'purchase_order_component_id',
-		'purchase_invoice_component_id',
-		'quantity',
-		'price',
-		'total',
-		'note',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'payment_request_id',
+        'purchase_order_component_id',
+        'purchase_invoice_component_id',
+        'quantity',
+        'price',
+        'total',
+        'note',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<PaymentRequest, $this>
-	 */
-	public function paymentRequest(): BelongsTo
-	{
-		return $this->belongsTo(PaymentRequest::class);
-	}
+    /**
+     * @return BelongsTo<PaymentRequest, $this>
+     */
+    public function paymentRequest(): BelongsTo
+    {
+        return $this->belongsTo(PaymentRequest::class);
+    }
 
-	/**
-	 * @return BelongsTo<PurchaseOrderComponent, $this>
-	 */
-	public function purchaseOrderComponent(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseOrderComponent::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseOrderComponent, $this>
+     */
+    public function purchaseOrderComponent(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseOrderComponent::class);
+    }
 
-	/**
-	 * @return BelongsTo<PurchaseInvoiceComponent, $this>
-	 */
-	public function purchaseInvoiceComponent(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseInvoiceComponent::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseInvoiceComponent, $this>
+     */
+    public function purchaseInvoiceComponent(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseInvoiceComponent::class);
+    }
 }

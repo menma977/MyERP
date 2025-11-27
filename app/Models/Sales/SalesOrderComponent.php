@@ -28,8 +28,9 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read Item $item
- * @property-read \App\Models\Sales\SalesOrder|null $order
+ * @property-read SalesOrder|null $order
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|SalesOrderComponent newModelQuery()
  * @method static Builder<static>|SalesOrderComponent newQuery()
  * @method static Builder<static>|SalesOrderComponent onlyTrashed()
@@ -48,42 +49,43 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|SalesOrderComponent whereUpdatedBy($value)
  * @method static Builder<static>|SalesOrderComponent withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|SalesOrderComponent withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class SalesOrderComponent extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'sales_order_id',
-		'item_id',
-		'quantity',
-		'price',
-		'total',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'sales_order_id',
+        'item_id',
+        'quantity',
+        'price',
+        'total',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<SalesOrder, $this>
-	 */
-	public function order(): BelongsTo
-	{
-		return $this->belongsTo(SalesOrder::class);
-	}
+    /**
+     * @return BelongsTo<SalesOrder, $this>
+     */
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(SalesOrder::class);
+    }
 
-	/**
-	 * @return BelongsTo<Item, $this>
-	 */
-	public function item(): BelongsTo
-	{
-		return $this->belongsTo(Item::class);
-	}
+    /**
+     * @return BelongsTo<Item, $this>
+     */
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class);
+    }
 }

@@ -27,8 +27,9 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read \App\Models\Items\ItemStock|null $stock
+ * @property-read ItemStock|null $stock
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|ItemStockHistory newModelQuery()
  * @method static Builder<static>|ItemStockHistory newQuery()
  * @method static Builder<static>|ItemStockHistory onlyTrashed()
@@ -46,33 +47,34 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ItemStockHistory whereUpdatedBy($value)
  * @method static Builder<static>|ItemStockHistory withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|ItemStockHistory withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class ItemStockHistory extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'item_stock_id',
-		'code',
-		'quantity',
-		'price',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'item_stock_id',
+        'code',
+        'quantity',
+        'price',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<ItemStock, $this>
-	 */
-	public function stock(): BelongsTo
-	{
-		return $this->belongsTo(ItemStock::class);
-	}
+    /**
+     * @return BelongsTo<ItemStock, $this>
+     */
+    public function stock(): BelongsTo
+    {
+        return $this->belongsTo(ItemStock::class);
+    }
 }

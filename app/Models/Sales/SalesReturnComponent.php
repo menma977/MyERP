@@ -33,9 +33,10 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read Item $item
- * @property-read \App\Models\Sales\SalesReturn|null $return
+ * @property-read SalesReturn|null $return
  * @property-read ItemStock|null $stock
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|SalesReturnComponent newModelQuery()
  * @method static Builder<static>|SalesReturnComponent newQuery()
  * @method static Builder<static>|SalesReturnComponent onlyTrashed()
@@ -56,60 +57,61 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|SalesReturnComponent whereUpdatedBy($value)
  * @method static Builder<static>|SalesReturnComponent withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|SalesReturnComponent withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class SalesReturnComponent extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'sales_return_id',
-		'item_id',
-		'item_batch_id',
-		'item_stock_id',
-		'quantity',
-		'price',
-		'total',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'sales_return_id',
+        'item_id',
+        'item_batch_id',
+        'item_stock_id',
+        'quantity',
+        'price',
+        'total',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<SalesReturn, $this>
-	 */
-	public function return(): BelongsTo
-	{
-		return $this->belongsTo(SalesReturn::class);
-	}
+    /**
+     * @return BelongsTo<SalesReturn, $this>
+     */
+    public function return(): BelongsTo
+    {
+        return $this->belongsTo(SalesReturn::class);
+    }
 
-	/**
-	 * @return BelongsTo<ItemStock, $this>
-	 */
-	public function stock(): BelongsTo
-	{
-		return $this->belongsTo(ItemStock::class);
-	}
+    /**
+     * @return BelongsTo<ItemStock, $this>
+     */
+    public function stock(): BelongsTo
+    {
+        return $this->belongsTo(ItemStock::class);
+    }
 
-	/**
-	 * @return BelongsTo<ItemBatch, $this>
-	 */
-	public function batch(): BelongsTo
-	{
-		return $this->belongsTo(ItemBatch::class);
-	}
+    /**
+     * @return BelongsTo<ItemBatch, $this>
+     */
+    public function batch(): BelongsTo
+    {
+        return $this->belongsTo(ItemBatch::class);
+    }
 
-	/**
-	 * @return BelongsTo<Item, $this>
-	 */
-	public function item(): BelongsTo
-	{
-		return $this->belongsTo(Item::class);
-	}
+    /**
+     * @return BelongsTo<Item, $this>
+     */
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class);
+    }
 }

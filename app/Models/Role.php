@@ -30,17 +30,18 @@ use Spatie\Permission\Models\Role as SpatieRole;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read \App\Models\User|null $createdBy
- * @property-read \App\Models\User|null $deletedBy
+ * @property-read User|null $createdBy
+ * @property-read User|null $deletedBy
  * @property-read Collection<int, \Spatie\Permission\Models\Permission> $permissions
  * @property-read int|null $permissions_count
- * @property-read \App\Models\User|null $updatedBy
- * @property-read Collection<int, \App\Models\User> $users
+ * @property-read User|null $updatedBy
+ * @property-read Collection<int, User> $users
  * @property-read int|null $users_count
+ *
  * @method static Builder<static>|Role newModelQuery()
  * @method static Builder<static>|Role newQuery()
  * @method static Builder<static>|Role onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Role permission($permissions, $without = false)
+ * @method static Builder<static>|Role permission($permissions, $without = false)
  * @method static Builder<static>|Role query()
  * @method static Builder<static>|Role whereCreatedAt($value)
  * @method static Builder<static>|Role whereCreatedBy($value)
@@ -52,22 +53,23 @@ use Spatie\Permission\Models\Role as SpatieRole;
  * @method static Builder<static>|Role whereUpdatedAt($value)
  * @method static Builder<static>|Role whereUpdatedBy($value)
  * @method static Builder<static>|Role withTrashed(bool $withTrashed = true)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Role withoutPermission($permissions)
+ * @method static Builder<static>|Role withoutPermission($permissions)
  * @method static Builder<static>|Role withoutTrashed()
+ *
  * @mixin Eloquent
  */
 #[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
 class Role extends SpatieRole
 {
-	use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
-	use SoftDeletes;
+    use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
+    use SoftDeletes;
 
-	protected $fillable = [
-		'name',
-		'guard_name',
-		'team_id',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-	];
+    protected $fillable = [
+        'name',
+        'guard_name',
+        'team_id',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+    ];
 }

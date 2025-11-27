@@ -36,12 +36,13 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read \App\Models\Approval\Approval $approval
- * @property-read Collection<int, \App\Models\Approval\ApprovalContributor> $contributors
+ * @property-read Approval $approval
+ * @property-read Collection<int, ApprovalContributor> $contributors
  * @property-read int|null $contributors_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|ApprovalComponent newModelQuery()
  * @method static Builder<static>|ApprovalComponent newQuery()
  * @method static Builder<static>|ApprovalComponent onlyTrashed()
@@ -63,56 +64,57 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalComponent whereUpdatedBy($value)
  * @method static Builder<static>|ApprovalComponent withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|ApprovalComponent withoutTrashed()
+ *
  * @mixin Eloquent
  */
 #[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
 class ApprovalComponent extends Model
 {
-	use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
-	use SoftDeletes;
+    use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
+    use SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 */
-	protected $fillable = [
-		'approval_id',
-		'name',
-		'step',
-		'type',
-		'color',
-		'can_drag',
-		'can_edit',
-		'can_delete',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-	];
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'approval_id',
+        'name',
+        'step',
+        'type',
+        'color',
+        'can_drag',
+        'can_edit',
+        'can_delete',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+    ];
 
-	protected $casts = [
-		'step' => 'integer',
-		'type' => ContributorTypeEnum::class,
-		'can_drag' => 'boolean',
-		'can_edit' => 'boolean',
-		'can_delete' => 'boolean',
-	];
+    protected $casts = [
+        'step' => 'integer',
+        'type' => ContributorTypeEnum::class,
+        'can_drag' => 'boolean',
+        'can_edit' => 'boolean',
+        'can_delete' => 'boolean',
+    ];
 
-	/**
-	 * Get the approval associated with this component.
-	 *
-	 * @return BelongsTo<Approval, $this>
-	 */
-	public function approval(): BelongsTo
-	{
-		return $this->belongsTo(Approval::class);
-	}
+    /**
+     * Get the approval associated with this component.
+     *
+     * @return BelongsTo<Approval, $this>
+     */
+    public function approval(): BelongsTo
+    {
+        return $this->belongsTo(Approval::class);
+    }
 
-	/**
-	 * Get the contributors associated with this component.
-	 *
-	 * @return HasMany<ApprovalContributor, $this>
-	 */
-	public function contributors(): HasMany
-	{
-		return $this->hasMany(ApprovalContributor::class);
-	}
+    /**
+     * Get the contributors associated with this component.
+     *
+     * @return HasMany<ApprovalContributor, $this>
+     */
+    public function contributors(): HasMany
+    {
+        return $this->hasMany(ApprovalContributor::class);
+    }
 }

@@ -28,14 +28,15 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, \App\Models\Sales\SalesReturnComponent> $components
+ * @property-read Collection<int, SalesReturnComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
- * @property-read \App\Models\Sales\SalesInvoice|null $invoice
- * @property-read \App\Models\Sales\SalesOrder|null $order
+ * @property-read SalesInvoice|null $invoice
+ * @property-read SalesOrder|null $order
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|SalesReturn newModelQuery()
  * @method static Builder<static>|SalesReturn newQuery()
  * @method static Builder<static>|SalesReturn onlyTrashed()
@@ -53,49 +54,50 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|SalesReturn whereUpdatedBy($value)
  * @method static Builder<static>|SalesReturn withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|SalesReturn withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class SalesReturn extends ApprovalAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'sales_order_id',
-		'sales_invoice_id',
-		'code',
-		'total',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'sales_order_id',
+        'sales_invoice_id',
+        'code',
+        'total',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<SalesOrder, $this>
-	 */
-	public function order(): BelongsTo
-	{
-		return $this->belongsTo(SalesOrder::class);
-	}
+    /**
+     * @return BelongsTo<SalesOrder, $this>
+     */
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(SalesOrder::class);
+    }
 
-	/**
-	 * @return BelongsTo<SalesInvoice, $this>
-	 */
-	public function invoice(): BelongsTo
-	{
-		return $this->belongsTo(SalesInvoice::class);
-	}
+    /**
+     * @return BelongsTo<SalesInvoice, $this>
+     */
+    public function invoice(): BelongsTo
+    {
+        return $this->belongsTo(SalesInvoice::class);
+    }
 
-	/**
-	 * @return HasMany<SalesReturnComponent, $this>
-	 */
-	public function components(): HasMany
-	{
-		return $this->hasMany(SalesReturnComponent::class, 'sales_return_id');
-	}
+    /**
+     * @return HasMany<SalesReturnComponent, $this>
+     */
+    public function components(): HasMany
+    {
+        return $this->hasMany(SalesReturnComponent::class, 'sales_return_id');
+    }
 }

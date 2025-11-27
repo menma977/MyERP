@@ -39,16 +39,17 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, \App\Models\Approval\ApprovalEventContributor> $contributors
+ * @property-read Collection<int, ApprovalEventContributor> $contributors
  * @property-read int|null $contributors_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read \App\Models\Approval\ApprovalEvent $event
+ * @property-read ApprovalEvent $event
  * @property-read mixed $is_approved
  * @property-read mixed $is_cancelled
  * @property-read mixed $is_rejected
  * @property-read mixed $is_rollback
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|ApprovalEventComponent newModelQuery()
  * @method static Builder<static>|ApprovalEventComponent newQuery()
  * @method static Builder<static>|ApprovalEventComponent onlyTrashed()
@@ -71,118 +72,118 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalEventComponent whereUpdatedBy($value)
  * @method static Builder<static>|ApprovalEventComponent withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|ApprovalEventComponent withoutTrashed()
+ *
  * @mixin Eloquent
  */
 #[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
 class ApprovalEventComponent extends Model
 {
-	use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
-	use HasUlids, SoftDeletes;
+    use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
+    use HasUlids, SoftDeletes;
 
-	protected $appends = [
-		'is_approved',
-		'is_rejected',
-		'is_cancelled',
-		'is_rollback',
-	];
+    protected $appends = [
+        'is_approved',
+        'is_rejected',
+        'is_cancelled',
+        'is_rollback',
+    ];
 
-	/**
-	 * The attributes that are mass assignable.
-	 */
-	protected $fillable = [
-		'approval_event_id',
-		'name',
-		'step',
-		'type',
-		'color',
-		'approved_at',
-		'rejected_at',
-		'cancelled_at',
-		'rollback_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'approval_event_id',
+        'name',
+        'step',
+        'type',
+        'color',
+        'approved_at',
+        'rejected_at',
+        'cancelled_at',
+        'rollback_at',
+    ];
 
-	protected $casts = [
-		'step' => 'integer',
-		'type' => ContributorTypeEnum::class,
-		'approved_at' => 'datetime',
-		'rejected_at' => 'datetime',
-		'cancelled_at' => 'datetime',
-		'rollback_at' => 'datetime',
-	];
+    protected $casts = [
+        'step' => 'integer',
+        'type' => ContributorTypeEnum::class,
+        'approved_at' => 'datetime',
+        'rejected_at' => 'datetime',
+        'cancelled_at' => 'datetime',
+        'rollback_at' => 'datetime',
+    ];
 
-	/**
-	 * Get the event associated with this component.
-	 *
-	 * @return BelongsTo<ApprovalEvent, $this>
-	 */
-	public function event(): BelongsTo
-	{
-		return $this->belongsTo(ApprovalEvent::class, 'approval_event_id');
-	}
+    /**
+     * Get the event associated with this component.
+     *
+     * @return BelongsTo<ApprovalEvent, $this>
+     */
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(ApprovalEvent::class, 'approval_event_id');
+    }
 
-	/**
-	 * Get the contributors associated with this component.
-	 *
-	 * @return HasMany<ApprovalEventContributor, $this>
-	 */
-	public function contributors(): HasMany
-	{
-		return $this->hasMany(ApprovalEventContributor::class);
-	}
+    /**
+     * Get the contributors associated with this component.
+     *
+     * @return HasMany<ApprovalEventContributor, $this>
+     */
+    public function contributors(): HasMany
+    {
+        return $this->hasMany(ApprovalEventContributor::class);
+    }
 
-	/**
-	 * Get the approval status of the event.
-	 *
-	 * @return Attribute<bool, never>
-	 *
-	 * @noinspection PhpUnused
-	 */
-	protected function isApproved(): Attribute
-	{
-		return Attribute::make(
-			get: fn(mixed $value, array $attributes) => isset($attributes['approved_at']),
-		);
-	}
+    /**
+     * Get the approval status of the event.
+     *
+     * @return Attribute<bool, never>
+     *
+     * @noinspection PhpUnused
+     */
+    protected function isApproved(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => isset($attributes['approved_at']),
+        );
+    }
 
-	/**
-	 * Get the approval status of the event.
-	 *
-	 * @return Attribute<bool, never>
-	 *
-	 * @noinspection PhpUnused
-	 */
-	protected function isRejected(): Attribute
-	{
-		return Attribute::make(
-			get: fn(mixed $value, array $attributes) => isset($attributes['rejected_at']),
-		);
-	}
+    /**
+     * Get the approval status of the event.
+     *
+     * @return Attribute<bool, never>
+     *
+     * @noinspection PhpUnused
+     */
+    protected function isRejected(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => isset($attributes['rejected_at']),
+        );
+    }
 
-	/**
-	 * Get the approval status of the event.
-	 *
-	 * @return Attribute<bool, never>
-	 *
-	 * @noinspection PhpUnused
-	 */
-	protected function isCancelled(): Attribute
-	{
-		return Attribute::make(
-			get: fn(mixed $value, array $attributes) => isset($attributes['cancelled_at']),
-		);
-	}
+    /**
+     * Get the approval status of the event.
+     *
+     * @return Attribute<bool, never>
+     *
+     * @noinspection PhpUnused
+     */
+    protected function isCancelled(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => isset($attributes['cancelled_at']),
+        );
+    }
 
-	/**
-	 * Get the approval status of the event.
-	 *
-	 * @return Attribute<bool, never>
-	 *
-	 * @noinspection PhpUnused
-	 */
-	protected function isRollback(): Attribute
-	{
-		return Attribute::make(
-			get: fn(mixed $value, array $attributes) => isset($attributes['rollback_at']),
-		);
-	}
-}
+    /**
+     * Get the approval status of the event.
+     *
+     * @return Attribute<bool, never>
+     *
+     * @noinspection PhpUnused
+     */
+    protected function isRollback(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => isset($attributes['rollback_at']),
+        );
+    

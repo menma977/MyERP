@@ -29,11 +29,12 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, \App\Models\Approval\ApprovalFlowComponent> $components
+ * @property-read Collection<int, ApprovalFlowComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|ApprovalDictionary newModelQuery()
  * @method static Builder<static>|ApprovalDictionary newQuery()
  * @method static Builder<static>|ApprovalDictionary onlyTrashed()
@@ -49,32 +50,33 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalDictionary whereUpdatedBy($value)
  * @method static Builder<static>|ApprovalDictionary withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|ApprovalDictionary withoutTrashed()
+ *
  * @mixin Eloquent
  */
 #[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
 class ApprovalDictionary extends Model
 {
-	use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
-	use HasUlids, SoftDeletes;
+    use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 */
-	protected $fillable = [
-		'key',
-		'name',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-	];
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'key',
+        'name',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+    ];
 
-	/**
-	 * Get the components associated with this dictionary.
-	 *
-	 * @return HasMany<ApprovalFlowComponent, $this>
-	 */
-	public function components(): HasMany
-	{
-		return $this->hasMany(ApprovalFlowComponent::class);
-	}
+    /**
+     * Get the components associated with this dictionary.
+     *
+     * @return HasMany<ApprovalFlowComponent, $this>
+     */
+    public function components(): HasMany
+    {
+        return $this->hasMany(ApprovalFlowComponent::class);
+    }
 }

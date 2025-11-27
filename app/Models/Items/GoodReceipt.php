@@ -30,7 +30,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, \App\Models\Items\GoodReceiptComponent> $components
+ * @property-read Collection<int, GoodReceiptComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
@@ -39,6 +39,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, PurchaseReturn> $purchaseReturns
  * @property-read int|null $purchase_returns_count
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|GoodReceipt newModelQuery()
  * @method static Builder<static>|GoodReceipt newQuery()
  * @method static Builder<static>|GoodReceipt onlyTrashed()
@@ -56,55 +57,56 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|GoodReceipt whereUpdatedBy($value)
  * @method static Builder<static>|GoodReceipt withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|GoodReceipt withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class GoodReceipt extends ApprovalAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'purchase_order_id',
-		'code',
-		'total',
-		'note',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'purchase_order_id',
+        'code',
+        'total',
+        'note',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * Get the purchase order associated with the good issue.
-	 *
-	 * @return BelongsTo<\App\Models\Purchases\PurchaseOrder, $this>
-	 */
-	public function order(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseOrder::class);
-	}
+    /**
+     * Get the purchase order associated with the good issue.
+     *
+     * @return BelongsTo<PurchaseOrder, $this>
+     */
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseOrder::class);
+    }
 
-	/**
-	 * Get the goods component associated with the good issue.
-	 *
-	 * @return HasMany<GoodReceiptComponent, $this>
-	 */
-	public function components(): HasMany
-	{
-		return $this->hasMany(GoodReceiptComponent::class);
-	}
+    /**
+     * Get the goods component associated with the good issue.
+     *
+     * @return HasMany<GoodReceiptComponent, $this>
+     */
+    public function components(): HasMany
+    {
+        return $this->hasMany(GoodReceiptComponent::class);
+    }
 
-	/**
-	 * Get the purchase returns associated with the good receipt.
-	 *
-	 * @return HasMany<PurchaseReturn, $this>
-	 */
-	public function purchaseReturns(): HasMany
-	{
-		return $this->hasMany(PurchaseReturn::class, 'good_receipt_id');
-	}
+    /**
+     * Get the purchase returns associated with the good receipt.
+     *
+     * @return HasMany<PurchaseReturn, $this>
+     */
+    public function purchaseReturns(): HasMany
+    {
+        return $this->hasMany(PurchaseReturn::class, 'good_receipt_id');
+    }
 }

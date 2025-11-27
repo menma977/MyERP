@@ -27,9 +27,10 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read \App\Models\Purchases\PurchaseInvoice|null $invoice
- * @property-read \App\Models\Purchases\PurchaseOrderComponent|null $orderComponent
+ * @property-read PurchaseInvoice|null $invoice
+ * @property-read PurchaseOrderComponent|null $orderComponent
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|PurchaseInvoiceComponent newModelQuery()
  * @method static Builder<static>|PurchaseInvoiceComponent newQuery()
  * @method static Builder<static>|PurchaseInvoiceComponent onlyTrashed()
@@ -49,43 +50,44 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|PurchaseInvoiceComponent whereUpdatedBy($value)
  * @method static Builder<static>|PurchaseInvoiceComponent withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|PurchaseInvoiceComponent withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class PurchaseInvoiceComponent extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'purchase_invoice_id',
-		'purchase_order_component_id',
-		'item_id',
-		'quantity',
-		'price',
-		'total',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'purchase_invoice_id',
+        'purchase_order_component_id',
+        'item_id',
+        'quantity',
+        'price',
+        'total',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<PurchaseInvoice, $this>
-	 */
-	public function invoice(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseInvoice::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseInvoice, $this>
+     */
+    public function invoice(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseInvoice::class);
+    }
 
-	/**
-	 * @return BelongsTo<PurchaseOrderComponent, $this>
-	 */
-	public function orderComponent(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseOrderComponent::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseOrderComponent, $this>
+     */
+    public function orderComponent(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseOrderComponent::class);
+    }
 }

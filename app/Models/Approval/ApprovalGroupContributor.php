@@ -30,9 +30,10 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read \App\Models\Approval\ApprovalGroup|null $group
+ * @property-read ApprovalGroup|null $group
  * @property-read User|null $updatedBy
  * @property-read User $user
+ *
  * @method static Builder<static>|ApprovalGroupContributor newModelQuery()
  * @method static Builder<static>|ApprovalGroupContributor newQuery()
  * @method static Builder<static>|ApprovalGroupContributor onlyTrashed()
@@ -48,42 +49,43 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalGroupContributor whereUserId($value)
  * @method static Builder<static>|ApprovalGroupContributor withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|ApprovalGroupContributor withoutTrashed()
+ *
  * @mixin Eloquent
  */
 #[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
 class ApprovalGroupContributor extends Model
 {
-	use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
-	use HasUlids, SoftDeletes;
+    use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 */
-	protected $fillable = [
-		'approval_group_id',
-		'user_id',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-	];
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'approval_group_id',
+        'user_id',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+    ];
 
-	/**
-	 * Get the user associated with this group contributor.
-	 *
-	 * @return BelongsTo<User, $this>
-	 */
-	public function user(): BelongsTo
-	{
-		return $this->belongsTo(User::class);
-	}
+    /**
+     * Get the user associated with this group contributor.
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
-	/**
-	 * Get the group associated with this contributor.
-	 *
-	 * @return BelongsTo<ApprovalGroup, $this>
-	 */
-	public function group(): BelongsTo
-	{
-		return $this->belongsTo(ApprovalGroup::class);
-	}
+    /**
+     * Get the group associated with this contributor.
+     *
+     * @return BelongsTo<ApprovalGroup, $this>
+     */
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(ApprovalGroup::class);
+    }
 }

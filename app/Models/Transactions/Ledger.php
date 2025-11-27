@@ -26,11 +26,12 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, \App\Models\Transactions\LedgerComponent> $component
+ * @property-read Collection<int, LedgerComponent> $component
  * @property-read int|null $component_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|Ledger newModelQuery()
  * @method static Builder<static>|Ledger newQuery()
  * @method static Builder<static>|Ledger onlyTrashed()
@@ -48,33 +49,34 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Ledger whereUpdatedBy($value)
  * @method static Builder<static>|Ledger withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|Ledger withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class Ledger extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'code',
-		'in',
-		'out',
-		'total',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'code',
+        'in',
+        'out',
+        'total',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return HasMany<LedgerComponent, $this>
-	 */
-	public function component(): HasMany
-	{
-		return $this->hasMany(LedgerComponent::class);
-	}
+    /**
+     * @return HasMany<LedgerComponent, $this>
+     */
+    public function component(): HasMany
+    {
+        return $this->hasMany(LedgerComponent::class);
+    }
 }

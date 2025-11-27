@@ -28,11 +28,12 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, \App\Models\Approval\ApprovalGroupContributor> $contributors
+ * @property-read Collection<int, ApprovalGroupContributor> $contributors
  * @property-read int|null $contributors_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|ApprovalGroup newModelQuery()
  * @method static Builder<static>|ApprovalGroup newQuery()
  * @method static Builder<static>|ApprovalGroup onlyTrashed()
@@ -47,31 +48,32 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalGroup whereUpdatedBy($value)
  * @method static Builder<static>|ApprovalGroup withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|ApprovalGroup withoutTrashed()
+ *
  * @mixin Eloquent
  */
 #[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
 class ApprovalGroup extends Model
 {
-	use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
-	use HasUlids, SoftDeletes;
+    use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 */
-	protected $fillable = [
-		'name',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-	];
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'name',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+    ];
 
-	/**
-	 * Get the contributors associated with this group.
-	 *
-	 * @return HasMany<ApprovalGroupContributor, $this>
-	 */
-	public function contributors(): HasMany
-	{
-		return $this->hasMany(ApprovalGroupContributor::class);
-	}
+    /**
+     * Get the contributors associated with this group.
+     *
+     * @return HasMany<ApprovalGroupContributor, $this>
+     */
+    public function contributors(): HasMany
+    {
+        return $this->hasMany(ApprovalGroupContributor::class);
+    }
 }

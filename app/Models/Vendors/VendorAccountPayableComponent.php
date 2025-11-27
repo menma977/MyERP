@@ -25,11 +25,12 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read \App\Models\Vendors\VendorAccountPayable|null $accountPayable
+ * @property-read VendorAccountPayable|null $accountPayable
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read PurchaseInvoiceComponent $purchaseInvoiceComponent
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|VendorAccountPayableComponent newModelQuery()
  * @method static Builder<static>|VendorAccountPayableComponent newQuery()
  * @method static Builder<static>|VendorAccountPayableComponent onlyTrashed()
@@ -48,42 +49,43 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|VendorAccountPayableComponent whereVendorAccountPayableId($value)
  * @method static Builder<static>|VendorAccountPayableComponent withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|VendorAccountPayableComponent withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class VendorAccountPayableComponent extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'vendor_account_payable_id',
-		'purchase_invoice_component_id',
-		'quantity',
-		'price',
-		'total',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'vendor_account_payable_id',
+        'purchase_invoice_component_id',
+        'quantity',
+        'price',
+        'total',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<VendorAccountPayable, $this>
-	 */
-	public function accountPayable(): BelongsTo
-	{
-		return $this->belongsTo(VendorAccountPayable::class);
-	}
+    /**
+     * @return BelongsTo<VendorAccountPayable, $this>
+     */
+    public function accountPayable(): BelongsTo
+    {
+        return $this->belongsTo(VendorAccountPayable::class);
+    }
 
-	/**
-	 * @return BelongsTo<PurchaseInvoiceComponent, $this>
-	 */
-	public function purchaseInvoiceComponent(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseInvoiceComponent::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseInvoiceComponent, $this>
+     */
+    public function purchaseInvoiceComponent(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseInvoiceComponent::class);
+    }
 }

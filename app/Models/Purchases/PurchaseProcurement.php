@@ -27,13 +27,14 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, \App\Models\Purchases\PurchaseProcurementComponent> $components
+ * @property-read Collection<int, PurchaseProcurementComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
- * @property-read \App\Models\Purchases\PurchaseRequest|null $request
+ * @property-read PurchaseRequest|null $request
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|PurchaseProcurement newModelQuery()
  * @method static Builder<static>|PurchaseProcurement newQuery()
  * @method static Builder<static>|PurchaseProcurement onlyTrashed()
@@ -50,40 +51,41 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|PurchaseProcurement whereUpdatedBy($value)
  * @method static Builder<static>|PurchaseProcurement withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|PurchaseProcurement withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class PurchaseProcurement extends ApprovalAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'purchase_request_id',
-		'code',
-		'note',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'purchase_request_id',
+        'code',
+        'note',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<PurchaseRequest, $this>
-	 */
-	public function request(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseRequest::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseRequest, $this>
+     */
+    public function request(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseRequest::class);
+    }
 
-	/**
-	 * @return HasMany<PurchaseProcurementComponent, $this>
-	 */
-	public function components(): HasMany
-	{
-		return $this->hasMany(PurchaseProcurementComponent::class);
-	}
+    /**
+     * @return HasMany<PurchaseProcurementComponent, $this>
+     */
+    public function components(): HasMany
+    {
+        return $this->hasMany(PurchaseProcurementComponent::class);
+    }
 }

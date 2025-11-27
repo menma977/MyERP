@@ -24,7 +24,8 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
- * @property-read \App\Models\Vendors\VendorComponent $vendorComponent
+ * @property-read VendorComponent $vendorComponent
+ *
  * @method static Builder<static>|VendorComponentHistory newModelQuery()
  * @method static Builder<static>|VendorComponentHistory newQuery()
  * @method static Builder<static>|VendorComponentHistory onlyTrashed()
@@ -40,31 +41,32 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|VendorComponentHistory whereVendorComponentId($value)
  * @method static Builder<static>|VendorComponentHistory withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|VendorComponentHistory withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class VendorComponentHistory extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'vendor_component_id',
-		'price',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'vendor_component_id',
+        'price',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<VendorComponent, $this>
-	 */
-	public function vendorComponent(): BelongsTo
-	{
-		return $this->belongsTo(VendorComponent::class);
-	}
+    /**
+     * @return BelongsTo<VendorComponent, $this>
+     */
+    public function vendorComponent(): BelongsTo
+    {
+        return $this->belongsTo(VendorComponent::class);
+    }
 }
