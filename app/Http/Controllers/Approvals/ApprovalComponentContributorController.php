@@ -83,6 +83,7 @@ class ApprovalComponentContributorController extends Controller
      * Update the specified resource in storage.
      *
      * @noinspection DuplicatedCode
+     *
      * @return array<string, string>
      */
     public function update(Request $request)

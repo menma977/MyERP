@@ -27,7 +27,7 @@ class GroupContributorController extends Controller
             'user',
         ])->when($request->input('search'), function ($query) use ($request) {
             $query->whereHas('user', function ($query) use ($request) {
-                $query->where('name', 'like', '%' . $request->input('search') . '%');
+                $query->where('name', 'like', '%'.$request->input('search').'%');
             });
         })->when($request->route('group_id'), function ($query) use ($request) {
             $query->where('approval_group_id', $request->route('group_id'));
