@@ -25,8 +25,8 @@ class ApprovalComponentController extends Controller
         $approvalComponent = ApprovalComponent::with([
             'approval',
             'contributors.approvable',
-        ])->where('approval_id', $request->route('approval_id'))->when($request->input('search'), function ($query) use ($request) {
-            $query->where('name', 'like', '%'.$request->input('search').'%');
+        ])->where('approval_id', $request->route('approval_id'))->when($request->input('search'), function ($build) use ($request) {
+            return $build->where('name', 'like', '%'.$request->input('search').'%');
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {

@@ -21,8 +21,8 @@ class FlowComponentController extends Controller
      */
     public function index(Request $request)
     {
-        $flowComponent = ApprovalFlowComponent::where('approval_flow_id', $request->route('flow_id'))->when($request->input('search'), function ($query) use ($request) {
-            return $query->where('key', 'like', '%'.$request->input('search').'%');
+        $flowComponent = ApprovalFlowComponent::where('approval_flow_id', $request->route('flow_id'))->when($request->input('search'), function ($build) use ($request) {
+            return $build->where('key', 'like', '%'.$request->input('search').'%');
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {

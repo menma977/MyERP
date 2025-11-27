@@ -25,8 +25,8 @@ class ApprovalController extends Controller
             'flow',
             'flow.components',
             'components',
-        ])->when($request->input('search'), function ($query) use ($request) {
-            $query->where('name', 'like', '%' . $request->input('search') . '%');
+        ])->when($request->input('search'), function ($build) use ($request) {
+            return $build->where('name', 'like', '%'.$request->input('search').'%');
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {

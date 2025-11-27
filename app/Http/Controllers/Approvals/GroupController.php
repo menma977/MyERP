@@ -21,8 +21,8 @@ class GroupController extends Controller
      */
     public function index(Request $request)
     {
-        $group = ApprovalGroup::when($request->input('search'), function ($query) use ($request) {
-            $query->where('name', 'like', '%'.$request->input('search').'%');
+        $group = ApprovalGroup::when($request->input('search'), function ($build) use ($request) {
+            return $build->where('name', 'like', '%'.$request->input('search').'%');
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {

@@ -28,8 +28,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, ItemBatch> $batch
- * @property-read int|null $batch_count
+ * @property-read Collection<int, ItemBatch> $batches
+ * @property-read int|null $batches_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
@@ -76,7 +76,7 @@ class Item extends ModelAbstract
     /**
      * @return HasMany<ItemBatch, $this>
      */
-    public function batch(): HasMany
+    public function batches(): HasMany
     {
         return $this->hasMany(ItemBatch::class);
     }

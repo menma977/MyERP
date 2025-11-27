@@ -25,12 +25,12 @@ class GroupContributorController extends Controller
         $groupContributors = ApprovalGroupContributor::with([
             'group',
             'user',
-        ])->when($request->input('search'), function ($query) use ($request) {
-            $query->whereHas('user', function ($query) use ($request) {
-                $query->where('name', 'like', '%'.$request->input('search').'%');
+        ])->when($request->input('search'), function ($build) use ($request) {
+            return $build->whereHas('user', function ($build) use ($request) {
+                return $build->where('name', 'like', '%'.$request->input('search').'%');
             });
-        })->when($request->route('group_id'), function ($query) use ($request) {
-            $query->where('approval_group_id', $request->route('group_id'));
+        })->when($request->route('group_id'), function ($build) use ($request) {
+            return $build->where('approval_group_id', $request->route('group_id'));
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {
