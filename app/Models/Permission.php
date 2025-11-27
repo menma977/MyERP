@@ -21,6 +21,8 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
  *
  * @property int $id
  * @property string $name
+ * @property string $label
+ * @property string $group
  * @property string $guard_name
  * @property int|null $created_by
  * @property int|null $updated_by
