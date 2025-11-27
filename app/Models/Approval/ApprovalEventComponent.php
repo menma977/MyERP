@@ -186,4 +186,5 @@ class ApprovalEventComponent extends Model
         return Attribute::make(
             get: fn (mixed $value, array $attributes) => isset($attributes['rollback_at']),
         );
-    
+    }
+}
