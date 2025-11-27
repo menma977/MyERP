@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Approvals;
 
 use App\Http\Controllers\Controller;
 use App\Models\Approval\Approval;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\ValidationException;
 
@@ -14,6 +16,8 @@ class ApprovalController extends Controller
      * Approval Index
      *
      * Display a listing of the resource.
+     *
+     * @return Approval[]|Collection<int, Approval>|LengthAwarePaginator<int, Approval>
      */
     public function index(Request $request)
     {
@@ -36,6 +40,9 @@ class ApprovalController extends Controller
      * Approval Store
      *
      * Store a newly created resource in storage.
+     */
+    /**
+     * @return array<string, string>
      */
     public function store(Request $request)
     {
@@ -61,6 +68,9 @@ class ApprovalController extends Controller
      *
      * Show the specified resource.
      */
+    /**
+     * @return Approval|Collection<int, Approval>
+     */
     public function show(Request $request)
     {
         return Approval::with([
@@ -75,6 +85,9 @@ class ApprovalController extends Controller
      *
      * Update the specified resource in storage.
      */
+    /**
+     * @return array<string, string>
+     */
     public function update(Request $request)
     {
         $request->validate([
@@ -84,13 +97,17 @@ class ApprovalController extends Controller
         ]);
 
         $approval = Approval::findOrFail($request->route('id'));
-        $approval->approval_flow_id = $request->input('flow_id');
-        $approval->name = $request->input('name');
-        $approval->type = $request->input('type');
-        $approval->save();
+        if ($approval instanceof Approval) {
+            $approval->approval_flow_id = $request->input('flow_id');
+            $approval->name = $request->input('name');
+            $approval->type = $request->input('type');
+            $approval->save();
+        }
+
+        $approvalName = ($approval instanceof Approval) ? $approval->name : 'Approval';
 
         return [
-            'message' => trans('messages.success.update', ['target' => $approval->name], App::getLocale()),
+            'message' => trans('messages.success.update', ['target' => $approvalName], App::getLocale()),
         ];
     }
 
@@ -99,18 +116,25 @@ class ApprovalController extends Controller
      *
      * Remove the specified resource from storage.
      */
+    /**
+     * @return array<string, string>
+     */
     public function delete(Request $request)
     {
         $approval = Approval::findOrFail($request->route('id'));
-        if ($approval->components()->exists()) {
+        if ($approval instanceof Approval && $approval->components()->exists()) {
             throw ValidationException::withMessages([
                 'message' => trans('messages.fail.delete.cost', ['attribute' => $approval->name, 'target' => 'Component'], App::getLocale()),
             ]);
         }
-        $approval->delete();
+        if ($approval instanceof Approval) {
+            $approval->delete();
+        }
+
+        $approvalName = ($approval instanceof Approval) ? $approval->name : 'Approval';
 
         return [
-            'message' => trans('messages.success.delete', ['target' => $approval->name], App::getLocale()),
+            'message' => trans('messages.success.delete', ['target' => $approvalName], App::getLocale()),
         ];
     }
 }
