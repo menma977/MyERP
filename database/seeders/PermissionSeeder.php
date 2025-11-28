@@ -44,6 +44,25 @@ class PermissionSeeder extends Seeder
     {
         $collector = collect();
 
+        /**User permissions*/
+        $collector->push(['name' => 'user.index', 'label' => 'User Index', 'group' => 'user', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'user.show', 'label' => 'User Show', 'group' => 'user', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'user.store', 'label' => 'User Store', 'group' => 'user', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'user.update', 'label' => 'User Update', 'group' => 'user', 'guard_name' => 'sanctum']);
+
+        /**Role permissions*/
+        $collector->push(['name' => 'role.index', 'label' => 'Role Index', 'group' => 'role', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'role.show', 'label' => 'Role Show', 'group' => 'role', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'role.store', 'label' => 'Role Store', 'group' => 'role', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'role.update', 'label' => 'Role Update', 'group' => 'role', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'role.delete', 'label' => 'Role Delete', 'group' => 'role', 'guard_name' => 'sanctum']);
+
+        $collector->push(['name' => 'role.permission.index', 'label' => 'Role Permission Index', 'group' => 'role.permission', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'role.permission.show', 'label' => 'Role Permission Show', 'group' => 'role.permission', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'role.permission.store', 'label' => 'Role Permission Store', 'group' => 'role.permission', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'role.permission.update', 'label' => 'Role Permission Update', 'group' => 'role.permission', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'role.permission.delete', 'label' => 'Role Permission Delete', 'group' => 'role.permission', 'guard_name' => 'sanctum']);
+
         /**Approvals permissions*/
         $collector->push(['name' => 'approval.index', 'label' => 'Approval Index', 'group' => 'approval', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'approval.show', 'label' => 'Approval Show', 'group' => 'approval', 'guard_name' => 'sanctum']);
