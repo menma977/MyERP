@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait CreatedByTrait
 {
-	/**
-	 * @return BelongsTo<User, $this>
-	 */
-	public function createdBy(): BelongsTo
-	{
-		return $this->belongsTo(User::class, 'created_by');
-	}
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by')->withTrashed();
+    }
 }

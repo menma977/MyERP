@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait UpdatedByTrait
 {
-	/**
-	 * @return BelongsTo<User, $this>
-	 */
-	public function updatedBy(): BelongsTo
-	{
-		return $this->belongsTo(User::class, 'updated_by');
-	}
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function updatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by')->withTrashed();
+    }
 }
