@@ -28,9 +28,10 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read \App\Models\Purchases\PurchaseRequest|null $request
+ * @property-read PurchaseRequest|null $request
  * @property-read User|null $updatedBy
  * @property-read Vendor $vendor
+ *
  * @method static Builder<static>|PurchaseRequestComponent newModelQuery()
  * @method static Builder<static>|PurchaseRequestComponent newQuery()
  * @method static Builder<static>|PurchaseRequestComponent onlyTrashed()
@@ -50,43 +51,44 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|PurchaseRequestComponent whereVendorId($value)
  * @method static Builder<static>|PurchaseRequestComponent withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|PurchaseRequestComponent withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class PurchaseRequestComponent extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'purchase_request_id',
-		'vendor_id',
-		'price',
-		'quantity',
-		'total',
-		'note',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'purchase_request_id',
+        'vendor_id',
+        'price',
+        'quantity',
+        'total',
+        'note',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<PurchaseRequest, $this>
-	 */
-	public function request(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseRequest::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseRequest, $this>
+     */
+    public function request(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseRequest::class);
+    }
 
-	/**
-	 * @return BelongsTo<\App\Models\Vendors\Vendor, $this>
-	 */
-	public function vendor(): BelongsTo
-	{
-		return $this->belongsTo(Vendor::class);
-	}
+    /**
+     * @return BelongsTo<Vendor, $this>
+     */
+    public function vendor(): BelongsTo
+    {
+        return $this->belongsTo(Vendor::class);
+    }
 }

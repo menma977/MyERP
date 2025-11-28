@@ -26,15 +26,16 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, \App\Models\Sales\SalesOrderComponent> $components
+ * @property-read Collection<int, SalesOrderComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
- * @property-read \App\Models\Sales\SalesInvoice|null $invoice
- * @property-read Collection<int, \App\Models\Sales\SalesReturn> $salesReturns
+ * @property-read SalesInvoice|null $invoice
+ * @property-read Collection<int, SalesReturn> $salesReturns
  * @property-read int|null $sales_returns_count
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|SalesOrder newModelQuery()
  * @method static Builder<static>|SalesOrder newQuery()
  * @method static Builder<static>|SalesOrder onlyTrashed()
@@ -50,49 +51,50 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|SalesOrder whereUpdatedBy($value)
  * @method static Builder<static>|SalesOrder withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|SalesOrder withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class SalesOrder extends ApprovalAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'code',
-		'total',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'code',
+        'total',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return HasMany<SalesOrderComponent, $this>
-	 */
-	public function components(): HasMany
-	{
-		return $this->hasMany(SalesOrderComponent::class);
-	}
+    /**
+     * @return HasMany<SalesOrderComponent, $this>
+     */
+    public function components(): HasMany
+    {
+        return $this->hasMany(SalesOrderComponent::class);
+    }
 
-	/**
-	 * @return HasOne<SalesInvoice, $this>
-	 */
-	public function invoice(): HasOne
-	{
-		return $this->hasOne(SalesInvoice::class);
-	}
+    /**
+     * @return HasOne<SalesInvoice, $this>
+     */
+    public function invoice(): HasOne
+    {
+        return $this->hasOne(SalesInvoice::class);
+    }
 
-	/**
-	 * Get the sales returns associated with the sales order.
-	 *
-	 * @return HasMany<SalesReturn, $this>
-	 */
-	public function salesReturns(): HasMany
-	{
-		return $this->hasMany(SalesReturn::class, 'sales_order_id');
-	}
+    /**
+     * Get the sales returns associated with the sales order.
+     *
+     * @return HasMany<SalesReturn, $this>
+     */
+    public function salesReturns(): HasMany
+    {
+        return $this->hasMany(SalesReturn::class, 'sales_order_id');
+    }
 }

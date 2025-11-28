@@ -31,9 +31,10 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read Item $item
- * @property-read \App\Models\Purchases\PurchaseProcurement|null $procurement
+ * @property-read PurchaseProcurement|null $procurement
  * @property-read User|null $updatedBy
  * @property-read Vendor $vendor
+ *
  * @method static Builder<static>|PurchaseProcurementComponent newModelQuery()
  * @method static Builder<static>|PurchaseProcurementComponent newQuery()
  * @method static Builder<static>|PurchaseProcurementComponent onlyTrashed()
@@ -54,52 +55,53 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|PurchaseProcurementComponent whereVendorId($value)
  * @method static Builder<static>|PurchaseProcurementComponent withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|PurchaseProcurementComponent withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class PurchaseProcurementComponent extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'purchase_procurement_id',
-		'vendor_id',
-		'item_id',
-		'quantity',
-		'price',
-		'total',
-		'note',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'purchase_procurement_id',
+        'vendor_id',
+        'item_id',
+        'quantity',
+        'price',
+        'total',
+        'note',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<PurchaseProcurement, $this>
-	 */
-	public function procurement(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseProcurement::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseProcurement, $this>
+     */
+    public function procurement(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseProcurement::class);
+    }
 
-	/**
-	 * @return BelongsTo<\App\Models\Vendors\Vendor, $this>
-	 */
-	public function vendor(): BelongsTo
-	{
-		return $this->belongsTo(Vendor::class);
-	}
+    /**
+     * @return BelongsTo<Vendor, $this>
+     */
+    public function vendor(): BelongsTo
+    {
+        return $this->belongsTo(Vendor::class);
+    }
 
-	/**
-	 * @return BelongsTo<Item, $this>
-	 */
-	public function item(): BelongsTo
-	{
-		return $this->belongsTo(Item::class);
-	}
+    /**
+     * @return BelongsTo<Item, $this>
+     */
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class);
+    }
 }

@@ -24,10 +24,11 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read \App\Models\Items\ItemBatch|null $batch
+ * @property-read ItemBatch|null $batch
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|ItemStock newModelQuery()
  * @method static Builder<static>|ItemStock newQuery()
  * @method static Builder<static>|ItemStock onlyTrashed()
@@ -44,32 +45,33 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ItemStock whereUpdatedBy($value)
  * @method static Builder<static>|ItemStock withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|ItemStock withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class ItemStock extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'item_batch_id',
-		'quantity',
-		'price',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'item_batch_id',
+        'quantity',
+        'price',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<ItemBatch, $this>
-	 */
-	public function batch(): BelongsTo
-	{
-		return $this->belongsTo(ItemBatch::class);
-	}
+    /**
+     * @return BelongsTo<ItemBatch, $this>
+     */
+    public function batch(): BelongsTo
+    {
+        return $this->belongsTo(ItemBatch::class);
+    }
 }

@@ -30,11 +30,12 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Model $approvable
- * @property-read \App\Models\Approval\ApprovalComponent|null $component
+ * @property-read Model $approvable
+ * @property-read ApprovalComponent|null $component
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|ApprovalContributor newModelQuery()
  * @method static Builder<static>|ApprovalContributor newQuery()
  * @method static Builder<static>|ApprovalContributor onlyTrashed()
@@ -51,43 +52,44 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalContributor whereUpdatedBy($value)
  * @method static Builder<static>|ApprovalContributor withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|ApprovalContributor withoutTrashed()
+ *
  * @mixin Eloquent
  */
 #[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
 class ApprovalContributor extends Model
 {
-	use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
-	use HasUlids, SoftDeletes;
+    use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 */
-	protected $fillable = [
-		'approval_component_id',
-		'approvable_type',
-		'approvable_id',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-	];
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'approval_component_id',
+        'approvable_type',
+        'approvable_id',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+    ];
 
-	/**
-	 * Get the component associated with this contributor.
-	 *
-	 * @return BelongsTo<ApprovalComponent, $this>
-	 */
-	public function component(): BelongsTo
-	{
-		return $this->belongsTo(ApprovalComponent::class)->withTrashed();
-	}
+    /**
+     * Get the component associated with this contributor.
+     *
+     * @return BelongsTo<ApprovalComponent, $this>
+     */
+    public function component(): BelongsTo
+    {
+        return $this->belongsTo(ApprovalComponent::class)->withTrashed();
+    }
 
-	/**
-	 * Get the parent approvable model.
-	 *
-	 * @return MorphTo<Model, $this>
-	 */
-	public function approvable(): MorphTo
-	{
-		return $this->morphTo();
-	}
+    /**
+     * Get the parent approvable model.
+     *
+     * @return MorphTo<Model, $this>
+     */
+    public function approvable(): MorphTo
+    {
+        return $this->morphTo();
+    }
 }

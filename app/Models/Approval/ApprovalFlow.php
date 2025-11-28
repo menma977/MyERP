@@ -29,12 +29,13 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read \App\Models\Approval\Approval|null $approval
- * @property-read Collection<int, \App\Models\Approval\ApprovalFlowComponent> $components
+ * @property-read Approval|null $approval
+ * @property-read Collection<int, ApprovalFlowComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|ApprovalFlow newModelQuery()
  * @method static Builder<static>|ApprovalFlow newQuery()
  * @method static Builder<static>|ApprovalFlow onlyTrashed()
@@ -49,41 +50,42 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalFlow whereUpdatedBy($value)
  * @method static Builder<static>|ApprovalFlow withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|ApprovalFlow withoutTrashed()
+ *
  * @mixin Eloquent
  */
 #[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
 class ApprovalFlow extends Model
 {
-	use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
-	use HasUlids, SoftDeletes;
+    use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 */
-	protected $fillable = [
-		'name',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-	];
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'name',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+    ];
 
-	/**
-	 * Get the approval associated with this flow.
-	 *
-	 * @return HasOne<Approval, $this>
-	 */
-	public function approval(): HasOne
-	{
-		return $this->hasOne(Approval::class);
-	}
+    /**
+     * Get the approval associated with this flow.
+     *
+     * @return HasOne<Approval, $this>
+     */
+    public function approval(): HasOne
+    {
+        return $this->hasOne(Approval::class);
+    }
 
-	/**
-	 * Get the components associated with this flow.
-	 *
-	 * @return HasMany<ApprovalFlowComponent, $this>
-	 */
-	public function components(): HasMany
-	{
-		return $this->hasMany(ApprovalFlowComponent::class);
-	}
+    /**
+     * Get the components associated with this flow.
+     *
+     * @return HasMany<ApprovalFlowComponent, $this>
+     */
+    public function components(): HasMany
+    {
+        return $this->hasMany(ApprovalFlowComponent::class);
+    }
 }

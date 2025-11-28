@@ -28,11 +28,12 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, \App\Models\Items\ItemBatch> $batch
- * @property-read int|null $batch_count
+ * @property-read Collection<int, ItemBatch> $batches
+ * @property-read int|null $batches_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|Item newModelQuery()
  * @method static Builder<static>|Item newQuery()
  * @method static Builder<static>|Item onlyTrashed()
@@ -50,40 +51,41 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Item whereUpdatedBy($value)
  * @method static Builder<static>|Item withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|Item withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class Item extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'code',
-		'name',
-		'type',
-		'unit',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'code',
+        'name',
+        'type',
+        'unit',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+    ];
 
-	/**
-	 * @return HasMany<ItemBatch, $this>
-	 */
-	public function batch(): HasMany
-	{
-		return $this->hasMany(ItemBatch::class);
-	}
+    /**
+     * @return HasMany<ItemBatch, $this>
+     */
+    public function batches(): HasMany
+    {
+        return $this->hasMany(ItemBatch::class);
+    }
 
-	protected function casts(): array
-	{
-		return [
-			'type' => ItemTypeEnum::class,
-			'unit' => ItemUnitEnum::class,
-		];
-	}
+    protected function casts(): array
+    {
+        return [
+            'type' => ItemTypeEnum::class,
+            'unit' => ItemUnitEnum::class,
+        ];
+    }
 }

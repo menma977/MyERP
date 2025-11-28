@@ -31,9 +31,10 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read \App\Models\Approval\ApprovalDictionary|null $dictionary
- * @property-read \App\Models\Approval\ApprovalFlow|null $flow
+ * @property-read ApprovalDictionary|null $dictionary
+ * @property-read ApprovalFlow|null $flow
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|ApprovalFlowComponent newModelQuery()
  * @method static Builder<static>|ApprovalFlowComponent newQuery()
  * @method static Builder<static>|ApprovalFlowComponent onlyTrashed()
@@ -50,43 +51,44 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalFlowComponent whereUpdatedBy($value)
  * @method static Builder<static>|ApprovalFlowComponent withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|ApprovalFlowComponent withoutTrashed()
+ *
  * @mixin Eloquent
  */
 #[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
 class ApprovalFlowComponent extends Model
 {
-	use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
-	use HasUlids, SoftDeletes;
+    use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 */
-	protected $fillable = [
-		'approval_flow_id',
-		'approval_dictionary_id',
-		'key',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-	];
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'approval_flow_id',
+        'approval_dictionary_id',
+        'key',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+    ];
 
-	/**
-	 * Get the flow associated with this component.
-	 *
-	 * @return BelongsTo<ApprovalFlow, $this>
-	 */
-	public function flow(): BelongsTo
-	{
-		return $this->belongsTo(ApprovalFlow::class);
-	}
+    /**
+     * Get the flow associated with this component.
+     *
+     * @return BelongsTo<ApprovalFlow, $this>
+     */
+    public function flow(): BelongsTo
+    {
+        return $this->belongsTo(ApprovalFlow::class);
+    }
 
-	/**
-	 * Get the dictionary associated with this component.
-	 *
-	 * @return BelongsTo<ApprovalDictionary, $this>
-	 */
-	public function dictionary(): BelongsTo
-	{
-		return $this->belongsTo(ApprovalDictionary::class);
-	}
+    /**
+     * Get the dictionary associated with this component.
+     *
+     * @return BelongsTo<ApprovalDictionary, $this>
+     */
+    public function dictionary(): BelongsTo
+    {
+        return $this->belongsTo(ApprovalDictionary::class);
+    }
 }

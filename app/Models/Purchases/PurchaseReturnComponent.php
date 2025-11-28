@@ -31,9 +31,10 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read GoodReceiptComponent $goodReceiptComponent
- * @property-read \App\Models\Purchases\PurchaseOrderComponent $purchaseOrderComponent
- * @property-read \App\Models\Purchases\PurchaseReturn|null $return
+ * @property-read PurchaseOrderComponent $purchaseOrderComponent
+ * @property-read PurchaseReturn|null $return
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|PurchaseReturnComponent newModelQuery()
  * @method static Builder<static>|PurchaseReturnComponent newQuery()
  * @method static Builder<static>|PurchaseReturnComponent onlyTrashed()
@@ -55,53 +56,54 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|PurchaseReturnComponent whereUpdatedBy($value)
  * @method static Builder<static>|PurchaseReturnComponent withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|PurchaseReturnComponent withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class PurchaseReturnComponent extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'purchase_return_id',
-		'purchase_order_component_id',
-		'good_receipt_component_id',
-		'item_id',
-		'quantity',
-		'price',
-		'total',
-		'note',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'purchase_return_id',
+        'purchase_order_component_id',
+        'good_receipt_component_id',
+        'item_id',
+        'quantity',
+        'price',
+        'total',
+        'note',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<PurchaseReturn, $this>
-	 */
-	public function return(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseReturn::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseReturn, $this>
+     */
+    public function return(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseReturn::class);
+    }
 
-	/**
-	 * @return BelongsTo<PurchaseOrderComponent, $this>
-	 */
-	public function purchaseOrderComponent(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseOrderComponent::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseOrderComponent, $this>
+     */
+    public function purchaseOrderComponent(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseOrderComponent::class);
+    }
 
-	/**
-	 * @return BelongsTo<GoodReceiptComponent, $this>
-	 */
-	public function goodReceiptComponent(): BelongsTo
-	{
-		return $this->belongsTo(GoodReceiptComponent::class);
-	}
+    /**
+     * @return BelongsTo<GoodReceiptComponent, $this>
+     */
+    public function goodReceiptComponent(): BelongsTo
+    {
+        return $this->belongsTo(GoodReceiptComponent::class);
+    }
 }

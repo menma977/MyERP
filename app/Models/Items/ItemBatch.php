@@ -28,9 +28,10 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read \App\Models\Items\Item $item
- * @property-read \App\Models\Items\ItemStock|null $stock
+ * @property-read Item $item
+ * @property-read ItemStock|null $stock
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|ItemBatch newModelQuery()
  * @method static Builder<static>|ItemBatch newQuery()
  * @method static Builder<static>|ItemBatch onlyTrashed()
@@ -48,48 +49,49 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ItemBatch whereUpdatedBy($value)
  * @method static Builder<static>|ItemBatch withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|ItemBatch withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class ItemBatch extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'item_id',
-		'code',
-		'expiry_at',
-		'is_available',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'item_id',
+        'code',
+        'expiry_at',
+        'is_available',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<Item, $this>
-	 */
-	public function item(): BelongsTo
-	{
-		return $this->belongsTo(Item::class);
-	}
+    /**
+     * @return BelongsTo<Item, $this>
+     */
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class);
+    }
 
-	/**
-	 * @return HasOne<ItemStock, $this>
-	 */
-	public function stock(): HasOne
-	{
-		return $this->hasOne(ItemStock::class);
-	}
+    /**
+     * @return HasOne<ItemStock, $this>
+     */
+    public function stock(): HasOne
+    {
+        return $this->hasOne(ItemStock::class);
+    }
 
-	protected function casts(): array
-	{
-		return [
-			'expiry_at' => 'datetime',
-		];
-	}
+    protected function casts(): array
+    {
+        return [
+            'expiry_at' => 'datetime',
+        ];
+    }
 }

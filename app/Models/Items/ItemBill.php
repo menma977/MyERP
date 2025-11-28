@@ -26,12 +26,13 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, \App\Models\Items\ItemBillComponent> $component
+ * @property-read Collection<int, ItemBillComponent> $component
  * @property-read int|null $component_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read \App\Models\Items\Item $item
+ * @property-read Item $item
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|ItemBill newModelQuery()
  * @method static Builder<static>|ItemBill newQuery()
  * @method static Builder<static>|ItemBill onlyTrashed()
@@ -48,40 +49,41 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ItemBill whereUpdatedBy($value)
  * @method static Builder<static>|ItemBill withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|ItemBill withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class ItemBill extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'item_id',
-		'code',
-		'quantity',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'item_id',
+        'code',
+        'quantity',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<Item, $this>
-	 */
-	public function item(): BelongsTo
-	{
-		return $this->belongsTo(Item::class, 'item_id');
-	}
+    /**
+     * @return BelongsTo<Item, $this>
+     */
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class, 'item_id');
+    }
 
-	/**
-	 * @return HasMany<ItemBillComponent, $this>
-	 */
-	public function component(): HasMany
-	{
-		return $this->hasMany(ItemBillComponent::class);
-	}
+    /**
+     * @return HasMany<ItemBillComponent, $this>
+     */
+    public function component(): HasMany
+    {
+        return $this->hasMany(ItemBillComponent::class);
+    }
 }

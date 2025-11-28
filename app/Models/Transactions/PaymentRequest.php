@@ -34,7 +34,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, \App\Models\Transactions\PaymentRequestComponent> $components
+ * @property-read Collection<int, PaymentRequestComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
@@ -42,6 +42,7 @@ use Illuminate\Support\Carbon;
  * @property-read PurchaseInvoice|null $invoice
  * @property-read PurchaseOrder|null $order
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|PaymentRequest newModelQuery()
  * @method static Builder<static>|PaymentRequest newQuery()
  * @method static Builder<static>|PaymentRequest onlyTrashed()
@@ -62,59 +63,60 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|PaymentRequest whereUpdatedBy($value)
  * @method static Builder<static>|PaymentRequest withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|PaymentRequest withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class PaymentRequest extends ApprovalAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'purchase_order_id',
-		'purchase_invoice_id',
-		'code',
-		'method',
-		'total',
-		'tax',
-		'note',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'purchase_order_id',
+        'purchase_invoice_id',
+        'code',
+        'method',
+        'total',
+        'tax',
+        'note',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<PurchaseOrder, $this>
-	 */
-	public function order(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseOrder::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseOrder, $this>
+     */
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseOrder::class);
+    }
 
-	/**
-	 * @return BelongsTo<PurchaseInvoice, $this>
-	 */
-	public function invoice(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseInvoice::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseInvoice, $this>
+     */
+    public function invoice(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseInvoice::class);
+    }
 
-	/**
-	 * @return HasMany<PaymentRequestComponent, $this>
-	 */
-	public function components(): HasMany
-	{
-		return $this->hasMany(PaymentRequestComponent::class, 'payment_request_id');
-	}
+    /**
+     * @return HasMany<PaymentRequestComponent, $this>
+     */
+    public function components(): HasMany
+    {
+        return $this->hasMany(PaymentRequestComponent::class, 'payment_request_id');
+    }
 
-	protected function casts(): array
-	{
-		return [
-			'method' => PaymentMethodEnum::class,
-		];
-	}
+    protected function casts(): array
+    {
+        return [
+            'method' => PaymentMethodEnum::class,
+        ];
+    }
 }

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Approvals;
 
 use App\Http\Controllers\Controller;
 use App\Models\Approval\ApprovalContributor;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\Rule;
 
@@ -14,6 +16,8 @@ class ApprovalComponentContributorController extends Controller
      * Approval Component Contributor Index
      *
      * Display a listing of the resource.
+     *
+     * @return ApprovalContributor[]|Collection<int, ApprovalContributor>|LengthAwarePaginator<int, ApprovalContributor>
      */
     public function index(Request $request)
     {
@@ -37,6 +41,8 @@ class ApprovalComponentContributorController extends Controller
      * Store a newly created resource in storage.
      *
      * @noinspection DuplicatedCode
+     *
+     * @return array<string, string>
      */
     public function store(Request $request)
     {
@@ -46,7 +52,7 @@ class ApprovalComponentContributorController extends Controller
         ]);
 
         $approvalComponentContributor = new ApprovalContributor;
-        $approvalComponentContributor->approval_component_id = (int)$request->route('approval_component_id');
+        $approvalComponentContributor->approval_component_id = (int) $request->route('approval_component_id');
         $approvalComponentContributor->approvable_id = $request->input('approvable_id');
         $approvalComponentContributor->approvable_type = config('approval.group')[$request->input('key')];
         $approvalComponentContributor->save();
@@ -60,6 +66,8 @@ class ApprovalComponentContributorController extends Controller
      * Approval Component Contributor Show
      *
      * Show the specified resource.
+     *
+     * @return ApprovalContributor|Collection<int, ApprovalContributor>
      */
     public function show(Request $request)
     {
@@ -75,6 +83,8 @@ class ApprovalComponentContributorController extends Controller
      * Update the specified resource in storage.
      *
      * @noinspection DuplicatedCode
+     *
+     * @return array<string, string>
      */
     public function update(Request $request)
     {
@@ -84,10 +94,12 @@ class ApprovalComponentContributorController extends Controller
         ]);
 
         $approvalComponentContributor = ApprovalContributor::findOrFail($request->route('id'));
-        $approvalComponentContributor->approval_component_id = (int)$request->route('approval_component_id');
-        $approvalComponentContributor->approvable_id = $request->input('approvable_id');
-        $approvalComponentContributor->approvable_type = config('approval.group')[$request->input('key')];
-        $approvalComponentContributor->save();
+        if ($approvalComponentContributor instanceof ApprovalContributor) {
+            $approvalComponentContributor->approval_component_id = (int) $request->route('approval_component_id');
+            $approvalComponentContributor->approvable_id = $request->input('approvable_id');
+            $approvalComponentContributor->approvable_type = config('approval.group')[$request->input('key')];
+            $approvalComponentContributor->save();
+        }
 
         return [
             'message' => trans('messages.success.update', ['target' => 'contributor'], App::getLocale()),
@@ -98,11 +110,15 @@ class ApprovalComponentContributorController extends Controller
      * Approval Component Contributor Delete
      *
      * Remove the specified resource from storage.
+     *
+     * @return array<string, string>
      */
     public function delete(Request $request)
     {
         $approvalComponentContributor = ApprovalContributor::findOrFail($request->route('id'));
-        $approvalComponentContributor->delete();
+        if ($approvalComponentContributor instanceof ApprovalContributor) {
+            $approvalComponentContributor->delete();
+        }
 
         return [
             'message' => trans('messages.success.delete', ['target' => 'contributor'], App::getLocale()),

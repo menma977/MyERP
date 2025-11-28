@@ -29,13 +29,14 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, \App\Models\Items\GoodIssueComponent> $components
+ * @property-read Collection<int, GoodIssueComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
  * @property-read SalesInvoice $salesInvoice
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|GoodIssue newModelQuery()
  * @method static Builder<static>|GoodIssue newQuery()
  * @method static Builder<static>|GoodIssue onlyTrashed()
@@ -53,45 +54,46 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|GoodIssue whereUpdatedBy($value)
  * @method static Builder<static>|GoodIssue withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|GoodIssue withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class GoodIssue extends ApprovalAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'sales_invoice_id',
-		'code',
-		'total',
-		'note',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'sales_invoice_id',
+        'code',
+        'total',
+        'note',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * Get the sales invoice associated with the good issue.
-	 *
-	 * @return BelongsTo<\App\Models\Sales\SalesInvoice, $this>
-	 */
-	public function salesInvoice(): BelongsTo
-	{
-		return $this->belongsTo(SalesInvoice::class);
-	}
+    /**
+     * Get the sales invoice associated with the good issue.
+     *
+     * @return BelongsTo<SalesInvoice, $this>
+     */
+    public function salesInvoice(): BelongsTo
+    {
+        return $this->belongsTo(SalesInvoice::class);
+    }
 
-	/**
-	 * Get the components associated with the good issue.
-	 *
-	 * @return HasMany<GoodIssueComponent, $this>
-	 */
-	public function components(): HasMany
-	{
-		return $this->hasMany(GoodIssueComponent::class);
-	}
+    /**
+     * Get the components associated with the good issue.
+     *
+     * @return HasMany<GoodIssueComponent, $this>
+     */
+    public function components(): HasMany
+    {
+        return $this->hasMany(GoodIssueComponent::class);
+    }
 }

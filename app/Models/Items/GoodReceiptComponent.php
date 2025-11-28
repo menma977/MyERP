@@ -28,10 +28,11 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read \App\Models\Items\GoodReceipt $goodReceipt
- * @property-read \App\Models\Items\Item $item
+ * @property-read GoodReceipt $goodReceipt
+ * @property-read Item $item
  * @property-read PurchaseOrderComponent $purchaseOrderComponent
  * @property-read User|null $updatedBy
+ *
  * @method static Builder<static>|GoodReceiptComponent newModelQuery()
  * @method static Builder<static>|GoodReceiptComponent newQuery()
  * @method static Builder<static>|GoodReceiptComponent onlyTrashed()
@@ -51,51 +52,52 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|GoodReceiptComponent whereUpdatedBy($value)
  * @method static Builder<static>|GoodReceiptComponent withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|GoodReceiptComponent withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class GoodReceiptComponent extends ModelAbstract
 {
-	use HasUlids, SoftDeletes;
+    use HasUlids, SoftDeletes;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	protected $fillable = [
-		'purchase_order_component_id',
-		'good_receipt_id',
-		'item_id',
-		'quantity',
-		'price',
-		'total',
-		'created_by',
-		'updated_by',
-		'deleted_by',
-		'deleted_at',
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'purchase_order_component_id',
+        'good_receipt_id',
+        'item_id',
+        'quantity',
+        'price',
+        'total',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 
-	/**
-	 * @return BelongsTo<\App\Models\Purchases\PurchaseOrderComponent, $this>
-	 */
-	public function purchaseOrderComponent(): BelongsTo
-	{
-		return $this->belongsTo(PurchaseOrderComponent::class);
-	}
+    /**
+     * @return BelongsTo<PurchaseOrderComponent, $this>
+     */
+    public function purchaseOrderComponent(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseOrderComponent::class);
+    }
 
-	/**
-	 * @return BelongsTo<GoodReceipt, $this>
-	 */
-	public function goodReceipt(): BelongsTo
-	{
-		return $this->belongsTo(GoodReceipt::class);
-	}
+    /**
+     * @return BelongsTo<GoodReceipt, $this>
+     */
+    public function goodReceipt(): BelongsTo
+    {
+        return $this->belongsTo(GoodReceipt::class);
+    }
 
-	/**
-	 * @return BelongsTo<Item, $this>
-	 */
-	public function item(): BelongsTo
-	{
-		return $this->belongsTo(Item::class);
-	}
+    /**
+     * @return BelongsTo<Item, $this>
+     */
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class);
+    }
 }

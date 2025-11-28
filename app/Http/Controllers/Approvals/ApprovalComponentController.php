@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Approvals;
 
 use App\Http\Controllers\Controller;
 use App\Models\Approval\ApprovalComponent;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\ValidationException;
 
@@ -14,14 +17,16 @@ class ApprovalComponentController extends Controller
      * Approval Component Index
      *
      * Display a listing of the resource.
+     *
+     * @return JsonResponse|LengthAwarePaginator<int, ApprovalComponent>|Collection<int, ApprovalComponent>
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse|LengthAwarePaginator|Collection
     {
         $approvalComponent = ApprovalComponent::with([
             'approval',
             'contributors.approvable',
-        ])->where('approval_id', $request->route('approval_id'))->when($request->input('search'), function ($query) use ($request) {
-            $query->where('name', 'like', '%' . $request->input('search') . '%');
+        ])->where('approval_id', $request->route('approval_id'))->when($request->input('search'), function ($build) use ($request) {
+            return $build->where('name', 'like', '%'.$request->input('search').'%');
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {
@@ -35,8 +40,10 @@ class ApprovalComponentController extends Controller
      * Approval Component Store
      *
      * Store a newly created resource in storage.
+     *
+     * @return array<string, mixed>
      */
-    public function store(Request $request)
+    public function store(Request $request): array
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -45,7 +52,7 @@ class ApprovalComponentController extends Controller
         ]);
 
         $approvalComponent = new ApprovalComponent;
-        $approvalComponent->approval_id = (int)$request->route('approval_id');
+        $approvalComponent->approval_id = (int) $request->route('approval_id');
         $approvalComponent->name = $request->input('name');
         $approvalComponent->type = $request->input('type');
         $approvalComponent->color = $request->input('color');
@@ -55,7 +62,7 @@ class ApprovalComponentController extends Controller
         $approvalComponent->can_delete = true;
         $approvalComponent->save();
 
-        $this->synchronizeSteps((int)$request->route('approval_id'));
+        $this->synchronizeSteps((int) $request->route('approval_id'));
 
         return [
             'message' => trans('messages.success.store', ['target' => $approvalComponent->name], App::getLocale()),
@@ -66,8 +73,10 @@ class ApprovalComponentController extends Controller
      * Approval Component Show
      *
      * Show the specified resource.
+     *
+     * @return ApprovalComponent|Collection<int, ApprovalComponent>
      */
-    public function show(Request $request)
+    public function show(Request $request): ApprovalComponent|Collection
     {
         return ApprovalComponent::with([
             'approval',
@@ -79,8 +88,10 @@ class ApprovalComponentController extends Controller
      * Approval Component Update
      *
      * Update the specified resource in storage.
+     *
+     * @return array<string, mixed>
      */
-    public function update(Request $request)
+    public function update(Request $request): array
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -90,17 +101,21 @@ class ApprovalComponentController extends Controller
         ]);
 
         $approvalComponent = ApprovalComponent::findOrFail($request->route('id'));
-        $approvalComponent->approval_id = (int)$request->route('approval_id');
-        $approvalComponent->name = $request->input('name');
-        $approvalComponent->type = $request->input('type');
-        $approvalComponent->color = $request->input('color');
-        $approvalComponent->step = (int)$request->input('step');
-        $approvalComponent->save();
+        if ($approvalComponent instanceof ApprovalComponent) {
+            $approvalComponent->approval_id = (int) $request->route('approval_id');
+            $approvalComponent->name = $request->input('name');
+            $approvalComponent->type = $request->input('type');
+            $approvalComponent->color = $request->input('color');
+            $approvalComponent->step = (int) $request->input('step');
+            $approvalComponent->save();
+        }
 
-        $this->synchronizeSteps((int)$request->route('approval_id'));
+        $this->synchronizeSteps((int) $request->route('approval_id'));
+
+        $componentName = ($approvalComponent instanceof ApprovalComponent) ? $approvalComponent->name : 'Component';
 
         return [
-            'message' => trans('messages.success.update', ['target' => $approvalComponent->name], App::getLocale()),
+            'message' => trans('messages.success.update', ['target' => $componentName], App::getLocale()),
         ];
     }
 
@@ -108,22 +123,28 @@ class ApprovalComponentController extends Controller
      * Approval Component Delete
      *
      * Remove the specified resource from storage.
+     *
+     * @return array<string, mixed>
      */
-    public function delete(Request $request)
+    public function delete(Request $request): array
     {
         $approvalComponent = ApprovalComponent::findOrFail($request->route('id'));
-        if ($approvalComponent->contributors()->exists()) {
+        if ($approvalComponent instanceof ApprovalComponent && $approvalComponent->contributors()->exists()) {
             throw ValidationException::withMessages([
                 'message' => trans('messages.fail.delete.cost', ['attribute' => $approvalComponent->name, 'target' => 'Contributor'], App::getLocale()),
             ]);
         }
-        $approvalId = $approvalComponent->approval_id;
-        $approvalComponent->delete();
+        $approvalId = ($approvalComponent instanceof ApprovalComponent) ? $approvalComponent->approval_id : 0;
+        if ($approvalComponent instanceof ApprovalComponent) {
+            $approvalComponent->delete();
+        }
 
         $this->synchronizeSteps($approvalId);
 
+        $componentName = ($approvalComponent instanceof ApprovalComponent) ? $approvalComponent->name : 'Component';
+
         return [
-            'message' => trans('messages.success.delete', ['target' => $approvalComponent->name], App::getLocale()),
+            'message' => trans('messages.success.delete', ['target' => $componentName], App::getLocale()),
         ];
     }
 
