@@ -2,19 +2,12 @@
 
 namespace App\Models\Approval;
 
+use App\Abstracts\ModelAbstract;
 use App\Models\User;
-use App\Observers\CreatedByObserver;
-use App\Observers\DeletedByObserver;
-use App\Observers\UpdatedByObserver;
-use App\Traits\CreatedByTrait;
-use App\Traits\DeletedByTrait;
-use App\Traits\UpdatedByTrait;
 use Eloquent;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -65,10 +58,8 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
-#[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
-class ApprovalEventContributor extends Model
+class ApprovalEventContributor extends ModelAbstract
 {
-    use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
     use HasUlids, SoftDeletes;
 
     protected $appends = [

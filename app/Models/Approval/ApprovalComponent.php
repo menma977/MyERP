@@ -2,19 +2,12 @@
 
 namespace App\Models\Approval;
 
+use App\Abstracts\ModelAbstract;
 use App\Enums\ContributorTypeEnum;
 use App\Models\User;
-use App\Observers\CreatedByObserver;
-use App\Observers\DeletedByObserver;
-use App\Observers\UpdatedByObserver;
-use App\Traits\CreatedByTrait;
-use App\Traits\DeletedByTrait;
-use App\Traits\UpdatedByTrait;
 use Eloquent;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -67,10 +60,8 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
-#[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
-class ApprovalComponent extends Model
+class ApprovalComponent extends ModelAbstract
 {
-    use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
     use SoftDeletes;
 
     /**

@@ -22,8 +22,8 @@ use Illuminate\Support\Carbon;
  * @property string $purchase_request_id
  * @property string $purchase_procurement_id
  * @property string $code
- * @property string $request_total
- * @property string $total
+ * @property float $request_total
+ * @property float $total
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by

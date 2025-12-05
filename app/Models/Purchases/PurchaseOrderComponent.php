@@ -18,12 +18,12 @@ use Illuminate\Support\Carbon;
  * @property string $purchase_request_component_id
  * @property string $purchase_procurement_component_id
  * @property string $item_id
- * @property string $request_quantity
- * @property string $request_price
- * @property string $request_total
- * @property string $quantity
- * @property string $price
- * @property string $total
+ * @property float $request_quantity
+ * @property float $request_price
+ * @property float $request_total
+ * @property float $quantity
+ * @property float $price
+ * @property float $total
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by

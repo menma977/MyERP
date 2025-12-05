@@ -10,7 +10,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
@@ -22,15 +21,13 @@ class LoginController extends Controller
      */
     public function login(Request $request): array
     {
-        Validator::make($request->all(), [
+        $request->validate([
             'login' => ['required', 'string'],
             'password' => ['required', 'string'],
             'device_name' => ['nullable', 'string', 'max:255'],
-        ])->validate();
+        ]);
 
-        $loginField = filter_var($request->input('login'), FILTER_VALIDATE_EMAIL)
-            ? 'email'
-            : 'username';
+        $loginField = filter_var($request->input('login'), FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
         $user = User::where($loginField, $request->input('login'))->first();
 
