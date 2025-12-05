@@ -2,15 +2,9 @@
 
 namespace App\Models\Approval;
 
+use App\Abstracts\ModelAbstract;
 use App\Models\User;
-use App\Observers\CreatedByObserver;
-use App\Observers\DeletedByObserver;
-use App\Observers\UpdatedByObserver;
-use App\Traits\CreatedByTrait;
-use App\Traits\DeletedByTrait;
-use App\Traits\UpdatedByTrait;
 use Eloquent;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
@@ -55,10 +49,8 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
-#[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
-class ApprovalContributor extends Model
+class ApprovalContributor extends ModelAbstract
 {
-    use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
     use HasUlids, SoftDeletes;
 
     /**
@@ -84,7 +76,7 @@ class ApprovalContributor extends Model
     }
 
     /**
-     * Get the parent approvable model.
+     * Get the parent-approvable model.
      *
      * @return MorphTo<Model, $this>
      */

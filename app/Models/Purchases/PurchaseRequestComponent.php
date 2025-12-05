@@ -16,9 +16,9 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $purchase_request_id
  * @property int $vendor_id
- * @property string $price
- * @property string $quantity
- * @property string $total
+ * @property float $price
+ * @property float $quantity
+ * @property float $total
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -73,7 +73,20 @@ class PurchaseRequestComponent extends ModelAbstract
         'created_by',
         'updated_by',
         'deleted_by',
-        'deleted_at',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'price' => 'decimal:2',
+        'quantity' => 'decimal:2',
+        'total' => 'decimal:2',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     /**
@@ -90,5 +103,35 @@ class PurchaseRequestComponent extends ModelAbstract
     public function vendor(): BelongsTo
     {
         return $this->belongsTo(Vendor::class);
+    }
+
+    /**
+     * Get the user that created the component.
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Get the user that updated the component.
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function updatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * Get the user that deleted the component.
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function deletedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'deleted_by');
     }
 }

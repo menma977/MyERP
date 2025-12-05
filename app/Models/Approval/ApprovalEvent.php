@@ -2,17 +2,11 @@
 
 namespace App\Models\Approval;
 
+use App\Abstracts\ModelAbstract;
 use App\Enums\ApprovalStatusEnum;
 use App\Enums\ApprovalTypeEnum;
 use App\Models\User;
-use App\Observers\CreatedByObserver;
-use App\Observers\DeletedByObserver;
-use App\Observers\UpdatedByObserver;
-use App\Traits\CreatedByTrait;
-use App\Traits\DeletedByTrait;
-use App\Traits\UpdatedByTrait;
 use Eloquent;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -89,10 +83,8 @@ use Illuminate\Support\Facades\Auth;
  *
  * @mixin Eloquent
  */
-#[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
-class ApprovalEvent extends Model
+class ApprovalEvent extends ModelAbstract
 {
-    use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
     use HasUlids, SoftDeletes;
 
     protected $appends = [
@@ -145,7 +137,7 @@ class ApprovalEvent extends Model
     }
 
     /**
-     * Get the parent requestable model.
+     * Get the parent-requestable model.
      *
      * @return MorphTo<Model, $this>
      */
