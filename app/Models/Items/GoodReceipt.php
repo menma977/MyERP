@@ -22,7 +22,7 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $purchase_order_id
  * @property string $code
- * @property string $total
+ * @property float $total
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by

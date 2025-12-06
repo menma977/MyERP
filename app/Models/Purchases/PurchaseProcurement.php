@@ -98,12 +98,12 @@ class PurchaseProcurement extends ApprovalAbstract
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
                 $purchaseProcurement = PurchaseProcurement::find($approvalEvent->id);
-                if (!$purchaseProcurement) {
+                if (! $purchaseProcurement) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();
 
                     throw ValidationException::withMessages([
-                        'id' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Purchase Procurement', 'target' => 'Access']),
+                        'id' => trans('messages.fail.approve', ['target' => 'Purchase Procurement']),
                     ]);
                 }
 
