@@ -36,7 +36,7 @@ use Illuminate\Validation\ValidationException;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, PurchaseOrderComponent> $component
+ * @property-read Collection<int, PurchaseOrderComponent> $components
  * @property-read int|null $component_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
@@ -117,7 +117,7 @@ class PurchaseOrder extends ApprovalAbstract
     /**
      * @return HasMany<PurchaseOrderComponent, $this>
      */
-    public function component(): HasMany
+    public function components(): HasMany
     {
         return $this->hasMany(PurchaseOrderComponent::class);
     }
@@ -144,7 +144,7 @@ class PurchaseOrder extends ApprovalAbstract
                 $goodsReceipt->note = $purchaseOrder->note;
                 $goodsReceipt->save();
 
-                foreach ($purchaseOrder->component as $component) {
+                foreach ($purchaseOrder->components as $component) {
                     $goodsReceiptComponent = new GoodReceiptComponent;
                     $goodsReceiptComponent->good_receipt_id = $goodsReceipt->id;
                     $goodsReceiptComponent->purchase_order_component_id = $component->id;

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Purchases\PurchaseOrderComponentController;
+use App\Http\Controllers\Purchases\PurchaseOrderController;
 use App\Http\Controllers\Purchases\PurchaseProcurementComponentController;
 use App\Http\Controllers\Purchases\PurchaseProcurementController;
 use App\Http\Controllers\Purchases\PurchaseRequestComponentController;
@@ -52,6 +54,30 @@ Route::prefix('purchase')->name('purchase.')->middleware(['auth:sanctum'])->grou
             Route::delete('delete/{id}', [PurchaseProcurementComponentController::class, 'delete'])->name('delete')->middleware('can:purchase.component.delete');
             Route::post('restore/{id}', [PurchaseProcurementComponentController::class, 'restore'])->name('restore')->middleware('can:purchase.component.restore');
             Route::delete('destroy/{id}', [PurchaseProcurementComponentController::class, 'destroy'])->name('destroy')->middleware('can:purchase.component.destroy');
+        });
+    });
+
+    Route::prefix('order')->name('order.')->middleware('can:purchase.order.index')->group(function () {
+        Route::get('index', [PurchaseOrderController::class, 'index'])->name('index');
+        Route::get('show/{id}', [PurchaseOrderController::class, 'show'])->name('show')->middleware('can:purchase.order.show');
+        Route::put('update/{id}', [PurchaseOrderController::class, 'update'])->name('update')->middleware('can:purchase.order.update');
+        Route::delete('delete/{id}', [PurchaseOrderController::class, 'delete'])->name('delete')->middleware('can:purchase.order.delete');
+        Route::post('restore/{id}', [PurchaseOrderController::class, 'restore'])->name('restore')->middleware('can:purchase.order.restore');
+        Route::delete('destroy/{id}', [PurchaseOrderController::class, 'destroy'])->name('destroy')->middleware('can:purchase.order.destroy');
+        Route::post('approve/{id}', [PurchaseOrderController::class, 'approve'])->name('approve')->middleware('can:purchase.order.store');
+        Route::post('reject/{id}', [PurchaseOrderController::class, 'reject'])->name('reject')->middleware('can:purchase.order.store');
+        Route::post('cancel/{id}', [PurchaseOrderController::class, 'cancel'])->name('cancel')->middleware('can:purchase.order.store');
+        Route::post('rollback/{id}', [PurchaseOrderController::class, 'rollback'])->name('rollback')->middleware('can:purchase.order.store');
+        Route::post('force/{id}', [PurchaseOrderController::class, 'force'])->name('force')->middleware('can:purchase.order.store');
+
+        Route::prefix('component/{purchase_order_id}')->name('component.')->middleware('can:purchase.order.component.index')->group(function () {
+            Route::get('index', [PurchaseOrderComponentController::class, 'index'])->name('index');
+            Route::get('show/{id}', [PurchaseOrderComponentController::class, 'show'])->name('show')->middleware('can:purchase.order.component.show');
+            Route::post('store', [PurchaseOrderComponentController::class, 'store'])->name('store')->middleware('can:purchase.order.component.store');
+            Route::put('update/{id}', [PurchaseOrderComponentController::class, 'update'])->name('update')->middleware('can:purchase.order.component.update');
+            Route::delete('delete/{id}', [PurchaseOrderComponentController::class, 'delete'])->name('delete')->middleware('can:purchase.order.component.delete');
+            Route::post('restore/{id}', [PurchaseOrderComponentController::class, 'restore'])->name('restore')->middleware('can:purchase.order.component.restore');
+            Route::delete('destroy/{id}', [PurchaseOrderComponentController::class, 'destroy'])->name('destroy')->middleware('can:purchase.order.component.destroy');
         });
     });
 });
