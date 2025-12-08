@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Purchases;
 
 use App\Http\Controllers\Controller;
 use App\Models\Purchases\PurchaseOrder;
-use App\Rules\ValidationWithoutTrashed;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -86,7 +85,6 @@ class PurchaseOrderController extends Controller
         $request->validate([
             'purchase_request_id' => ['required', 'string', 'exists:purchase_requests,id'],
             'purchase_procurement_id' => ['required', 'string', 'exists:purchase_procurements,id'],
-            'code' => ['required', 'string', 'max:255', new ValidationWithoutTrashed(PurchaseOrder::class, 'code', $request->route('id'))],
             'request_total' => ['required', 'numeric', 'min:0'],
             'total' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string', 'max:1000'],
@@ -96,7 +94,6 @@ class PurchaseOrderController extends Controller
         $purchaseOrder = PurchaseOrder::findOrFail($request->route('id'));
         $purchaseOrder->purchase_request_id = $request->input('purchase_request_id');
         $purchaseOrder->purchase_procurement_id = $request->input('purchase_procurement_id');
-        $purchaseOrder->code = $request->input('code');
         $purchaseOrder->request_total = $request->input('request_total');
         $purchaseOrder->total = $request->input('total');
         $purchaseOrder->note = $request->input('note');

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Items;
 
 use App\Http\Controllers\Controller;
 use App\Models\Items\GoodReceipt;
-use App\Rules\ValidationWithoutTrashed;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -46,34 +45,6 @@ class GoodReceiptController extends Controller
     }
 
     /**
-     * Good Receipt Store
-     *
-     * Store a newly created resource in storage.
-     *
-     * @return array{message: string}
-     */
-    public function store(Request $request): array
-    {
-        $request->validate([
-            'purchase_order_id' => ['required', 'string', 'exists:purchase_orders,id'],
-            'code' => ['required', 'string', 'max:255', new ValidationWithoutTrashed(GoodReceipt::class, 'code')],
-            'total' => ['required', 'numeric', 'min:0'],
-            'note' => ['nullable', 'string'],
-        ]);
-
-        $goodReceipt = new GoodReceipt;
-        $goodReceipt->purchase_order_id = $request->input('purchase_order_id');
-        $goodReceipt->code = $request->input('code');
-        $goodReceipt->total = $request->input('total');
-        $goodReceipt->note = $request->input('note');
-        $goodReceipt->save();
-
-        return [
-            'message' => trans('messages.success.store', ['target' => 'Good Receipt']),
-        ];
-    }
-
-    /**
      * Good Receipt Show
      *
      * Show the specified resource.
@@ -101,7 +72,6 @@ class GoodReceiptController extends Controller
     {
         $request->validate([
             'purchase_order_id' => ['required', 'string', 'exists:purchase_orders,id'],
-            'code' => ['required', 'string', 'max:255', new ValidationWithoutTrashed(GoodReceipt::class, 'code', $request->route('id'))],
             'total' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string'],
         ]);
@@ -109,7 +79,6 @@ class GoodReceiptController extends Controller
         /** @var GoodReceipt $goodReceipt */
         $goodReceipt = GoodReceipt::findOrFail($request->route('id'));
         $goodReceipt->purchase_order_id = $request->input('purchase_order_id');
-        $goodReceipt->code = $request->input('code');
         $goodReceipt->total = $request->input('total');
         $goodReceipt->note = $request->input('note');
         $goodReceipt->save();
