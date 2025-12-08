@@ -29,13 +29,11 @@ class GoodReceiptComponentController extends Controller
             'deletedBy',
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
-                $query
-                    ->whereHas('item', function (Builder $query) use ($request) {
-                        $query->where('name', 'like', '%' . $request->input('search') . '%');
-                    })
-                    ->orWhereHas('goodReceipt', function (Builder $query) use ($request) {
-                        $query->where('code', 'like', '%' . $request->input('search') . '%');
-                    });
+                return $query->whereHas('item', function (Builder $query) use ($request) {
+                    return $query->where('name', 'like', '%' . $request->input('search') . '%');
+                })->orWhereHas('goodReceipt', function (Builder $query) use ($request) {
+                    return $query->where('code', 'like', '%' . $request->input('search') . '%');
+                });
             });
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
