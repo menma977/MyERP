@@ -20,8 +20,8 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $purchase_order_id
  * @property string $code
- * @property string $total
- * @property string $tax
+ * @property float $total
+ * @property float $tax
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -59,6 +59,8 @@ use Illuminate\Support\Carbon;
 class PurchaseInvoice extends ApprovalAbstract
 {
     use HasUlids, SoftDeletes;
+
+    const float TAX = 0.12;
 
     /**
      * The attributes that are mass assignable.

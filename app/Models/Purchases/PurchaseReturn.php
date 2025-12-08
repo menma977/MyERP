@@ -22,7 +22,7 @@ use Illuminate\Support\Carbon;
  * @property string $purchase_order_id
  * @property string $good_receipt_id
  * @property string $code
- * @property string $total
+ * @property float $total
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -79,6 +79,15 @@ class PurchaseReturn extends ApprovalAbstract
         'updated_by',
         'deleted_by',
         'deleted_at',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'total' => 'decimal:2',
     ];
 
     /**

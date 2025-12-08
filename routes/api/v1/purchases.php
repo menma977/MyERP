@@ -6,6 +6,8 @@ use App\Http\Controllers\Purchases\PurchaseProcurementComponentController;
 use App\Http\Controllers\Purchases\PurchaseProcurementController;
 use App\Http\Controllers\Purchases\PurchaseRequestComponentController;
 use App\Http\Controllers\Purchases\PurchaseRequestController;
+use App\Http\Controllers\Purchases\PurchaseReturnComponentController;
+use App\Http\Controllers\Purchases\PurchaseReturnController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('purchase')->name('purchase.')->middleware(['auth:sanctum'])->group(function () {
@@ -78,6 +80,31 @@ Route::prefix('purchase')->name('purchase.')->middleware(['auth:sanctum'])->grou
             Route::delete('delete/{id}', [PurchaseOrderComponentController::class, 'delete'])->name('delete')->middleware('can:purchase.order.component.delete');
             Route::post('restore/{id}', [PurchaseOrderComponentController::class, 'restore'])->name('restore')->middleware('can:purchase.order.component.restore');
             Route::delete('destroy/{id}', [PurchaseOrderComponentController::class, 'destroy'])->name('destroy')->middleware('can:purchase.order.component.destroy');
+        });
+    });
+
+    Route::prefix('return')->name('return.')->middleware('can:purchase.return.index')->group(function () {
+        Route::get('index', [PurchaseReturnController::class, 'index'])->name('index');
+        Route::get('show/{id}', [PurchaseReturnController::class, 'show'])->name('show')->middleware('can:purchase.return.show');
+        Route::post('store', [PurchaseReturnController::class, 'store'])->name('store')->middleware('can:purchase.return.store');
+        Route::put('update/{id}', [PurchaseReturnController::class, 'update'])->name('update')->middleware('can:purchase.return.update');
+        Route::delete('delete/{id}', [PurchaseReturnController::class, 'delete'])->name('delete')->middleware('can:purchase.return.delete');
+        Route::post('restore/{id}', [PurchaseReturnController::class, 'restore'])->name('restore')->middleware('can:purchase.return.restore');
+        Route::delete('destroy/{id}', [PurchaseReturnController::class, 'destroy'])->name('destroy')->middleware('can:purchase.return.destroy');
+        Route::post('approve/{id}', [PurchaseReturnController::class, 'approve'])->name('approve')->middleware('can:purchase.return.store');
+        Route::post('reject/{id}', [PurchaseReturnController::class, 'reject'])->name('reject')->middleware('can:purchase.return.store');
+        Route::post('cancel/{id}', [PurchaseReturnController::class, 'cancel'])->name('cancel')->middleware('can:purchase.return.store');
+        Route::post('rollback/{id}', [PurchaseReturnController::class, 'rollback'])->name('rollback')->middleware('can:purchase.return.store');
+        Route::post('force/{id}', [PurchaseReturnController::class, 'force'])->name('force')->middleware('can:purchase.return.store');
+
+        Route::prefix('component/{purchase_return_id}')->name('component.')->middleware('can:purchase.component.index')->group(function () {
+            Route::get('index', [PurchaseReturnComponentController::class, 'index'])->name('index');
+            Route::get('show/{id}', [PurchaseReturnComponentController::class, 'show'])->name('show')->middleware('can:purchase.component.show');
+            Route::post('store', [PurchaseReturnComponentController::class, 'store'])->name('store')->middleware('can:purchase.component.store');
+            Route::put('update/{id}', [PurchaseReturnComponentController::class, 'update'])->name('update')->middleware('can:purchase.component.update');
+            Route::delete('delete/{id}', [PurchaseReturnComponentController::class, 'delete'])->name('delete')->middleware('can:purchase.component.delete');
+            Route::post('restore/{id}', [PurchaseReturnComponentController::class, 'restore'])->name('restore')->middleware('can:purchase.component.restore');
+            Route::delete('destroy/{id}', [PurchaseReturnComponentController::class, 'destroy'])->name('destroy')->middleware('can:purchase.component.destroy');
         });
     });
 });
