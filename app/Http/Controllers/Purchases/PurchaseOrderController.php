@@ -37,14 +37,11 @@ class PurchaseOrderController extends Controller
             'deletedBy',
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
-                $query
-                    ->where('code', 'like', '%' . $request->input('search') . '%')
-                    ->orWhereHas('request', function (Builder $query) use ($request) {
-                        $query->where('code', 'like', '%' . $request->input('search') . '%');
-                    })
-                    ->orWhereHas('procurement', function (Builder $query) use ($request) {
-                        $query->where('code', 'like', '%' . $request->input('search') . '%');
-                    });
+                return $query->where('code', 'like', '%'.$request->input('search').'%')->orWhereHas('request', function (Builder $query) use ($request) {
+                    $query->where('code', 'like', '%'.$request->input('search').'%');
+                })->orWhereHas('procurement', function (Builder $query) use ($request) {
+                    $query->where('code', 'like', '%'.$request->input('search').'%');
+                });
             });
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
@@ -86,7 +83,6 @@ class PurchaseOrderController extends Controller
             'purchase_request_id' => ['required', 'string', 'exists:purchase_requests,id'],
             'purchase_procurement_id' => ['required', 'string', 'exists:purchase_procurements,id'],
             'request_total' => ['required', 'numeric', 'min:0'],
-            'total' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string', 'max:1000'],
         ]);
 
@@ -94,8 +90,8 @@ class PurchaseOrderController extends Controller
         $purchaseOrder = PurchaseOrder::findOrFail($request->route('id'));
         $purchaseOrder->purchase_request_id = $request->input('purchase_request_id');
         $purchaseOrder->purchase_procurement_id = $request->input('purchase_procurement_id');
-        $purchaseOrder->request_total = $request->input('request_total');
-        $purchaseOrder->total = $request->input('total');
+        $purchaseOrder->request_total = $purchaseOrder?->request->total ?? 0;
+        $purchaseOrder->total = $purchaseOrder->components->sum('total');
         $purchaseOrder->note = $request->input('note');
         $purchaseOrder->save();
 
@@ -178,7 +174,7 @@ class PurchaseOrderController extends Controller
         $purchaseOrder = PurchaseOrder::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Purchase Order', 'target' => 'Access']),
             ]);
@@ -204,7 +200,7 @@ class PurchaseOrderController extends Controller
         $purchaseOrder = PurchaseOrder::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'reject', 'attribute' => 'Purchase Order', 'target' => 'Access']),
             ]);
@@ -230,7 +226,7 @@ class PurchaseOrderController extends Controller
         $purchaseOrder = PurchaseOrder::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Purchase Order', 'target' => 'Access']),
             ]);
@@ -256,7 +252,7 @@ class PurchaseOrderController extends Controller
         $purchaseOrder = PurchaseOrder::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Purchase Order', 'target' => 'Access']),
             ]);
@@ -282,7 +278,7 @@ class PurchaseOrderController extends Controller
         $purchaseOrder = PurchaseOrder::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Purchase Order', 'target' => 'Access']),
             ]);

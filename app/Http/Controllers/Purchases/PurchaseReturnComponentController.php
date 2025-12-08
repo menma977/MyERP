@@ -173,7 +173,7 @@ class PurchaseReturnComponentController extends Controller
         $purchaseReturnComponent->item_id = $request->input('item_id');
         $purchaseReturnComponent->quantity = $request->input('quantity');
         $purchaseReturnComponent->price = $request->input('price');
-        $purchaseReturnComponent->total = $request->input('total');
+        $purchaseReturnComponent->total = $purchaseReturnComponent->price * $purchaseReturnComponent->quantity;
         $purchaseReturnComponent->note = $request->input('note');
         $purchaseReturnComponent->save();
 
@@ -196,7 +196,6 @@ class PurchaseReturnComponentController extends Controller
             'item_id' => ['required', 'string', 'exists:items,id'],
             'quantity' => ['required', 'numeric', 'min:0'],
             'price' => ['required', 'numeric', 'min:0'],
-            'total' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string', 'max:255'],
         ]);
     }

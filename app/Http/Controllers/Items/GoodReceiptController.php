@@ -31,8 +31,8 @@ class GoodReceiptController extends Controller
             'deletedBy',
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
-                return $query->where('code', 'like', '%' . $request->input('search') . '%')->orWhereHas('order', function (Builder $query) use ($request) {
-                    $query->where('code', 'like', '%' . $request->input('search') . '%');
+                return $query->where('code', 'like', '%'.$request->input('search').'%')->orWhereHas('order', function (Builder $query) use ($request) {
+                    $query->where('code', 'like', '%'.$request->input('search').'%');
                 });
             });
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
@@ -72,14 +72,12 @@ class GoodReceiptController extends Controller
     {
         $request->validate([
             'purchase_order_id' => ['required', 'string', 'exists:purchase_orders,id'],
-            'total' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string'],
         ]);
 
         /** @var GoodReceipt $goodReceipt */
         $goodReceipt = GoodReceipt::findOrFail($request->route('id'));
         $goodReceipt->purchase_order_id = $request->input('purchase_order_id');
-        $goodReceipt->total = $request->input('total');
         $goodReceipt->note = $request->input('note');
         $goodReceipt->save();
 
@@ -162,7 +160,7 @@ class GoodReceiptController extends Controller
         $goodReceipt = GoodReceipt::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Good Receipt', 'target' => 'Access']),
             ]);
@@ -187,7 +185,7 @@ class GoodReceiptController extends Controller
         $goodReceipt = GoodReceipt::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'reject', 'attribute' => 'Good Receipt', 'target' => 'Access']),
             ]);
@@ -212,7 +210,7 @@ class GoodReceiptController extends Controller
         $goodReceipt = GoodReceipt::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Good Receipt', 'target' => 'Access']),
             ]);
@@ -237,7 +235,7 @@ class GoodReceiptController extends Controller
         $goodReceipt = GoodReceipt::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Good Receipt', 'target' => 'Access']),
             ]);
@@ -262,7 +260,7 @@ class GoodReceiptController extends Controller
         $goodReceipt = GoodReceipt::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Good Receipt', 'target' => 'Access']),
             ]);

@@ -35,24 +35,24 @@ class PurchaseReturnController extends Controller
             'order',
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
-                return $query->where('code', 'like', '%' . $request->input('search') . '%')
-                    ->orWhere('note', 'like', '%' . $request->input('search') . '%');
+                return $query->where('code', 'like', '%'.$request->input('search').'%')
+                    ->orWhere('note', 'like', '%'.$request->input('search').'%');
             });
         })->when(function () use ($request) {
             return $request->boolean('is_approved') || $request->boolean('is_canceled') || $request->boolean('is_rejected') || $request->boolean('is_rollback');
         }, function (Builder $query) use ($request) {
             $query->where(function (Builder $query) use ($request) {
                 if ($request->boolean('is_approved')) {
-                    $query->orWhereHas('event', fn(Builder $query) => $query->whereNotNull('approved_at'));
+                    $query->orWhereHas('event', fn (Builder $query) => $query->whereNotNull('approved_at'));
                 }
                 if ($request->boolean('is_canceled')) {
-                    $query->orWhereHas('event', fn(Builder $query) => $query->whereNotNull('cancelled_at'));
+                    $query->orWhereHas('event', fn (Builder $query) => $query->whereNotNull('cancelled_at'));
                 }
                 if ($request->boolean('is_rejected')) {
-                    $query->orWhereHas('event', fn(Builder $query) => $query->whereNotNull('rejected_at'));
+                    $query->orWhereHas('event', fn (Builder $query) => $query->whereNotNull('rejected_at'));
                 }
                 if ($request->boolean('is_rollback')) {
-                    $query->orWhereHas('event', fn(Builder $query) => $query->whereNotNull('rollback_at'));
+                    $query->orWhereHas('event', fn (Builder $query) => $query->whereNotNull('rollback_at'));
                 }
             });
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
@@ -76,12 +76,11 @@ class PurchaseReturnController extends Controller
         $request->validate([
             'purchase_order_id' => ['required', 'string', 'exists:purchase_orders,id'],
             'good_receipt_id' => ['required', 'string', 'exists:good_receipts,id'],
-            'total' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string', 'max:255'],
         ]);
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Purchase Return', 'target' => 'Access']),
             ]);
@@ -91,7 +90,7 @@ class PurchaseReturnController extends Controller
         $purchaseReturn->code = CodeGeneratorService::code('PR')->number(PurchaseReturn::count())->generate();
         $purchaseReturn->purchase_order_id = $request->input('purchase_order_id');
         $purchaseReturn->good_receipt_id = $request->input('good_receipt_id');
-        $purchaseReturn->total = $request->input('total');
+        $purchaseReturn->total = 0;
         $purchaseReturn->note = $request->input('note');
         $purchaseReturn->save();
 
@@ -132,7 +131,6 @@ class PurchaseReturnController extends Controller
         $request->validate([
             'purchase_order_id' => ['required', 'string', 'exists:purchase_orders,id'],
             'good_receipt_id' => ['required', 'string', 'exists:good_receipts,id'],
-            'total' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string', 'max:255'],
         ]);
 
@@ -140,7 +138,7 @@ class PurchaseReturnController extends Controller
         $purchaseReturn = PurchaseReturn::findOrFail($request->route('id'));
         $purchaseReturn->purchase_order_id = $request->input('purchase_order_id');
         $purchaseReturn->good_receipt_id = $request->input('good_receipt_id');
-        $purchaseReturn->total = $request->input('total');
+        $purchaseReturn->total = $purchaseReturn->components->sum('total');
         $purchaseReturn->note = $request->input('note');
         $purchaseReturn->save();
 
@@ -216,7 +214,7 @@ class PurchaseReturnController extends Controller
         $purchaseReturn = PurchaseReturn::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Purchase Return', 'target' => 'Access']),
             ]);
@@ -242,7 +240,7 @@ class PurchaseReturnController extends Controller
         $purchaseReturn = PurchaseReturn::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'reject', 'attribute' => 'Purchase Return', 'target' => 'Access']),
             ]);
@@ -268,7 +266,7 @@ class PurchaseReturnController extends Controller
         $purchaseReturn = PurchaseReturn::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Purchase Return', 'target' => 'Access']),
             ]);
@@ -294,7 +292,7 @@ class PurchaseReturnController extends Controller
         $purchaseReturn = PurchaseReturn::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Purchase Return', 'target' => 'Access']),
             ]);
@@ -320,7 +318,7 @@ class PurchaseReturnController extends Controller
         $purchaseReturn = PurchaseReturn::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Purchase Return', 'target' => 'Access']),
             ]);

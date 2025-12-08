@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 
 class PurchaseOrderComponentController extends Controller
 {
@@ -56,13 +54,6 @@ class PurchaseOrderComponentController extends Controller
      */
     public function store(Request $request): array
     {
-        $user = Auth::user();
-        if (! $user) {
-            throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Purchase Order Component', 'target' => 'Access']),
-            ]);
-        }
-
         $purchaseOrderComponent = new PurchaseOrderComponent;
         $this->save($request, $purchaseOrderComponent);
 
@@ -173,10 +164,8 @@ class PurchaseOrderComponentController extends Controller
             'item_id' => ['required', 'string', 'exists:items,id'],
             'request_quantity' => ['required', 'numeric', 'min:0'],
             'request_price' => ['required', 'numeric', 'min:0'],
-            'request_total' => ['required', 'numeric', 'min:0'],
             'quantity' => ['required', 'numeric', 'min:0'],
             'price' => ['required', 'numeric', 'min:0'],
-            'total' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string', 'max:255'],
         ]);
 
@@ -186,10 +175,10 @@ class PurchaseOrderComponentController extends Controller
         $purchaseOrderComponent->item_id = $request->input('item_id');
         $purchaseOrderComponent->request_quantity = $request->float('request_quantity');
         $purchaseOrderComponent->request_price = $request->float('request_price');
-        $purchaseOrderComponent->request_total = $request->float('request_total');
+        $purchaseOrderComponent->request_total = $purchaseOrderComponent->request_quantity * $purchaseOrderComponent->request_price;
         $purchaseOrderComponent->quantity = $request->float('quantity');
         $purchaseOrderComponent->price = $request->float('price');
-        $purchaseOrderComponent->total = $request->float('total');
+        $purchaseOrderComponent->total = $purchaseOrderComponent->quantity * $purchaseOrderComponent->price;
         $purchaseOrderComponent->note = $request->input('note');
         $purchaseOrderComponent->save();
 
