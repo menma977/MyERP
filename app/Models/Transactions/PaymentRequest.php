@@ -25,8 +25,8 @@ use Illuminate\Support\Carbon;
  * @property string $purchase_invoice_id
  * @property string $code
  * @property PaymentMethodEnum $method
- * @property string $total
- * @property string $tax
+ * @property float $total
+ * @property float $tax
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by

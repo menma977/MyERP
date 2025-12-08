@@ -18,9 +18,9 @@ use Illuminate\Support\Carbon;
  * @property string $payment_request_id
  * @property string $purchase_order_component_id
  * @property string $purchase_invoice_component_id
- * @property string $quantity
- * @property string $price
- * @property string $total
+ * @property float $quantity
+ * @property float $price
+ * @property float $total
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by

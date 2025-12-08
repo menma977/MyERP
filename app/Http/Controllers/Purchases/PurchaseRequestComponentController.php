@@ -31,10 +31,9 @@ class PurchaseRequestComponentController extends Controller
             'deletedBy',
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
-                $query->where('note', 'like', '%' . $request->input('search') . '%')
-                    ->orWhereHas('vendor', function (Builder $query) use ($request) {
-                        $query->where('name', 'like', '%' . $request->input('search') . '%');
-                    });
+                return $query->where('note', 'like', '%'.$request->input('search').'%')->orWhereHas('vendor', function (Builder $query) use ($request) {
+                    $query->where('name', 'like', '%'.$request->input('search').'%');
+                });
             });
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
@@ -59,12 +58,11 @@ class PurchaseRequestComponentController extends Controller
             'vendor_id' => ['required', 'integer', 'exists:vendors,id'],
             'price' => ['required', 'numeric', 'min:0'],
             'quantity' => ['required', 'numeric', 'min:0'],
-            'total' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string', 'max:255'],
         ]);
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Purchase Request Component', 'target' => 'Access']),
             ]);
@@ -108,7 +106,6 @@ class PurchaseRequestComponentController extends Controller
             'vendor_id' => ['required', 'integer', 'exists:vendors,id'],
             'price' => ['required', 'numeric', 'min:0'],
             'quantity' => ['required', 'numeric', 'min:0'],
-            'total' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string', 'max:255'],
         ]);
 
@@ -189,12 +186,12 @@ class PurchaseRequestComponentController extends Controller
         $purchaseRequestComponent->save();
 
         $purchaseRequest = PurchaseRequest::find($purchaseRequestComponent->purchase_request_id);
-        if (!$purchaseRequest) {
+        if (! $purchaseRequest) {
             return;
         }
 
         /** @var PurchaseRequest $purchaseRequest */
-        $purchaseRequest->total = (float)$purchaseRequest->components()->sum('total');
+        $purchaseRequest->total = (float) $purchaseRequest->components()->sum('total');
         $purchaseRequest->save();
     }
 }

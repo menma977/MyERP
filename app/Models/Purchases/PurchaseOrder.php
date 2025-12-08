@@ -4,7 +4,10 @@ namespace App\Models\Purchases;
 
 use App\Abstracts\ApprovalAbstract;
 use App\Models\Approval\ApprovalEvent;
+use App\Models\Items\GoodReceipt;
+use App\Models\Items\GoodReceiptComponent;
 use App\Models\User;
+use App\Services\CodeGeneratorService;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Represents a Purchase Order in the system.
@@ -31,7 +36,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, PurchaseOrderComponent> $component
+ * @property-read Collection<int, PurchaseOrderComponent> $components
  * @property-read int|null $component_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
@@ -112,8 +117,44 @@ class PurchaseOrder extends ApprovalAbstract
     /**
      * @return HasMany<PurchaseOrderComponent, $this>
      */
-    public function component(): HasMany
+    public function components(): HasMany
     {
         return $this->hasMany(PurchaseOrderComponent::class);
+    }
+
+    protected function onApprove(ApprovalEvent $approvalEvent): void
+    {
+        if ($approvalEvent->is_approved) {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            DB::transaction(function () use ($approvalEvent) {
+                $purchaseOrder = PurchaseOrder::find($approvalEvent->id);
+                if (! $purchaseOrder) {
+                    $approvalEvent->approved_at = null;
+                    $approvalEvent->save();
+
+                    throw ValidationException::withMessages([
+                        'id' => trans('messages.fail.approve', ['target' => 'Purchase Order']),
+                    ]);
+                }
+
+                $goodsReceipt = new GoodReceipt;
+                $goodsReceipt->purchase_order_id = $purchaseOrder->id;
+                $goodsReceipt->code = CodeGeneratorService::code('GR')->number(GoodReceipt::count())->generate();
+                $goodsReceipt->total = $purchaseOrder->total;
+                $goodsReceipt->note = $purchaseOrder->note;
+                $goodsReceipt->save();
+
+                foreach ($purchaseOrder->components as $component) {
+                    $goodsReceiptComponent = new GoodReceiptComponent;
+                    $goodsReceiptComponent->good_receipt_id = $goodsReceipt->id;
+                    $goodsReceiptComponent->purchase_order_component_id = $component->id;
+                    $goodsReceiptComponent->item_id = $component->item_id;
+                    $goodsReceiptComponent->quantity = $component->quantity;
+                    $goodsReceiptComponent->price = $component->price;
+                    $goodsReceiptComponent->total = $component->total;
+                    $goodsReceiptComponent->save();
+                }
+            });
+        }
     }
 }
