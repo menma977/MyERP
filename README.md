@@ -1,64 +1,341 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="https://img.shields.io/badge/Laravel-12.0-FF2D20?style=for-the-badge&logo=laravel" alt="Laravel">
+  <img src="https://img.shields.io/badge/PHP-8.4+-777BB4?style=for-the-badge&logo=php" alt="PHP">
+  <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql" alt="MySQL">
 </p>
 
-## About Laravel
+# MyERP - Enterprise Resource Planning System
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of
-development by easing common tasks used in many web projects, such as:
+A comprehensive ERP system built with Laravel 12, designed to streamline business operations including purchasing, inventory management, sales, and financial transactions.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Core Modules
 
-## Learning Laravel
+- **Authentication & Authorization**
+    - Laravel Sanctum for API authentication
+    - Spatie Laravel Permission for role-based access control
+    - Multi-level user roles and permissions
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the
-framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- **Purchase Management**
+    - Purchase Requests with approval workflows
+    - Purchase Orders and Procurement management
+    - Purchase Invoices and Returns
+    - Complete audit trail with soft deletes
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and
-JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Inventory Management**
+    - Item master data management
+    - Stock tracking with batch management
+    - Good Receipts and Goods Issue
+    - Real-time stock history
 
-## Laravel Sponsors
+- **Vendor Management**
+    - Vendor profile management
+    - Account payable tracking
+    - Invoice and payment processing
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit
-the [Laravel Partners program](https://partners.laravel.com).
+- **Transaction Management**
+    - Payment requests and processing
+    - Ledger management
+    - Financial transaction tracking
 
-### Premium Partners
+- **Approval Workflows**
+    - Configurable approval flows
+    - Multi-step approval processes
+    - Event-driven approval system
+    - Contributor-based approvals
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Technical Features
 
-## Contributing
+- **Modular Architecture**
+    - Clean separation of concerns
+    - Independent module development
+    - Scalable and maintainable codebase
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **API-First Design**
+    - RESTful API endpoints
+    - Consistent JSON responses
+    - Comprehensive error handling
+    - API versioning support
 
-## Code of Conduct
+- **Data Integrity**
+    - Comprehensive validation
+    - Database constraints
+    - Soft delete support
+    - Audit logging with activity tracking
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **Performance Optimized**
+    - Eager loading to prevent N+1 queries
+    - Database indexing
+    - Query optimization
+    - Caching strategies
 
-## Security Vulnerabilities
+## 🛠️ Technology Stack
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly
-addressed.
+### Backend
 
-## License
+- **Framework**: Laravel 12.0
+- **PHP Version**: 8.4+
+- **Database**: MySQL 8.0
+- **Authentication**: Laravel Sanctum
+- **Permissions**: Spatie Laravel Permission
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Development Tools
+
+- **Static Analysis**: PHPStan (Level 8)
+- **Code Style**: Laravel Pint
+- **Testing**: PHPUnit 11.x
+- **Debugging**: Laradumps
+- **IDE Support**: Laravel IDE Helper
+
+### Frontend
+
+- **Build Tool**: Vite
+- **Package Manager**: npm
+
+## 📋 Requirements
+
+- PHP 8.4 or higher
+- MySQL 8.0 or higher
+- Composer 2.0 or higher
+- Node.js 18.0 or higher
+- Git
+
+## 🚀 Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd MyERP
+```
+
+### 2. Install Dependencies
+
+```bash
+composer install
+npm install
+```
+
+### 3. Environment Setup
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### 4. Database Configuration
+
+Update your `.env` file with your database credentials:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=myerp
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+### 5. Run Migrations
+
+```bash
+php artisan migrate
+```
+
+### 6. Build Assets
+
+```bash
+npm run build
+```
+
+### 7. Start Development Server
+
+```bash
+composer run dev
+```
+
+## 🏗️ Project Structure
+
+```
+MyERP/
+├── app/
+│   ├── Http/Controllers/          # API Controllers
+│   │   ├── Purchases/           # Purchase management
+│   │   ├── Items/              # Inventory management
+│   │   ├── Transactions/       # Financial transactions
+│   │   ├── Approvals/          # Approval workflows
+│   │   └── Auth/               # Authentication
+│   ├── Models/                  # Eloquent Models
+│   │   ├── Purchases/          # Purchase models
+│   │   ├── Items/              # Inventory models
+│   │   ├── Transactions/       # Transaction models
+│   │   ├── Approvals/          # Approval models
+│   │   └── Vendors/           # Vendor models
+│   ├── Services/               # Business logic services
+│   ├── Traits/                 # Reusable traits
+│   ├── Observers/             # Model observers
+│   └── Rules/                 # Custom validation rules
+├── database/
+│   ├── migrations/             # Database migrations
+│   └── factories/             # Model factories
+├── routes/
+│   └── api/v1/              # API routes by module
+├── .kilocode/rules/          # Development guidelines
+└── laravel/                  # Laravel development reference
+```
+
+## 🔧 Development Guidelines
+
+### Code Standards
+
+- Follow PSR-12 coding standards
+- Use PHPStan Level 8 for static analysis
+- Apply Laravel Pint for code formatting
+- Write comprehensive PHPDoc documentation
+
+### API Development
+
+- Use explicit route definitions (no resource routes)
+- Implement inline validation in controllers
+- Return consistent JSON responses
+- Include proper HTTP status codes
+
+### Database Design
+
+- Use descriptive table names (snake_case, plural)
+- Include audit fields (created_by, updated_by, deleted_by)
+- Implement soft deletes for data retention
+- Add proper indexes for performance
+
+### Testing
+
+- Write feature tests for API endpoints
+- Test validation rules separately
+- Use database transactions in tests
+- Mock external dependencies
+
+## 📚 API Documentation
+
+### Base URL
+
+```
+http://localhost:8000/api/v1
+```
+
+### Authentication
+
+All API endpoints require authentication using Laravel Sanctum tokens.
+
+### Standard Endpoints
+
+Each module follows the standard REST API pattern:
+
+- `GET /index` - List all resources
+- `GET /show/{id}` - Get specific resource
+- `POST /store` - Create new resource
+- `PUT /update/{id}` - Update resource
+- `DELETE /delete/{id}` - Soft delete resource
+- `POST /restore/{id}` - Restore soft deleted resource
+- `DELETE /destroy/{id}` - Permanently delete resource
+
+### Workflow Endpoints
+
+Approval-enabled modules include additional endpoints:
+
+- `POST /approve/{id}` - Approve request
+- `POST /reject/{id}` - Reject request
+- `POST /cancel/{id}` - Cancel pending request
+- `POST /rollback/{id}` - Rollback completed request
+- `POST /force/{id}` - Force execute action
+
+## 🧪 Testing
+
+### Run All Tests
+
+```bash
+php artisan test
+```
+
+### Run Specific Test
+
+```bash
+php artisan test --filter PurchaseRequestTest
+```
+
+### Generate Coverage Report
+
+```bash
+php artisan test --coverage
+```
+
+## 🔍 Static Analysis
+
+### Run PHPStan
+
+```bash
+./vendor/bin/phpstan analyse
+```
+
+### Fix Code Style
+
+```bash
+./vendor/bin/pint
+```
+
+## 📝 Development Scripts
+
+### Setup Project
+
+```bash
+composer run setup
+```
+
+### Development Environment
+
+```bash
+composer run dev
+```
+
+### Production Build
+
+```bash
+npm run build
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests and static analysis
+5. Submit a pull request
+
+### Development Workflow
+
+1. Follow the coding standards defined in `.kilocode/rules/`
+2. Ensure all PHPStan errors are resolved
+3. Write tests for new functionality
+4. Update documentation as needed
+
+## 📄 License
+
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## 🗺️ Roadmap
+
+### Upcoming Features
+
+- [ ] Sales Management Module
+- [ ] Advanced Reporting Dashboard
+- [ ] Multi-tenant Support
+- [ ] Real-time Notifications
+- [ ] Mobile API Support
+
+### Technical Improvements
+
+- [ ] API Rate Limiting
+- [ ] Advanced Caching
+- [ ] Queue System Implementation
+- [ ] Performance Monitoring
+- [ ] Security Enhancements
