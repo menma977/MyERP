@@ -3,8 +3,12 @@
 namespace App\Models\Purchases;
 
 use App\Abstracts\ApprovalAbstract;
+use App\Enums\PaymentMethodEnum;
 use App\Models\Approval\ApprovalEvent;
+use App\Models\Transactions\PaymentRequest;
+use App\Models\Transactions\PaymentRequestComponent;
 use App\Models\User;
+use App\Services\CodeGeneratorService;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Represents a Pro forma Invoice in the system.
@@ -92,5 +98,42 @@ class PurchaseInvoice extends ApprovalAbstract
     public function components(): HasMany
     {
         return $this->hasMany(PurchaseInvoiceComponent::class, 'purchase_invoice_id');
+    }
+
+    protected function onApprove(ApprovalEvent $approvalEvent): void
+    {
+        if ($approvalEvent->is_approved) {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            DB::transaction(function () use ($approvalEvent) {
+                $purchaseInvoice = PurchaseInvoice::find($approvalEvent->id);
+                if (!$purchaseInvoice) {
+                    $approvalEvent->approved_at = null;
+                    $approvalEvent->save();
+
+                    throw ValidationException::withMessages([
+                        'id' => trans('messages.fail.approve', ['target' => 'Purchase Invoice']),
+                    ]);
+                }
+
+                $payment = new PaymentRequest;
+                $payment->purchase_invoice_id = $purchaseInvoice->id;
+                $payment->code = CodeGeneratorService::code('PYR')->number(PaymentRequest::count())->generate();
+                $payment->total = $purchaseInvoice->total;
+                $payment->tax = $purchaseInvoice->tax;
+                $payment->method = PaymentMethodEnum::BANK_TRANSFER;
+                $payment->note = $purchaseInvoice->order?->note;
+                $payment->save();
+
+                foreach ($purchaseInvoice->components as $component) {
+                    $paymentComponent = new PaymentRequestComponent;
+                    $paymentComponent->payment_request_id = $payment->id;
+                    $paymentComponent->purchase_invoice_component_id = $component->id;
+                    $paymentComponent->quantity = $component->quantity;
+                    $paymentComponent->price = $component->price;
+                    $paymentComponent->total = $component->total;
+                    $paymentComponent->save();
+                }
+            });
+        }
     }
 }
