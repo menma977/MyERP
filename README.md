@@ -4,7 +4,7 @@
   <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql" alt="MySQL">
 </p>
 
-# MyERP - Enterprise Resource Planning System
+# MyERP - Enterprise Resource Planning System (BACKEND ONLY)
 
 A comprehensive ERP system built with Laravel 12, designed to streamline business operations including purchasing, inventory management, sales, and financial transactions.
 
@@ -88,11 +88,6 @@ A comprehensive ERP system built with Laravel 12, designed to streamline busines
 - **Debugging**: Laradumps
 - **IDE Support**: Laravel IDE Helper
 
-### Frontend
-
-- **Build Tool**: Vite
-- **Package Manager**: npm
-
 ## 📋 Requirements
 
 - PHP 8.4 or higher
@@ -106,7 +101,7 @@ A comprehensive ERP system built with Laravel 12, designed to streamline busines
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone git@github.com:menma977/MyERP.git
 cd MyERP
 ```
 
@@ -181,8 +176,6 @@ MyERP/
 │   └── factories/             # Model factories
 ├── routes/
 │   └── api/v1/              # API routes by module
-├── .kilocode/rules/          # Development guidelines
-└── laravel/                  # Laravel development reference
 ```
 
 ## 🔧 Development Guidelines
@@ -281,26 +274,6 @@ php artisan test --coverage
 
 ```bash
 ./vendor/bin/pint
-```
-
-## 📝 Development Scripts
-
-### Setup Project
-
-```bash
-composer run setup
-```
-
-### Development Environment
-
-```bash
-composer run dev
-```
-
-### Production Build
-
-```bash
-npm run build
 ```
 
 ## 🤝 Contributing

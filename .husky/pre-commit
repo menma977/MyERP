@@ -1,0 +1,4 @@
+node .husky/info-malware-check.cjs
+node .husky/format.cjs
+# php vendor/bin/pest tests/Feature
+./vendor/bin/phpstan analyse --memory-limit=1G
