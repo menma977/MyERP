@@ -253,7 +253,7 @@ class PurchaseInvoiceController extends Controller
     /**
      * Purchase Invoice Force
      *
-     * Force execute action on a specified resource.
+     * Force to execute action on a specified resource.
      *
      * @return array{message: string}
      */
