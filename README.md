@@ -138,18 +138,6 @@ DB_PASSWORD=your_password
 php artisan migrate
 ```
 
-### 6. Build Assets
-
-```bash
-npm run build
-```
-
-### 7. Start Development Server
-
-```bash
-composer run dev
-```
-
 ## 🏗️ Project Structure
 
 ```
