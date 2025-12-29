@@ -3,5 +3,9 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-	return view('welcome');
+    return [
+        'app' => config('app.name'),
+        'version' => config('app.version'),
+        'status' => 'OK',
+    ];
 });

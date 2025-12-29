@@ -36,7 +36,6 @@ Route::prefix('item')->name('item.')->middleware(['auth:sanctum', 'can:item.inde
         Route::prefix('receipt')->name('receipt.')->middleware('can:good.receipt.index')->group(function () {
             Route::get('index', [GoodReceiptController::class, 'index'])->name('index');
             Route::get('show/{id}', [GoodReceiptController::class, 'show'])->name('show')->middleware('can:good.receipt.show');
-            Route::post('store', [GoodReceiptController::class, 'store'])->name('store')->middleware('can:good.receipt.store');
             Route::put('update/{id}', [GoodReceiptController::class, 'update'])->name('update')->middleware('can:good.receipt.update');
             Route::delete('delete/{id}', [GoodReceiptController::class, 'delete'])->name('delete')->middleware('can:good.receipt.delete');
             Route::post('restore/{id}', [GoodReceiptController::class, 'restore'])->name('restore')->middleware('can:good.receipt.restore');
