@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return [
         'app' => config('app.name'),
-        'version' => '1.0.0',
+        'version' => config('app.version'),
         'status' => 'OK',
     ];
 });
