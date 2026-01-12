@@ -4,9 +4,62 @@
   <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql" alt="MySQL">
 </p>
 
-# MyERP - Enterprise Resource Planning System (BACKEND ONLY)
+# MyERP — Enterprise Backend System (Laravel)
 
-A comprehensive ERP system built with Laravel 12, designed to streamline business operations including purchasing, inventory management, sales, and financial transactions.
+**MyERP** is a **backend-only ERP system** built with **Laravel 12**, focused on **enterprise-grade business workflows**, **data integrity**, and a **reusable approval engine**.
+
+This project is designed as a **system design & architecture showcase**, reflecting real-world ERP, HR, and financial backend requirements.
+
+
+---
+
+## 🎯 Purpose of This Project
+
+This repository demonstrates:
+- Enterprise backend architecture
+- Database-first design (ERD-driven)
+- Approval workflow engine used across multiple domains
+- Clean, maintainable Laravel backend with strict static analysis
+
+> This is **not a demo CRUD project**.  
+> It reflects patterns commonly used in **HR systems, hospital systems, and internal enterprise platforms**.
+
+---
+
+## 🧠 Architecture Highlights
+
+### Approval Engine (Core Focus)
+
+The approval mechanism is designed as a **reusable workflow engine**, not a feature tied to a single module.
+
+**Key characteristics:**
+- Multi-step approval flow
+- Role / contributor-based approvers
+- Event-driven state transitions
+- Full audit trail per entity
+- Extensible to any business module
+
+Entity → ApprovalFlow → ApprovalStep → Approver → AuditTrail
+
+
+This design allows the **same approval engine** to be reused for:
+- Purchase requests
+- Financial transactions
+- HR workflows
+- Any future ERP module
+
+---
+
+### Backend Architecture Principles
+
+- Clear separation of concerns  
+  **Controller → Service → Model**
+- Business logic isolated in service classes
+- Database schema designed before implementation
+- Explicit API endpoints (no magic resource routes)
+- Designed for long-term maintainability
+
+---
 
 ## 🚀 Features
 
@@ -80,13 +133,14 @@ A comprehensive ERP system built with Laravel 12, designed to streamline busines
 - **Authentication**: Laravel Sanctum
 - **Permissions**: Spatie Laravel Permission
 
-### Development Tools
+### Code Quality & Tooling
+- **Static Analysis:** PHPStan (Level 8)
+- **Code Style:** Laravel Pint
+- **Testing:** PHPUnit 11
+- **Debugging:** Laradumps
+- **IDE:** Laravel IDE Helper
 
-- **Static Analysis**: PHPStan (Level 8)
-- **Code Style**: Laravel Pint
-- **Testing**: PHPUnit 11.x
-- **Debugging**: Laradumps
-- **IDE Support**: Laravel IDE Helper
+> PHPStan Level 8 is intentionally used to enforce **strict type safety and null correctness**, aligning with enterprise backend standards.
 
 ## 📋 Requirements
 
@@ -165,6 +219,14 @@ MyERP/
 ├── routes/
 │   └── api/v1/              # API routes by module
 ```
+
+## 📐 Database Design Guidelines
+
+- ERD-driven schema design
+- Descriptive table naming (snake_case, plural)
+- Audit fields: `created_by`, `updated_by`, `deleted_by`
+- Soft deletes for historical data
+- Indexed foreign keys for performance
 
 ## 🔧 Development Guidelines
 
