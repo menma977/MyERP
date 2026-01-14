@@ -113,6 +113,13 @@ class PaymentRequest extends ApprovalAbstract
         return $this->hasMany(PaymentRequestComponent::class, 'payment_request_id');
     }
 
+    protected function onApprove(ApprovalEvent $approvalEvent): void
+    {
+        if ($approvalEvent->isApproved) {
+
+        }
+    }
+
     protected function casts(): array
     {
         return [

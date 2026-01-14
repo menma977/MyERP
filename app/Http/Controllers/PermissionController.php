@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App;
 use App\Models\Permission;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\App;
 
 class PermissionController extends Controller
 {
@@ -23,9 +23,9 @@ class PermissionController extends Controller
         $permissions = Permission::when($request->input('search'), function ($query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
                 $query
-                    ->where('name', 'like', '%' . $request->input('search') . '%')
-                    ->orWhere('label', 'like', '%' . $request->input('search') . '%')
-                    ->orWhere('group', 'like', '%' . $request->input('search') . '%');
+                    ->where('name', 'like', '%'.$request->input('search').'%')
+                    ->orWhere('label', 'like', '%'.$request->input('search').'%')
+                    ->orWhere('group', 'like', '%'.$request->input('search').'%');
             });
         })
             ->when($request->input('group'), function ($query) use ($request) {
@@ -56,6 +56,8 @@ class PermissionController extends Controller
      * Store a newly created resource in storage.
      *
      * @return array{message: string}
+     *
+     * @noinspection PhpMultipleClassDeclarationsInspection
      */
     public function store(Request $request): array
     {
@@ -81,14 +83,12 @@ class PermissionController extends Controller
     /**
      * Permission Update
      *
-     * Update the specified resource in storage.
-     *
      * @return array{message: string}
      */
     public function update(Request $request): array
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:permissions,name,' . $request->route('id')],
+            'name' => ['required', 'string', 'max:255', 'unique:permissions,name,'.$request->route('id')],
             'label' => ['required', 'string', 'max:255'],
             'group' => ['required', 'string', 'max:255'],
             'guard_name' => ['required', 'string', 'max:255', 'in:web,api,sanctum'],

@@ -58,7 +58,7 @@ use Illuminate\Support\Carbon;
 class Vendor extends ModelAbstract
 {
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are mass-assignable.
      *
      * @var list<string>
      */

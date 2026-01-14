@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App;
 use App\Models\Role;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\App;
 
 class RoleController extends Controller
 {
@@ -23,8 +23,8 @@ class RoleController extends Controller
         $roles = Role::when($request->input('search'), function ($query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
                 $query
-                    ->where('name', 'like', '%' . $request->input('search') . '%')
-                    ->orWhere('guard_name', 'like', '%' . $request->input('search') . '%');
+                    ->where('name', 'like', '%'.$request->input('search').'%')
+                    ->orWhere('guard_name', 'like', '%'.$request->input('search').'%');
             });
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
@@ -81,7 +81,7 @@ class RoleController extends Controller
     public function update(Request $request): array
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:roles,name,' . $request->route('id')],
+            'name' => ['required', 'string', 'max:255', 'unique:roles,name,'.$request->route('id')],
             'guard_name' => ['required', 'string', 'max:255', 'in:web,api,sanctum'],
         ]);
 

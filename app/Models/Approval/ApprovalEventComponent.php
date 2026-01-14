@@ -80,7 +80,7 @@ class ApprovalEventComponent extends ModelAbstract
     ];
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are mass-assignable.
      */
     protected $fillable = [
         'approval_event_id',

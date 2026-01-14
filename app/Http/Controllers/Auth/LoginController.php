@@ -66,8 +66,10 @@ class LoginController extends Controller
     public function logout(): array
     {
         if (Auth::check()) {
-            /** @phpstan-ignore-next-line */
-            Auth::user()->currentAccessToken()->delete();
+            $user = User::find(Auth::id());
+            if ($user) {
+                $user->currentAccessToken()->delete();
+            }
         }
 
         return [
@@ -82,8 +84,14 @@ class LoginController extends Controller
      */
     public function logoutAll(): array
     {
-        $user = Auth::user();
-        $user?->tokens()->delete();
+        $user = User::find(Auth::id());
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => 'User not authenticated',
+            ])->status(401);
+        }
+
+        $user->tokens()->delete();
 
         return [
             'message' => 'Successfully logged out from all devices',

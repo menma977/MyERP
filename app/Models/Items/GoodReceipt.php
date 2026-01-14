@@ -70,7 +70,7 @@ class GoodReceipt extends ApprovalAbstract
     use HasUlids, SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are mass-assignable.
      *
      * @var list<string>
      */
@@ -123,7 +123,7 @@ class GoodReceipt extends ApprovalAbstract
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
                 $goodReceipt = GoodReceipt::find($approvalEvent->id);
-                if (!$goodReceipt) {
+                if (! $goodReceipt) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();
 

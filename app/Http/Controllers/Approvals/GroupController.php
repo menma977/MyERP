@@ -17,9 +17,9 @@ class GroupController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return ApprovalGroup[]|Collection<int, ApprovalGroup>|LengthAwarePaginator<int, ApprovalGroup>
+     * @return Collection<int, ApprovalGroup>|LengthAwarePaginator<int, ApprovalGroup>
      */
-    public function index(Request $request)
+    public function index(Request $request): Collection|LengthAwarePaginator
     {
         $group = ApprovalGroup::when($request->input('search'), function ($build) use ($request) {
             return $build->where('name', 'like', '%'.$request->input('search').'%');
@@ -39,7 +39,7 @@ class GroupController extends Controller
      *
      * @return array<string, string>
      */
-    public function store(Request $request)
+    public function store(Request $request): array
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -76,7 +76,7 @@ class GroupController extends Controller
      *
      * @return array<string, string>
      */
-    public function update(Request $request)
+    public function update(Request $request): array
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -102,7 +102,7 @@ class GroupController extends Controller
      *
      * @return array<string, string>
      */
-    public function delete(Request $request)
+    public function delete(Request $request): array
     {
         $group = ApprovalGroup::findOrFail($request->route('id'));
         if ($group instanceof ApprovalGroup && $group->contributors()->exists()) {

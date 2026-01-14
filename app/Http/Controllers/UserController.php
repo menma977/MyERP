@@ -16,9 +16,9 @@ class UserController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return Collection<int, User>|LengthAwarePaginator<int, User>
+     * @return Collection<int, User>|LengthAwarePaginator<int, User>|int
      */
-    public function index(Request $request): Collection|LengthAwarePaginator
+    public function index(Request $request): Collection|LengthAwarePaginator|int
     {
         $users = User::when($request->input('search'), function ($query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
@@ -31,6 +31,10 @@ class UserController extends Controller
 
         if ($request->input('type', 'paginate') === 'collection') {
             return $users->get();
+        }
+
+        if ($request->input('type', 'paginate') === 'count') {
+            return $users->count();
         }
 
         return $users->paginate($request->input('per_page', 10));
