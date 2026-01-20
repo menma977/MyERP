@@ -274,10 +274,9 @@ php artisan test --coverage
 
 ### Development Workflow
 
-1. Follow the coding standards defined in `.kilocode/rules/`
-2. Ensure all PHPStan errors are resolved
-3. Write tests for new functionality
-4. Update documentation as needed
+1. Ensure all PHPStan errors are resolved
+2. Write tests for new functionality
+3. Update documentation as needed
 
 ## 📄 License
 
