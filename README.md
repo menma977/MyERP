@@ -16,6 +16,7 @@ This project is designed as a **system design & architecture showcase**, reflect
 ## 🎯 Purpose of This Project
 
 This repository demonstrates:
+
 - Enterprise backend architecture
 - Database-first design (ERD-driven)
 - Approval workflow engine used across multiple domains
@@ -33,6 +34,7 @@ This repository demonstrates:
 The approval mechanism is designed as a **reusable workflow engine**, not a feature tied to a single module.
 
 **Key characteristics:**
+
 - Multi-step approval flow
 - Role / contributor-based approvers
 - Event-driven state transitions
@@ -41,8 +43,8 @@ The approval mechanism is designed as a **reusable workflow engine**, not a feat
 
 Entity → ApprovalFlow → ApprovalStep → Approver → AuditTrail
 
-
 This design allows the **same approval engine** to be reused for:
+
 - Purchase requests
 - Financial transactions
 - HR workflows
@@ -134,6 +136,7 @@ This design allows the **same approval engine** to be reused for:
 - **Permissions**: Spatie Laravel Permission
 
 ### Code Quality & Tooling
+
 - **Static Analysis:** PHPStan (Level 8)
 - **Code Style:** Laravel Pint
 - **Testing:** PHPUnit 11
@@ -227,6 +230,48 @@ MyERP/
 - Audit fields: `created_by`, `updated_by`, `deleted_by`
 - Soft deletes for historical data
 - Indexed foreign keys for performance
+
+```mermaid
+graph LR
+    %% Sales & Outbound Flow
+    Order --> Invoice
+    Invoice --> GoodIssue1[Good Issue]
+    GoodIssue1 --> SalesReturn
+    SalesReturn --> BankIn
+
+    %% Item & Inventory Management
+    ItemBillComponent --> ItemBill
+    Item --> ItemBill
+    Item --> Batch
+    Batch --> Stock
+    StockHistory --> Stock
+    Stock --> GoodIssue1
+
+    %% Purchasing & Inbound Flow
+    PurchaseRequest --> Purchase
+    Purchase --> PurchaseOrder
+    PurchaseOrder --> GoodReceipt
+    GoodReceipt --> Stock
+    GoodReceipt --> ProformaInvoice
+    ProformaInvoice --> PaymentRequest
+    PaymentRequest --> BankOut
+    
+    %% Returns
+    PurchaseOrder --> PurchaseReturn
+    PurchaseReturn --> GoodIssue2[Good Issue]
+
+    %% User Access & Permissions (RBAC)
+    Role --> RoleHasModel
+    RoleHasModel --> User
+    RoleHasPermission --> Role
+    RoleHasPermission --> Permission
+    Permission --> PermissionHasModel
+    PermissionHasModel --> User
+
+    %% User Interaction Initiation
+    User --> PurchaseRequest
+    User --> Order
+```
 
 ## 🔧 Development Guidelines
 
