@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -57,7 +58,7 @@ class PurchaseProcurementComponentController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Purchase Procurement Component', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Purchase Procurement Component', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
@@ -65,7 +66,7 @@ class PurchaseProcurementComponentController extends Controller
         $this->save($request, $purchaseProcurementComponent);
 
         return [
-            'message' => trans('messages.success.store', ['target' => 'Purchase Procurement Component']),
+            'message' => trans('messages.success.store', ['target' => 'Purchase Procurement Component'], App::getLocale()),
         ];
     }
 
@@ -103,7 +104,7 @@ class PurchaseProcurementComponentController extends Controller
         $this->save($request, $purchaseProcurementComponent);
 
         return [
-            'message' => trans('messages.success.update', ['target' => 'Purchase Procurement Component']),
+            'message' => trans('messages.success.update', ['target' => 'Purchase Procurement Component'], App::getLocale()),
         ];
     }
 
@@ -121,7 +122,7 @@ class PurchaseProcurementComponentController extends Controller
         $purchaseProcurementComponent->delete();
 
         return [
-            'message' => trans('messages.success.delete', ['target' => 'Purchase Procurement Component']),
+            'message' => trans('messages.success.delete', ['target' => 'Purchase Procurement Component'], App::getLocale()),
         ];
     }
 
@@ -139,7 +140,7 @@ class PurchaseProcurementComponentController extends Controller
         $purchaseProcurementComponent->restore();
 
         return [
-            'message' => trans('messages.success.restore', ['target' => 'Purchase Procurement Component']),
+            'message' => trans('messages.success.restore', ['target' => 'Purchase Procurement Component'], App::getLocale()),
         ];
     }
 
@@ -157,7 +158,7 @@ class PurchaseProcurementComponentController extends Controller
         $purchaseProcurementComponent->forceDelete();
 
         return [
-            'message' => trans('messages.success.destroy', ['target' => 'Purchase Procurement Component']),
+            'message' => trans('messages.success.destroy', ['target' => 'Purchase Procurement Component'], App::getLocale()),
         ];
     }
 

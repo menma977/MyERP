@@ -18,7 +18,7 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $item_id
  * @property string $code
- * @property Carbon|null $expiry_at
+ * @property Carbon|null $expired_at
  * @property int $is_available
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -64,7 +64,7 @@ class ItemBatch extends ModelAbstract
     protected $fillable = [
         'item_id',
         'code',
-        'expiry_at',
+        'expired_at',
         'is_available',
         'created_by',
         'updated_by',
@@ -91,7 +91,7 @@ class ItemBatch extends ModelAbstract
     protected function casts(): array
     {
         return [
-            'expiry_at' => 'datetime',
+            'expired_at' => 'datetime',
         ];
     }
 }

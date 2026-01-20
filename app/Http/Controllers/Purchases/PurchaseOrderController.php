@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -96,7 +97,7 @@ class PurchaseOrderController extends Controller
         $purchaseOrder->save();
 
         return [
-            'message' => trans('messages.success.update', ['target' => 'Purchase Order']),
+            'message' => trans('messages.success.update', ['target' => 'Purchase Order'], App::getLocale()),
         ];
     }
 
@@ -114,14 +115,14 @@ class PurchaseOrderController extends Controller
 
         if ($purchaseOrder->return) {
             throw ValidationException::withMessages([
-                'return' => trans('messages.fail.action.cost', ['action' => 'delete', 'attribute' => 'Purchase Order', 'target' => 'Return']),
+                'return' => trans('messages.fail.action.cost', ['action' => 'delete', 'attribute' => 'Purchase Order', 'target' => 'Return'], App::getLocale()),
             ]);
         }
 
         $purchaseOrder->delete();
 
         return [
-            'message' => trans('messages.success.delete', ['target' => 'Purchase Order']),
+            'message' => trans('messages.success.delete', ['target' => 'Purchase Order'], App::getLocale()),
         ];
     }
 
@@ -139,7 +140,7 @@ class PurchaseOrderController extends Controller
         $purchaseOrder->restore();
 
         return [
-            'message' => trans('messages.success.restore', ['target' => 'Purchase Order']),
+            'message' => trans('messages.success.restore', ['target' => 'Purchase Order'], App::getLocale()),
         ];
     }
 
@@ -157,7 +158,7 @@ class PurchaseOrderController extends Controller
         $purchaseOrder->forceDelete();
 
         return [
-            'message' => trans('messages.success.destroy', ['target' => 'Purchase Order']),
+            'message' => trans('messages.success.destroy', ['target' => 'Purchase Order'], App::getLocale()),
         ];
     }
 
@@ -176,14 +177,14 @@ class PurchaseOrderController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Purchase Order', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Purchase Order', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseOrder->approve($user);
 
         return [
-            'message' => trans('messages.success.approve', ['target' => 'Purchase Order']),
+            'message' => trans('messages.success.approve', ['target' => 'Purchase Order'], App::getLocale()),
         ];
     }
 
@@ -202,14 +203,14 @@ class PurchaseOrderController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'reject', 'attribute' => 'Purchase Order', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'reject', 'attribute' => 'Purchase Order', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseOrder->reject($user);
 
         return [
-            'message' => trans('messages.success.reject', ['target' => 'Purchase Order']),
+            'message' => trans('messages.success.reject', ['target' => 'Purchase Order'], App::getLocale()),
         ];
     }
 
@@ -228,14 +229,14 @@ class PurchaseOrderController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Purchase Order', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Purchase Order', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseOrder->cancel($user);
 
         return [
-            'message' => trans('messages.success.cancel', ['target' => 'Purchase Order']),
+            'message' => trans('messages.success.cancel', ['target' => 'Purchase Order'], App::getLocale()),
         ];
     }
 
@@ -254,14 +255,14 @@ class PurchaseOrderController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Purchase Order', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Purchase Order', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseOrder->rollback($user);
 
         return [
-            'message' => trans('messages.success.rollback', ['target' => 'Purchase Order']),
+            'message' => trans('messages.success.rollback', ['target' => 'Purchase Order'], App::getLocale()),
         ];
     }
 
@@ -280,14 +281,14 @@ class PurchaseOrderController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Purchase Order', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Purchase Order', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseOrder->force($user, $request->input('step'));
 
         return [
-            'message' => trans('messages.success.force', ['target' => 'Purchase Order']),
+            'message' => trans('messages.success.force', ['target' => 'Purchase Order'], App::getLocale()),
         ];
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\App;
 
 class PurchaseOrderComponentController extends Controller
 {
@@ -58,7 +59,7 @@ class PurchaseOrderComponentController extends Controller
         $this->save($request, $purchaseOrderComponent);
 
         return [
-            'message' => trans('messages.success.store', ['target' => 'Purchase Order Component']),
+            'message' => trans('messages.success.store', ['target' => 'Purchase Order Component'], App::getLocale()),
         ];
     }
 
@@ -94,7 +95,7 @@ class PurchaseOrderComponentController extends Controller
         $this->save($request, $purchaseOrderComponent);
 
         return [
-            'message' => trans('messages.success.update', ['target' => 'Purchase Order Component']),
+            'message' => trans('messages.success.update', ['target' => 'Purchase Order Component'], App::getLocale()),
         ];
     }
 
@@ -112,7 +113,7 @@ class PurchaseOrderComponentController extends Controller
         $purchaseOrderComponent->delete();
 
         return [
-            'message' => trans('messages.success.delete', ['target' => 'Purchase Order Component']),
+            'message' => trans('messages.success.delete', ['target' => 'Purchase Order Component'], App::getLocale()),
         ];
     }
 
@@ -130,7 +131,7 @@ class PurchaseOrderComponentController extends Controller
         $purchaseOrderComponent->restore();
 
         return [
-            'message' => trans('messages.success.restore', ['target' => 'Purchase Order Component']),
+            'message' => trans('messages.success.restore', ['target' => 'Purchase Order Component'], App::getLocale()),
         ];
     }
 
@@ -148,7 +149,7 @@ class PurchaseOrderComponentController extends Controller
         $purchaseOrderComponent->forceDelete();
 
         return [
-            'message' => trans('messages.success.destroy', ['target' => 'Purchase Order Component']),
+            'message' => trans('messages.success.destroy', ['target' => 'Purchase Order Component'], App::getLocale()),
         ];
     }
 

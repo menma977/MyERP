@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -73,7 +74,7 @@ class PurchaseRequestController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Purchase Request', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Purchase Request', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
@@ -85,7 +86,7 @@ class PurchaseRequestController extends Controller
         $purchaseRequest->initEvent($user);
 
         return [
-            'message' => trans('messages.success.store', ['target' => 'Purchase Request']),
+            'message' => trans('messages.success.store', ['target' => 'Purchase Request'], App::getLocale()),
         ];
     }
 
@@ -119,20 +120,20 @@ class PurchaseRequestController extends Controller
 
         if ($purchaseRequest->procurement) {
             throw ValidationException::withMessages([
-                'procurement' => trans('messages.fail.action.cost', ['action' => 'delete', 'attribute' => 'Purchase Request', 'target' => 'Procurement']),
+                'procurement' => trans('messages.fail.action.cost', ['action' => 'delete', 'attribute' => 'Purchase Request', 'target' => 'Procurement'], App::getLocale()),
             ]);
         }
 
         if ($purchaseRequest->order) {
             throw ValidationException::withMessages([
-                'order' => trans('messages.fail.action.cost', ['action' => 'delete', 'attribute' => 'Purchase Request', 'target' => 'Order']),
+                'order' => trans('messages.fail.action.cost', ['action' => 'delete', 'attribute' => 'Purchase Request', 'target' => 'Order'], App::getLocale()),
             ]);
         }
 
         $purchaseRequest->delete();
 
         return [
-            'message' => trans('messages.success.delete', ['target' => 'Purchase Request']),
+            'message' => trans('messages.success.delete', ['target' => 'Purchase Request'], App::getLocale()),
         ];
     }
 
@@ -150,7 +151,7 @@ class PurchaseRequestController extends Controller
         $purchaseRequest->restore();
 
         return [
-            'message' => trans('messages.success.restore', ['target' => 'Purchase Request']),
+            'message' => trans('messages.success.restore', ['target' => 'Purchase Request'], App::getLocale()),
         ];
     }
 
@@ -168,7 +169,7 @@ class PurchaseRequestController extends Controller
         $purchaseRequest->forceDelete();
 
         return [
-            'message' => trans('messages.success.destroy', ['target' => 'Purchase Request']),
+            'message' => trans('messages.success.destroy', ['target' => 'Purchase Request'], App::getLocale()),
         ];
     }
 
@@ -187,14 +188,14 @@ class PurchaseRequestController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Purchase Request', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Purchase Request', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseRequest->approve($user);
 
         return [
-            'message' => trans('messages.success.approve', ['target' => 'Purchase Request']),
+            'message' => trans('messages.success.approve', ['target' => 'Purchase Request'], App::getLocale()),
         ];
     }
 
@@ -213,14 +214,14 @@ class PurchaseRequestController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'reject', 'attribute' => 'Purchase Request', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'reject', 'attribute' => 'Purchase Request', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseRequest->reject($user);
 
         return [
-            'message' => trans('messages.success.reject', ['target' => 'Purchase Request']),
+            'message' => trans('messages.success.reject', ['target' => 'Purchase Request'], App::getLocale()),
         ];
     }
 
@@ -239,14 +240,14 @@ class PurchaseRequestController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Purchase Request', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Purchase Request', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseRequest->cancel($user);
 
         return [
-            'message' => trans('messages.success.cancel', ['target' => 'Purchase Request']),
+            'message' => trans('messages.success.cancel', ['target' => 'Purchase Request'], App::getLocale()),
         ];
     }
 
@@ -265,14 +266,14 @@ class PurchaseRequestController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Purchase Request', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Purchase Request', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseRequest->rollback($user);
 
         return [
-            'message' => trans('messages.success.rollback', ['target' => 'Purchase Request']),
+            'message' => trans('messages.success.rollback', ['target' => 'Purchase Request'], App::getLocale()),
         ];
     }
 
@@ -291,14 +292,14 @@ class PurchaseRequestController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Purchase Request', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Purchase Request', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseRequest->force($user, $request->input('step'));
 
         return [
-            'message' => trans('messages.success.force', ['target' => 'Purchase Request']),
+            'message' => trans('messages.success.force', ['target' => 'Purchase Request'], App::getLocale()),
         ];
     }
 }

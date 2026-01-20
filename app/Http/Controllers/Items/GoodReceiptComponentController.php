@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\App;
 
 class GoodReceiptComponentController extends Controller
 {
@@ -30,9 +31,9 @@ class GoodReceiptComponentController extends Controller
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
                 return $query->whereHas('item', function (Builder $query) use ($request) {
-                    return $query->where('name', 'like', '%' . $request->input('search') . '%');
+                    return $query->where('name', 'like', '%'.$request->input('search').'%');
                 })->orWhereHas('goodReceipt', function (Builder $query) use ($request) {
-                    return $query->where('code', 'like', '%' . $request->input('search') . '%');
+                    return $query->where('code', 'like', '%'.$request->input('search').'%');
                 });
             });
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
@@ -68,7 +69,7 @@ class GoodReceiptComponentController extends Controller
         $goodReceiptComponent->save();
 
         return [
-            'message' => trans('messages.success.store', ['target' => 'Good Receipt Component']),
+            'message' => trans('messages.success.store', ['target' => 'Good Receipt Component'], App::getLocale()),
         ];
     }
 
@@ -114,7 +115,7 @@ class GoodReceiptComponentController extends Controller
         $goodReceiptComponent->save();
 
         return [
-            'message' => trans('messages.success.update', ['target' => 'Good Receipt Component']),
+            'message' => trans('messages.success.update', ['target' => 'Good Receipt Component'], App::getLocale()),
         ];
     }
 
@@ -132,7 +133,7 @@ class GoodReceiptComponentController extends Controller
         $goodReceiptComponent->delete();
 
         return [
-            'message' => trans('messages.success.delete', ['target' => 'Good Receipt Component']),
+            'message' => trans('messages.success.delete', ['target' => 'Good Receipt Component'], App::getLocale()),
         ];
     }
 
@@ -150,7 +151,7 @@ class GoodReceiptComponentController extends Controller
         $goodReceiptComponent->restore();
 
         return [
-            'message' => trans('messages.success.restore', ['target' => 'Good Receipt Component']),
+            'message' => trans('messages.success.restore', ['target' => 'Good Receipt Component'], App::getLocale()),
         ];
     }
 
@@ -168,7 +169,7 @@ class GoodReceiptComponentController extends Controller
         $goodReceiptComponent->forceDelete();
 
         return [
-            'message' => trans('messages.success.destroy', ['target' => 'Good Receipt Component']),
+            'message' => trans('messages.success.destroy', ['target' => 'Good Receipt Component'], App::getLocale()),
         ];
     }
 }

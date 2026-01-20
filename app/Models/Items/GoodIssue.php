@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Represents a Good Issue in the system.
@@ -95,5 +98,38 @@ class GoodIssue extends ApprovalAbstract
     public function components(): HasMany
     {
         return $this->hasMany(GoodIssueComponent::class);
+    }
+
+    protected function onApprove(ApprovalEvent $approvalEvent): void
+    {
+        if ($approvalEvent->is_approved) {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            DB::transaction(function () use ($approvalEvent) {
+                $goodIssue = GoodIssue::find($approvalEvent->id);
+                if (! $goodIssue) {
+                    $approvalEvent->approved_at = null;
+                    $approvalEvent->save();
+
+                    throw ValidationException::withMessages([
+                        'id' => trans('messages.fail.approve', ['target' => 'Good Issue'], App::getLocale()),
+                    ]);
+                }
+
+                foreach ($goodIssue->components as $component) {
+                    $stock = ItemStock::find($component->item_stock_id);
+                    if (! $stock) {
+                        continue;
+                    }
+
+                    $stock->quantity += $component->quantity;
+                    $stock->save();
+
+                    $stockHistory = new ItemStockHistory;
+                    $stockHistory->item_stock_id = $stock->id;
+                    $stockHistory->quantity = $component->quantity;
+                    $stockHistory->save();
+                }
+            });
+        }
     }
 }

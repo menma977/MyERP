@@ -16,8 +16,8 @@ use Illuminate\Support\Carbon;
  *
  * @property string $id
  * @property string $item_batch_id
- * @property string $quantity
- * @property string $price
+ * @property float $quantity
+ * @property float $price
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by

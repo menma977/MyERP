@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 class ItemBillController extends Controller
@@ -86,7 +87,7 @@ class ItemBillController extends Controller
         });
 
         return [
-            'message' => trans('messages.success.store', ['target' => 'Item Bill']),
+            'message' => trans('messages.success.store', ['target' => 'Item Bill'], App::getLocale()),
         ];
     }
 
@@ -146,7 +147,7 @@ class ItemBillController extends Controller
         });
 
         return [
-            'message' => trans('messages.success.update', ['target' => 'Item Bill']),
+            'message' => trans('messages.success.update', ['target' => 'Item Bill'], App::getLocale()),
         ];
     }
 
@@ -168,7 +169,7 @@ class ItemBillController extends Controller
         });
 
         return [
-            'message' => trans('messages.success.delete', ['target' => 'Item Bill']),
+            'message' => trans('messages.success.delete', ['target' => 'Item Bill'], App::getLocale()),
         ];
     }
 
@@ -186,7 +187,7 @@ class ItemBillController extends Controller
         $itemBill->restore();
 
         return [
-            'message' => trans('messages.success.restore', ['target' => 'Item Bill']),
+            'message' => trans('messages.success.restore', ['target' => 'Item Bill'], App::getLocale()),
         ];
     }
 
@@ -208,7 +209,7 @@ class ItemBillController extends Controller
         });
 
         return [
-            'message' => trans('messages.success.destroy', ['target' => 'Item Bill']),
+            'message' => trans('messages.success.destroy', ['target' => 'Item Bill'], App::getLocale()),
         ];
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -82,7 +83,7 @@ class PurchaseReturnController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Purchase Return', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Purchase Return', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
@@ -97,7 +98,7 @@ class PurchaseReturnController extends Controller
         $purchaseReturn->initEvent($user);
 
         return [
-            'message' => trans('messages.success.store', ['target' => 'Purchase Return']),
+            'message' => trans('messages.success.store', ['target' => 'Purchase Return'], App::getLocale()),
         ];
     }
 
@@ -143,7 +144,7 @@ class PurchaseReturnController extends Controller
         $purchaseReturn->save();
 
         return [
-            'message' => trans('messages.success.update', ['target' => 'Purchase Return']),
+            'message' => trans('messages.success.update', ['target' => 'Purchase Return'], App::getLocale()),
         ];
     }
 
@@ -161,7 +162,7 @@ class PurchaseReturnController extends Controller
         $purchaseReturn->delete();
 
         return [
-            'message' => trans('messages.success.delete', ['target' => 'Purchase Return']),
+            'message' => trans('messages.success.delete', ['target' => 'Purchase Return'], App::getLocale()),
         ];
     }
 
@@ -179,7 +180,7 @@ class PurchaseReturnController extends Controller
         $purchaseReturn->restore();
 
         return [
-            'message' => trans('messages.success.restore', ['target' => 'Purchase Return']),
+            'message' => trans('messages.success.restore', ['target' => 'Purchase Return'], App::getLocale()),
         ];
     }
 
@@ -197,7 +198,7 @@ class PurchaseReturnController extends Controller
         $purchaseReturn->forceDelete();
 
         return [
-            'message' => trans('messages.success.destroy', ['target' => 'Purchase Return']),
+            'message' => trans('messages.success.destroy', ['target' => 'Purchase Return'], App::getLocale()),
         ];
     }
 
@@ -216,14 +217,14 @@ class PurchaseReturnController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Purchase Return', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Purchase Return', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseReturn->approve($user);
 
         return [
-            'message' => trans('messages.success.approve', ['target' => 'Purchase Return']),
+            'message' => trans('messages.success.approve', ['target' => 'Purchase Return'], App::getLocale()),
         ];
     }
 
@@ -242,14 +243,14 @@ class PurchaseReturnController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'reject', 'attribute' => 'Purchase Return', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'reject', 'attribute' => 'Purchase Return', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseReturn->reject($user);
 
         return [
-            'message' => trans('messages.success.reject', ['target' => 'Purchase Return']),
+            'message' => trans('messages.success.reject', ['target' => 'Purchase Return'], App::getLocale()),
         ];
     }
 
@@ -268,14 +269,14 @@ class PurchaseReturnController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Purchase Return', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Purchase Return', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseReturn->cancel($user);
 
         return [
-            'message' => trans('messages.success.cancel', ['target' => 'Purchase Return']),
+            'message' => trans('messages.success.cancel', ['target' => 'Purchase Return'], App::getLocale()),
         ];
     }
 
@@ -294,14 +295,14 @@ class PurchaseReturnController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Purchase Return', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Purchase Return', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseReturn->rollback($user);
 
         return [
-            'message' => trans('messages.success.rollback', ['target' => 'Purchase Return']),
+            'message' => trans('messages.success.rollback', ['target' => 'Purchase Return'], App::getLocale()),
         ];
     }
 
@@ -320,14 +321,14 @@ class PurchaseReturnController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Purchase Return', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Purchase Return', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseReturn->force($user, $request->input('step'));
 
         return [
-            'message' => trans('messages.success.force', ['target' => 'Purchase Return']),
+            'message' => trans('messages.success.force', ['target' => 'Purchase Return'], App::getLocale()),
         ];
     }
 }
