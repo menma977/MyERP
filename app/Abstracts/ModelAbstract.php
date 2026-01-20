@@ -14,5 +14,5 @@ use Illuminate\Database\Eloquent\Model;
 #[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
 abstract class ModelAbstract extends Model
 {
-	use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
+    use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
 }

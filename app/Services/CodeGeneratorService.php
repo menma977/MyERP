@@ -13,7 +13,7 @@ class CodeGeneratorService
     /**
      * Create a new CodeGeneratorService instance with the specified code.
      *
-     * @param string $code The code string to include in the generated code
+     * @param  string  $code  The code string to include in the generated code
      * @return self The CodeGeneratorService instance
      */
     public static function code(string $code): self
@@ -27,7 +27,7 @@ class CodeGeneratorService
     /**
      * Set the number for the code generation.
      *
-     * @param int $number The number to include in the generated code
+     * @param  int  $number  The number to include in the generated code
      * @return $this The CodeGeneratorService instance for method chaining
      */
     public function number(int $number): self
@@ -70,7 +70,7 @@ class CodeGeneratorService
      * a standard conversion algorithm with predefined numeral-value pairs.
      * It supports numbers from 1 to 3999.
      *
-     * @param int $number The number to convert (must be between 1 and 3999)
+     * @param  int  $number  The number to convert (must be between 1 and 3999)
      * @return string The Roman numeral representation of the number
      */
     private function toRoman(int $number): string
