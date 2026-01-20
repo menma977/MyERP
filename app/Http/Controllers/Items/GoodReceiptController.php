@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -82,7 +83,7 @@ class GoodReceiptController extends Controller
         $goodReceipt->save();
 
         return [
-            'message' => trans('messages.success.update', ['target' => 'Good Receipt']),
+            'message' => trans('messages.success.update', ['target' => 'Good Receipt'], App::getLocale()),
         ];
     }
 
@@ -100,14 +101,14 @@ class GoodReceiptController extends Controller
 
         if ($goodReceipt->purchaseReturns()->exists()) {
             throw ValidationException::withMessages([
-                'purchase_returns' => trans('messages.fail.action.cost', ['action' => 'delete', 'attribute' => 'Good Receipt', 'target' => 'Purchase Returns']),
+                'purchase_returns' => trans('messages.fail.action.cost', ['action' => 'delete', 'attribute' => 'Good Receipt', 'target' => 'Purchase Returns'], App::getLocale()),
             ]);
         }
 
         $goodReceipt->delete();
 
         return [
-            'message' => trans('messages.success.delete', ['target' => 'Good Receipt']),
+            'message' => trans('messages.success.delete', ['target' => 'Good Receipt'], App::getLocale()),
         ];
     }
 
@@ -125,7 +126,7 @@ class GoodReceiptController extends Controller
         $goodReceipt->restore();
 
         return [
-            'message' => trans('messages.success.restore', ['target' => 'Good Receipt']),
+            'message' => trans('messages.success.restore', ['target' => 'Good Receipt'], App::getLocale()),
         ];
     }
 
@@ -143,7 +144,7 @@ class GoodReceiptController extends Controller
         $goodReceipt->forceDelete();
 
         return [
-            'message' => trans('messages.success.destroy', ['target' => 'Good Receipt']),
+            'message' => trans('messages.success.destroy', ['target' => 'Good Receipt'], App::getLocale()),
         ];
     }
 
@@ -162,13 +163,13 @@ class GoodReceiptController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Good Receipt', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Good Receipt', 'target' => 'Access'], App::getLocale()),
             ]);
         }
         $goodReceipt->approve($user);
 
         return [
-            'message' => trans('messages.success.approve', ['target' => 'Good Receipt']),
+            'message' => trans('messages.success.approve', ['target' => 'Good Receipt'], App::getLocale()),
         ];
     }
 
@@ -187,13 +188,13 @@ class GoodReceiptController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'reject', 'attribute' => 'Good Receipt', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'reject', 'attribute' => 'Good Receipt', 'target' => 'Access'], App::getLocale()),
             ]);
         }
         $goodReceipt->reject($user);
 
         return [
-            'message' => trans('messages.success.reject', ['target' => 'Good Receipt']),
+            'message' => trans('messages.success.reject', ['target' => 'Good Receipt'], App::getLocale()),
         ];
     }
 
@@ -212,13 +213,13 @@ class GoodReceiptController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Good Receipt', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Good Receipt', 'target' => 'Access'], App::getLocale()),
             ]);
         }
         $goodReceipt->cancel($user);
 
         return [
-            'message' => trans('messages.success.cancel', ['target' => 'Good Receipt']),
+            'message' => trans('messages.success.cancel', ['target' => 'Good Receipt'], App::getLocale()),
         ];
     }
 
@@ -237,13 +238,13 @@ class GoodReceiptController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Good Receipt', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Good Receipt', 'target' => 'Access'], App::getLocale()),
             ]);
         }
         $goodReceipt->rollback($user);
 
         return [
-            'message' => trans('messages.success.rollback', ['target' => 'Good Receipt']),
+            'message' => trans('messages.success.rollback', ['target' => 'Good Receipt'], App::getLocale()),
         ];
     }
 
@@ -262,13 +263,13 @@ class GoodReceiptController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Good Receipt', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Good Receipt', 'target' => 'Access'], App::getLocale()),
             ]);
         }
         $goodReceipt->force($user, $request->input('step'));
 
         return [
-            'message' => trans('messages.success.force', ['target' => 'Good Receipt']),
+            'message' => trans('messages.success.force', ['target' => 'Good Receipt'], App::getLocale()),
         ];
     }
 }

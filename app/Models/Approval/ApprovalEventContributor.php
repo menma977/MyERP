@@ -70,7 +70,7 @@ class ApprovalEventContributor extends ModelAbstract
     ];
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are mass-assignable.
      */
     protected $fillable = [
         'approval_event_component_id',
@@ -121,7 +121,7 @@ class ApprovalEventContributor extends ModelAbstract
     protected function isApproved(): Attribute
     {
         return Attribute::make(
-            get: fn(mixed $value, array $attributes) => isset($attributes['approved_at']),
+            get: fn (mixed $value, array $attributes) => isset($attributes['approved_at']),
         );
     }
 
@@ -135,7 +135,7 @@ class ApprovalEventContributor extends ModelAbstract
     protected function isRejected(): Attribute
     {
         return Attribute::make(
-            get: fn(mixed $value, array $attributes) => isset($attributes['rejected_at']),
+            get: fn (mixed $value, array $attributes) => isset($attributes['rejected_at']),
         );
     }
 
@@ -149,7 +149,7 @@ class ApprovalEventContributor extends ModelAbstract
     protected function isCancelled(): Attribute
     {
         return Attribute::make(
-            get: fn(mixed $value, array $attributes) => isset($attributes['cancelled_at']),
+            get: fn (mixed $value, array $attributes) => isset($attributes['cancelled_at']),
         );
     }
 
@@ -163,7 +163,7 @@ class ApprovalEventContributor extends ModelAbstract
     protected function isRollback(): Attribute
     {
         return Attribute::make(
-            get: fn(mixed $value, array $attributes) => isset($attributes['rollback_at']),
+            get: fn (mixed $value, array $attributes) => isset($attributes['rollback_at']),
         );
     }
 }

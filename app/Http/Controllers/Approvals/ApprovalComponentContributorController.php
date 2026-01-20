@@ -17,9 +17,9 @@ class ApprovalComponentContributorController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return ApprovalContributor[]|Collection<int, ApprovalContributor>|LengthAwarePaginator<int, ApprovalContributor>
+     * @return Collection<int, ApprovalContributor>|LengthAwarePaginator<int, ApprovalContributor>
      */
-    public function index(Request $request)
+    public function index(Request $request): Collection|LengthAwarePaginator
     {
         $approvalComponentContributor = ApprovalContributor::with([
             'component',
@@ -44,7 +44,7 @@ class ApprovalComponentContributorController extends Controller
      *
      * @return array<string, string>
      */
-    public function store(Request $request)
+    public function store(Request $request): array
     {
         $request->validate([
             'approvable_id' => ['required'],
@@ -86,7 +86,7 @@ class ApprovalComponentContributorController extends Controller
      *
      * @return array<string, string>
      */
-    public function update(Request $request)
+    public function update(Request $request): array
     {
         $request->validate([
             'approvable_id' => ['required'],
@@ -113,7 +113,7 @@ class ApprovalComponentContributorController extends Controller
      *
      * @return array<string, string>
      */
-    public function delete(Request $request)
+    public function delete(Request $request): array
     {
         $approvalComponentContributor = ApprovalContributor::findOrFail($request->route('id'));
         if ($approvalComponentContributor instanceof ApprovalContributor) {

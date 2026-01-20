@@ -3,6 +3,7 @@
 use App\Http\Controllers\Items\BatchController;
 use App\Http\Controllers\Items\GoodReceiptComponentController;
 use App\Http\Controllers\Items\GoodReceiptController;
+use App\Http\Controllers\Items\ItemBillController;
 use App\Http\Controllers\Items\ItemController;
 use App\Http\Controllers\Items\StockController;
 use App\Http\Controllers\Items\StockHistoryController;
@@ -56,5 +57,15 @@ Route::prefix('item')->name('item.')->middleware(['auth:sanctum', 'can:item.inde
                 Route::delete('destroy/{id}', [GoodReceiptComponentController::class, 'destroy'])->name('destroy')->middleware('can:good.receipt.component.destroy');
             });
         });
+    });
+
+    Route::prefix('bill')->name('bill.')->middleware('can:item.bill.index')->group(function () {
+        Route::get('index', [ItemBillController::class, 'index'])->name('index');
+        Route::get('show/{id}', [ItemBillController::class, 'show'])->name('show')->middleware('can:item.bill.show');
+        Route::post('store', [ItemBillController::class, 'store'])->name('store')->middleware('can:item.bill.store');
+        Route::put('update/{id}', [ItemBillController::class, 'update'])->name('update')->middleware('can:item.bill.update');
+        Route::delete('delete/{id}', [ItemBillController::class, 'delete'])->name('delete')->middleware('can:item.bill.delete');
+        Route::post('restore/{id}', [ItemBillController::class, 'restore'])->name('restore')->middleware('can:item.bill.restore');
+        Route::delete('destroy/{id}', [ItemBillController::class, 'destroy'])->name('destroy')->middleware('can:item.bill.destroy');
     });
 });

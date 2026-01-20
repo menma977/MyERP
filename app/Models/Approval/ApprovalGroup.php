@@ -49,7 +49,7 @@ class ApprovalGroup extends ModelAbstract
     use HasUlids, SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are mass-assignable.
      */
     protected $fillable = [
         'name',

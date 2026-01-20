@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -70,7 +71,7 @@ class GoodReceipt extends ApprovalAbstract
     use HasUlids, SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are mass-assignable.
      *
      * @var list<string>
      */
@@ -123,12 +124,12 @@ class GoodReceipt extends ApprovalAbstract
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
                 $goodReceipt = GoodReceipt::find($approvalEvent->id);
-                if (!$goodReceipt) {
+                if (! $goodReceipt) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();
 
                     throw ValidationException::withMessages([
-                        'id' => trans('messages.fail.approve', ['target' => 'Good Receipt']),
+                        'id' => trans('messages.fail.approve', ['target' => 'Good Receipt'], App::getLocale()),
                     ]);
                 }
 
@@ -140,6 +141,28 @@ class GoodReceipt extends ApprovalAbstract
                 $invoice->save();
 
                 foreach ($goodReceipt->components as $component) {
+                    $item = Item::find($component->item_id);
+                    if (! $item) {
+                        continue;
+                    }
+
+                    $itemBatch = new ItemBatch;
+                    $itemBatch->item_id = $item->id;
+                    $itemBatch->code = CodeGeneratorService::code($item->code)->number(ItemBatch::where('item_id', $item->id)->count())->generate();
+                    $itemBatch->expired_at = $component->expired_at;
+                    $itemBatch->save();
+
+                    $itemStock = new ItemStock;
+                    $itemStock->item_batch_id = $itemBatch->id;
+                    $itemStock->quantity = $component->quantity;
+                    $itemStock->price = $component->price;
+                    $itemStock->save();
+
+                    $stockHistory = new ItemStockHistory;
+                    $stockHistory->item_stock_id = $itemStock->id;
+                    $stockHistory->quantity = $component->quantity;
+                    $stockHistory->save();
+
                     $invoiceComponent = new PurchaseInvoiceComponent;
                     $invoiceComponent->purchase_invoice_id = $invoice->id;
                     $invoiceComponent->purchase_order_component_id = $component->purchase_order_component_id;

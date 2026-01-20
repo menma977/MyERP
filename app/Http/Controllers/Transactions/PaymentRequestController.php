@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -32,12 +33,12 @@ class PaymentRequestController extends Controller
             'deletedBy',
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
-                return $query->where('code', 'like', '%' . $request->input('search') . '%')
+                return $query->where('code', 'like', '%'.$request->input('search').'%')
                     ->orWhereHas('order', function (Builder $query) use ($request) {
-                        $query->where('code', 'like', '%' . $request->input('search') . '%');
+                        $query->where('code', 'like', '%'.$request->input('search').'%');
                     })
                     ->orWhereHas('invoice', function (Builder $query) use ($request) {
-                        $query->where('code', 'like', '%' . $request->input('search') . '%');
+                        $query->where('code', 'like', '%'.$request->input('search').'%');
                     });
             });
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
@@ -97,7 +98,7 @@ class PaymentRequestController extends Controller
         $paymentRequest->save();
 
         return [
-            'message' => trans('messages.success.update', ['target' => 'Payment Request']),
+            'message' => trans('messages.success.update', ['target' => 'Payment Request'], App::getLocale()),
         ];
     }
 
@@ -115,7 +116,7 @@ class PaymentRequestController extends Controller
         $paymentRequest->delete();
 
         return [
-            'message' => trans('messages.success.delete', ['target' => 'Payment Request']),
+            'message' => trans('messages.success.delete', ['target' => 'Payment Request'], App::getLocale()),
         ];
     }
 
@@ -133,7 +134,7 @@ class PaymentRequestController extends Controller
         $paymentRequest->restore();
 
         return [
-            'message' => trans('messages.success.restore', ['target' => 'Payment Request']),
+            'message' => trans('messages.success.restore', ['target' => 'Payment Request'], App::getLocale()),
         ];
     }
 
@@ -151,7 +152,7 @@ class PaymentRequestController extends Controller
         $paymentRequest->forceDelete();
 
         return [
-            'message' => trans('messages.success.destroy', ['target' => 'Payment Request']),
+            'message' => trans('messages.success.destroy', ['target' => 'Payment Request'], App::getLocale()),
         ];
     }
 
@@ -168,16 +169,16 @@ class PaymentRequestController extends Controller
         $paymentRequest = PaymentRequest::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Payment Request', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Payment Request', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $paymentRequest->approve($user);
 
         return [
-            'message' => trans('messages.success.approve', ['target' => 'Payment Request']),
+            'message' => trans('messages.success.approve', ['target' => 'Payment Request'], App::getLocale()),
         ];
     }
 
@@ -194,16 +195,16 @@ class PaymentRequestController extends Controller
         $paymentRequest = PaymentRequest::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'reject', 'attribute' => 'Payment Request', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'reject', 'attribute' => 'Payment Request', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $paymentRequest->reject($user);
 
         return [
-            'message' => trans('messages.success.reject', ['target' => 'Payment Request']),
+            'message' => trans('messages.success.reject', ['target' => 'Payment Request'], App::getLocale()),
         ];
     }
 
@@ -220,16 +221,16 @@ class PaymentRequestController extends Controller
         $paymentRequest = PaymentRequest::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Payment Request', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Payment Request', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $paymentRequest->cancel($user);
 
         return [
-            'message' => trans('messages.success.cancel', ['target' => 'Payment Request']),
+            'message' => trans('messages.success.cancel', ['target' => 'Payment Request'], App::getLocale()),
         ];
     }
 
@@ -246,16 +247,16 @@ class PaymentRequestController extends Controller
         $paymentRequest = PaymentRequest::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Payment Request', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Payment Request', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $paymentRequest->rollback($user);
 
         return [
-            'message' => trans('messages.success.rollback', ['target' => 'Payment Request']),
+            'message' => trans('messages.success.rollback', ['target' => 'Payment Request'], App::getLocale()),
         ];
     }
 
@@ -276,16 +277,16 @@ class PaymentRequestController extends Controller
         $paymentRequest = PaymentRequest::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Payment Request', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Payment Request', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $paymentRequest->force($user, $request->input('step'));
 
         return [
-            'message' => trans('messages.success.force', ['target' => 'Payment Request']),
+            'message' => trans('messages.success.force', ['target' => 'Payment Request'], App::getLocale()),
         ];
     }
 }

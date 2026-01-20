@@ -20,6 +20,7 @@ use Illuminate\Support\Carbon;
  * @property float $quantity
  * @property float $price
  * @property float $total
+ * @property Carbon|null $expired_at
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -60,7 +61,7 @@ class GoodReceiptComponent extends ModelAbstract
     use HasUlids, SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are mass-assignable.
      *
      * @var list<string>
      */
@@ -71,6 +72,7 @@ class GoodReceiptComponent extends ModelAbstract
         'quantity',
         'price',
         'total',
+        'expired_at',
         'created_by',
         'updated_by',
         'deleted_by',

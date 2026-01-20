@@ -17,8 +17,8 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $item_stock_id
  * @property string $code
- * @property string $quantity
- * @property string $price
+ * @property float $quantity
+ * @property float $price
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -55,7 +55,7 @@ class ItemStockHistory extends ModelAbstract
     use HasUlids, SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are mass-assignable.
      *
      * @var list<string>
      */

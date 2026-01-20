@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Approvals;
 use App\Http\Controllers\Controller;
 use App\Models\Approval\ApprovalComponent;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
@@ -18,9 +17,9 @@ class ApprovalComponentController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return JsonResponse|LengthAwarePaginator<int, ApprovalComponent>|Collection<int, ApprovalComponent>
+     * @return LengthAwarePaginator<int, ApprovalComponent>|Collection<int, ApprovalComponent>
      */
-    public function index(Request $request): JsonResponse|LengthAwarePaginator|Collection
+    public function index(Request $request): LengthAwarePaginator|Collection
     {
         $approvalComponent = ApprovalComponent::with([
             'approval',

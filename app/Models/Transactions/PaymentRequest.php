@@ -8,6 +8,7 @@ use App\Models\Approval\ApprovalEvent;
 use App\Models\Purchases\PurchaseInvoice;
 use App\Models\Purchases\PurchaseOrder;
 use App\Models\User;
+use App\Services\CodeGeneratorService;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Represents a Payment Request in the system.
@@ -111,6 +114,40 @@ class PaymentRequest extends ApprovalAbstract
     public function components(): HasMany
     {
         return $this->hasMany(PaymentRequestComponent::class, 'payment_request_id');
+    }
+
+    protected function onApprove(ApprovalEvent $approvalEvent): void
+    {
+        if ($approvalEvent->is_approved) {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            DB::transaction(function () use ($approvalEvent) {
+                $paymentRequest = PaymentRequest::find($approvalEvent->id);
+                if (! $paymentRequest) {
+                    $approvalEvent->approved_at = null;
+                    $approvalEvent->save();
+
+                    throw ValidationException::withMessages([
+                        'id' => trans('messages.fail.approve', ['target' => 'Payment Request']),
+                    ]);
+                }
+
+                $ledger = new Ledger;
+                $ledger->code = CodeGeneratorService::code('LDG')->number(Ledger::count())->generate();
+                $ledger->in = '0';
+                $ledger->out = (string) $paymentRequest->total;
+                $ledger->total = (string) $paymentRequest->total;
+                $ledger->save();
+
+                foreach ($paymentRequest->components as $component) {
+                    $ledgerComponent = new LedgerComponent;
+                    $ledgerComponent->ledger_id = $ledger->id;
+                    $ledgerComponent->in = '0';
+                    $ledgerComponent->out = (string) $component->total;
+                    $ledgerComponent->total = (string) $component->total;
+                    $ledgerComponent->save();
+                }
+            });
+        }
     }
 
     protected function casts(): array

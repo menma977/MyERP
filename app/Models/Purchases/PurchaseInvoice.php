@@ -69,7 +69,7 @@ class PurchaseInvoice extends ApprovalAbstract
     const float TAX = 0.12;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are mass-assignable.
      *
      * @var list<string>
      */
@@ -106,7 +106,7 @@ class PurchaseInvoice extends ApprovalAbstract
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
                 $purchaseInvoice = PurchaseInvoice::find($approvalEvent->id);
-                if (!$purchaseInvoice) {
+                if (! $purchaseInvoice) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();
 

@@ -65,7 +65,7 @@ class SalesReturnComponent extends ModelAbstract
     use HasUlids, SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are mass-assignable.
      *
      * @var list<string>
      */

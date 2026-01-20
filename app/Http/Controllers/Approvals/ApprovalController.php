@@ -17,9 +17,9 @@ class ApprovalController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return Approval[]|Collection<int, Approval>|LengthAwarePaginator<int, Approval>
+     * @return Collection<int, Approval>|LengthAwarePaginator<int, Approval>
      */
-    public function index(Request $request)
+    public function index(Request $request): Collection|LengthAwarePaginator
     {
         $approvals = Approval::with([
             'flow',
@@ -43,7 +43,7 @@ class ApprovalController extends Controller
      *
      * @return array<string, string>
      */
-    public function store(Request $request)
+    public function store(Request $request): array
     {
         $request->validate([
             'flow_id' => ['required', 'exists:approval_flows,id'],
@@ -87,7 +87,7 @@ class ApprovalController extends Controller
     /**
      * @return array<string, string>
      */
-    public function update(Request $request)
+    public function update(Request $request): array
     {
         $request->validate([
             'flow_id' => ['required', 'exists:approval_flows,id'],
@@ -118,7 +118,7 @@ class ApprovalController extends Controller
     /**
      * @return array<string, string>
      */
-    public function delete(Request $request)
+    public function delete(Request $request): array
     {
         $approval = Approval::findOrFail($request->route('id'));
         if ($approval instanceof Approval && $approval->components()->exists()) {

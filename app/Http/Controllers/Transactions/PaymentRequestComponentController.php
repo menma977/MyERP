@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\App;
 
 /**
  * Payment Request Component Controller
@@ -36,11 +37,11 @@ class PaymentRequestComponentController extends Controller
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
                 return $query->whereHas('paymentRequest', function (Builder $query) use ($request) {
-                    $query->where('code', 'like', '%' . $request->input('search') . '%');
+                    $query->where('code', 'like', '%'.$request->input('search').'%');
                 })->orWhereHas('purchaseOrderComponent', function (Builder $query) use ($request) {
-                    $query->where('item_id', 'like', '%' . $request->input('search') . '%');
+                    $query->where('item_id', 'like', '%'.$request->input('search').'%');
                 })->orWhereHas('purchaseInvoiceComponent', function (Builder $query) use ($request) {
-                    $query->where('item_id', 'like', '%' . $request->input('search') . '%');
+                    $query->where('item_id', 'like', '%'.$request->input('search').'%');
                 });
             });
         })->where('payment_request_id', $request->route('payment_request_id'))
@@ -92,7 +93,7 @@ class PaymentRequestComponentController extends Controller
         $this->save($request, $paymentRequestComponent);
 
         return [
-            'message' => trans('messages.success.store', ['target' => 'Payment Request Component']),
+            'message' => trans('messages.success.store', ['target' => 'Payment Request Component'], App::getLocale()),
         ];
     }
 
@@ -119,7 +120,7 @@ class PaymentRequestComponentController extends Controller
         $this->save($request, $paymentRequestComponent);
 
         return [
-            'message' => trans('messages.success.update', ['target' => 'Payment Request Component']),
+            'message' => trans('messages.success.update', ['target' => 'Payment Request Component'], App::getLocale()),
         ];
     }
 
@@ -137,7 +138,7 @@ class PaymentRequestComponentController extends Controller
         $paymentRequestComponent->delete();
 
         return [
-            'message' => trans('messages.success.delete', ['target' => 'Payment Request Component']),
+            'message' => trans('messages.success.delete', ['target' => 'Payment Request Component'], App::getLocale()),
         ];
     }
 
@@ -155,7 +156,7 @@ class PaymentRequestComponentController extends Controller
         $paymentRequestComponent->restore();
 
         return [
-            'message' => trans('messages.success.restore', ['target' => 'Payment Request Component']),
+            'message' => trans('messages.success.restore', ['target' => 'Payment Request Component'], App::getLocale()),
         ];
     }
 
@@ -173,7 +174,7 @@ class PaymentRequestComponentController extends Controller
         $paymentRequestComponent->forceDelete();
 
         return [
-            'message' => trans('messages.success.destroy', ['target' => 'Payment Request Component']),
+            'message' => trans('messages.success.destroy', ['target' => 'Payment Request Component'], App::getLocale()),
         ];
     }
 
@@ -189,12 +190,12 @@ class PaymentRequestComponentController extends Controller
         $paymentRequestComponent->save();
 
         $paymentRequest = PaymentRequest::find($paymentRequestComponent->payment_request_id);
-        if (!$paymentRequest) {
+        if (! $paymentRequest) {
             return;
         }
 
         /** @var PaymentRequest $paymentRequest */
-        $paymentRequest->total = (float)$paymentRequest->components()->sum('total');
+        $paymentRequest->total = (float) $paymentRequest->components()->sum('total');
         $paymentRequest->save();
     }
 }

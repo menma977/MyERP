@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -36,8 +37,8 @@ class PurchaseInvoiceController extends Controller
             'deletedBy',
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
-                return $query->where('code', 'like', '%' . $request->input('search') . '%')->orWhereHas('order', function (Builder $query) use ($request) {
-                    $query->where('code', 'like', '%' . $request->input('search') . '%');
+                return $query->where('code', 'like', '%'.$request->input('search').'%')->orWhereHas('order', function (Builder $query) use ($request) {
+                    $query->where('code', 'like', '%'.$request->input('search').'%');
                 });
             });
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
@@ -88,7 +89,7 @@ class PurchaseInvoiceController extends Controller
         $purchaseInvoice->save();
 
         return [
-            'message' => trans('messages.success.update', ['target' => 'Purchase Invoice']),
+            'message' => trans('messages.success.update', ['target' => 'Purchase Invoice'], App::getLocale()),
         ];
     }
 
@@ -106,7 +107,7 @@ class PurchaseInvoiceController extends Controller
         $purchaseInvoice->delete();
 
         return [
-            'message' => trans('messages.success.delete', ['target' => 'Purchase Invoice']),
+            'message' => trans('messages.success.delete', ['target' => 'Purchase Invoice'], App::getLocale()),
         ];
     }
 
@@ -124,7 +125,7 @@ class PurchaseInvoiceController extends Controller
         $purchaseInvoice->restore();
 
         return [
-            'message' => trans('messages.success.restore', ['target' => 'Purchase Invoice']),
+            'message' => trans('messages.success.restore', ['target' => 'Purchase Invoice'], App::getLocale()),
         ];
     }
 
@@ -142,7 +143,7 @@ class PurchaseInvoiceController extends Controller
         $purchaseInvoice->forceDelete();
 
         return [
-            'message' => trans('messages.success.destroy', ['target' => 'Purchase Invoice']),
+            'message' => trans('messages.success.destroy', ['target' => 'Purchase Invoice'], App::getLocale()),
         ];
     }
 
@@ -159,16 +160,16 @@ class PurchaseInvoiceController extends Controller
         $purchaseInvoice = PurchaseInvoice::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Purchase Invoice', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Purchase Invoice', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseInvoice->approve($user);
 
         return [
-            'message' => trans('messages.success.approve', ['target' => 'Purchase Invoice']),
+            'message' => trans('messages.success.approve', ['target' => 'Purchase Invoice'], App::getLocale()),
         ];
     }
 
@@ -185,16 +186,16 @@ class PurchaseInvoiceController extends Controller
         $purchaseInvoice = PurchaseInvoice::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'reject', 'attribute' => 'Purchase Invoice', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'reject', 'attribute' => 'Purchase Invoice', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseInvoice->reject($user);
 
         return [
-            'message' => trans('messages.success.reject', ['target' => 'Purchase Invoice']),
+            'message' => trans('messages.success.reject', ['target' => 'Purchase Invoice'], App::getLocale()),
         ];
     }
 
@@ -211,16 +212,16 @@ class PurchaseInvoiceController extends Controller
         $purchaseInvoice = PurchaseInvoice::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Purchase Invoice', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Purchase Invoice', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseInvoice->cancel($user);
 
         return [
-            'message' => trans('messages.success.cancel', ['target' => 'Purchase Invoice']),
+            'message' => trans('messages.success.cancel', ['target' => 'Purchase Invoice'], App::getLocale()),
         ];
     }
 
@@ -237,16 +238,16 @@ class PurchaseInvoiceController extends Controller
         $purchaseInvoice = PurchaseInvoice::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Purchase Invoice', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Purchase Invoice', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseInvoice->rollback($user);
 
         return [
-            'message' => trans('messages.success.rollback', ['target' => 'Purchase Invoice']),
+            'message' => trans('messages.success.rollback', ['target' => 'Purchase Invoice'], App::getLocale()),
         ];
     }
 
@@ -263,16 +264,16 @@ class PurchaseInvoiceController extends Controller
         $purchaseInvoice = PurchaseInvoice::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Purchase Invoice', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Purchase Invoice', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
         $purchaseInvoice->force($user, $request->input('step'));
 
         return [
-            'message' => trans('messages.success.force', ['target' => 'Purchase Invoice']),
+            'message' => trans('messages.success.force', ['target' => 'Purchase Invoice'], App::getLocale()),
         ];
     }
 }

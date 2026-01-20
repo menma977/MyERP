@@ -17,9 +17,9 @@ class FlowController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return ApprovalFlow[]|Collection<int, ApprovalFlow>|LengthAwarePaginator<int, ApprovalFlow>
+     * @return Collection<int, ApprovalFlow>|LengthAwarePaginator<int, ApprovalFlow>
      */
-    public function index(Request $request)
+    public function index(Request $request): Collection|LengthAwarePaginator
     {
         $flow = ApprovalFlow::when($request->input('search'), function ($build) use ($request) {
             return $build->where('name', 'like', '%'.$request->input('search').'%');
@@ -39,7 +39,7 @@ class FlowController extends Controller
      *
      * @return array<string, string>
      */
-    public function store(Request $request)
+    public function store(Request $request): array
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -75,7 +75,7 @@ class FlowController extends Controller
      *
      * @return array<string, string>
      */
-    public function update(Request $request)
+    public function update(Request $request): array
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -101,7 +101,7 @@ class FlowController extends Controller
      *
      * @return array<string, string>
      */
-    public function delete(Request $request)
+    public function delete(Request $request): array
     {
         $flow = ApprovalFlow::findOrFail($request->route('id'));
 

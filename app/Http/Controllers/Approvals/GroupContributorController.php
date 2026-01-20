@@ -18,9 +18,9 @@ class GroupContributorController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return ApprovalGroupContributor[]|Collection<int, ApprovalGroupContributor>|LengthAwarePaginator<int, ApprovalGroupContributor>
+     * @return Collection<int, ApprovalGroupContributor>|LengthAwarePaginator<int, ApprovalGroupContributor>
      */
-    public function index(Request $request)
+    public function index(Request $request): Collection|LengthAwarePaginator
     {
         $groupContributors = ApprovalGroupContributor::with([
             'group',
@@ -47,7 +47,7 @@ class GroupContributorController extends Controller
      *
      * @return array<string, string>
      */
-    public function store(Request $request)
+    public function store(Request $request): array
     {
         $request->validate([
             'user_id' => ['required', 'exists:users,id'],
@@ -97,7 +97,7 @@ class GroupContributorController extends Controller
      *
      * @return array<string, string>
      */
-    public function update(Request $request)
+    public function update(Request $request): array
     {
         $request->validate([
             'user_id' => ['required', 'exists:users,id'],
@@ -125,7 +125,7 @@ class GroupContributorController extends Controller
      *
      * @return array<string, string>
      */
-    public function delete(Request $request)
+    public function delete(Request $request): array
     {
         $groupContributors = ApprovalGroupContributor::findOrFail($request->route('id'));
 

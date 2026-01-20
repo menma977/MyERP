@@ -61,7 +61,7 @@ class PurchaseRequest extends ApprovalAbstract
     use HasUlids, SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are mass-assignable.
      *
      * @var list<string>
      */
@@ -104,7 +104,7 @@ class PurchaseRequest extends ApprovalAbstract
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
                 $purchaseRequest = PurchaseRequest::find($approvalEvent->id);
-                if (!$purchaseRequest) {
+                if (! $purchaseRequest) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();
 

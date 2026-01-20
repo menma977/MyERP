@@ -14,12 +14,12 @@ class RoleHasUserSeeder extends Seeder
     public function run(): void
     {
         $developer = User::where('username', 'dev')->first();
-        if (!$developer) {
+        if (! $developer) {
             return;
         }
 
         $developerRole = Role::where('name', 'developer')->first();
-        if (!$developerRole) {
+        if (! $developerRole) {
             return;
         }
 

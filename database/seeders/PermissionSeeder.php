@@ -50,7 +50,7 @@ class PermissionSeeder extends Seeder
         $permissionNames = $permissions->pluck('name')->toArray();
 
         $developer = Role::where('name', 'developer')->first();
-        if (!$developer) {
+        if (! $developer) {
             $this->command->error('Developer role not found. Skipping permission assignment.');
 
             return;

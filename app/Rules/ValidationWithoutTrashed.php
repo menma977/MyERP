@@ -4,6 +4,7 @@ namespace App\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\App;
 use Illuminate\Translation\PotentiallyTranslatedString;
 
 class ValidationWithoutTrashed implements ValidationRule
@@ -35,7 +36,7 @@ class ValidationWithoutTrashed implements ValidationRule
         }
 
         if ($query->exists()) {
-            $fail(trans('validation.unique', ['attribute' => $attribute]));
+            $fail(trans('validation.unique', ['attribute' => $attribute], App::getLocale()));
         }
     }
 }

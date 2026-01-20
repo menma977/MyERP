@@ -19,7 +19,7 @@ use Illuminate\Support\Carbon;
  * @property string $item_id
  * @property string $item_batch_id
  * @property string $item_stock_id
- * @property string $quantity
+ * @property float $quantity
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -62,7 +62,7 @@ class GoodIssueComponent extends ModelAbstract
     use HasUlids, SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are mass-assignable.
      *
      * @var list<string>
      */

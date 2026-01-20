@@ -17,9 +17,9 @@ class FlowComponentController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return ApprovalFlowComponent[]|Collection<int, ApprovalFlowComponent>|LengthAwarePaginator<int, ApprovalFlowComponent>
+     * @return Collection<int, ApprovalFlowComponent>|LengthAwarePaginator<int, ApprovalFlowComponent>
      */
-    public function index(Request $request)
+    public function index(Request $request): Collection|LengthAwarePaginator
     {
         $flowComponent = ApprovalFlowComponent::where('approval_flow_id', $request->route('flow_id'))->when($request->input('search'), function ($build) use ($request) {
             return $build->where('key', 'like', '%'.$request->input('search').'%');
@@ -39,7 +39,7 @@ class FlowComponentController extends Controller
      *
      * @return array<string, string>
      */
-    public function store(Request $request)
+    public function store(Request $request): array
     {
         $request->validate([
             'approval_dictionary_id' => ['required', 'exists:approval_dictionaries,id'],
@@ -81,7 +81,7 @@ class FlowComponentController extends Controller
      *
      * @return array<string, string>
      */
-    public function update(Request $request)
+    public function update(Request $request): array
     {
         $request->validate([
             'approval_dictionary_id' => ['required', 'exists:approval_dictionaries,id'],
@@ -112,7 +112,7 @@ class FlowComponentController extends Controller
      *
      * @return array<string, string>
      */
-    public function delete(Request $request)
+    public function delete(Request $request): array
     {
         $flowComponent = ApprovalFlowComponent::findOrFail($request->route('id'));
         if ($flowComponent instanceof ApprovalFlowComponent) {

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -64,7 +65,7 @@ class PurchaseRequestComponentController extends Controller
         $user = Auth::user();
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Purchase Request Component', 'target' => 'Access']),
+                'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Purchase Request Component', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
@@ -72,7 +73,7 @@ class PurchaseRequestComponentController extends Controller
         $this->save($request, $purchaseRequestComponent);
 
         return [
-            'message' => trans('messages.success.store', ['target' => 'Purchase Request Component']),
+            'message' => trans('messages.success.store', ['target' => 'Purchase Request Component'], App::getLocale()),
         ];
     }
 
@@ -114,7 +115,7 @@ class PurchaseRequestComponentController extends Controller
         $this->save($request, $purchaseRequestComponent);
 
         return [
-            'message' => trans('messages.success.update', ['target' => 'Purchase Request Component']),
+            'message' => trans('messages.success.update', ['target' => 'Purchase Request Component'], App::getLocale()),
         ];
     }
 
@@ -132,7 +133,7 @@ class PurchaseRequestComponentController extends Controller
         $purchaseRequestComponent->delete();
 
         return [
-            'message' => trans('messages.success.delete', ['target' => 'Purchase Request Component']),
+            'message' => trans('messages.success.delete', ['target' => 'Purchase Request Component'], App::getLocale()),
         ];
     }
 
@@ -150,7 +151,7 @@ class PurchaseRequestComponentController extends Controller
         $purchaseRequestComponent->restore();
 
         return [
-            'message' => trans('messages.success.restore', ['target' => 'Purchase Request Component']),
+            'message' => trans('messages.success.restore', ['target' => 'Purchase Request Component'], App::getLocale()),
         ];
     }
 
@@ -168,7 +169,7 @@ class PurchaseRequestComponentController extends Controller
         $purchaseRequestComponent->forceDelete();
 
         return [
-            'message' => trans('messages.success.destroy', ['target' => 'Purchase Request Component']),
+            'message' => trans('messages.success.destroy', ['target' => 'Purchase Request Component'], App::getLocale()),
         ];
     }
 
