@@ -17,6 +17,7 @@ return new class extends Migration
             $table->ulid('id')->primary()->index();
             $table->foreignUlid('sales_invoice_id')->constrained('sales_invoices')->cascadeOnDelete();
             $table->string('code')->unique();
+            $table->decimal('hpp', 18, 4)->default(0);
             $table->decimal('total', 18, 4)->default(0);
             $table->text('note')->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();

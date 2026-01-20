@@ -24,7 +24,8 @@ use Illuminate\Validation\ValidationException;
  * @property string $id
  * @property string $sales_invoice_id
  * @property string $code
- * @property string $total
+ * @property float $cogs
+ * @property float $total
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -72,6 +73,7 @@ class GoodIssue extends ApprovalAbstract
     protected $fillable = [
         'sales_invoice_id',
         'code',
+        'cogs',
         'total',
         'note',
         'created_by',
@@ -115,20 +117,32 @@ class GoodIssue extends ApprovalAbstract
                     ]);
                 }
 
+                $cogs = 0;
                 foreach ($goodIssue->components as $component) {
                     $stock = ItemStock::find($component->item_stock_id);
                     if (! $stock) {
                         continue;
                     }
 
+                    $componentCogs = $component->quantity * $stock->price;
+                    $component->cogs = $componentCogs;
+                    $component->save();
+
+                    $cogs += $componentCogs;
+
                     $stock->quantity -= $component->quantity;
                     $stock->save();
 
                     $stockHistory = new ItemStockHistory;
+                    $stockHistory->code = $goodIssue->code;
                     $stockHistory->item_stock_id = $stock->id;
-                    $stockHistory->quantity -= $component->quantity;
+                    $stockHistory->quantity = -$component->quantity;
+                    $stockHistory->price = $stock->price;
                     $stockHistory->save();
                 }
+
+                $goodIssue->cogs = $cogs;
+                $goodIssue->save();
             });
         }
     }
