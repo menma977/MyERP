@@ -164,11 +164,15 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'approval.event.component.store', 'label' => 'Approval Event Component Store', 'group' => 'approval.event.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'approval.event.component.update', 'label' => 'Approval Event Component Update', 'group' => 'approval.event.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'approval.event.component.delete', 'label' => 'Approval Event Component Delete', 'group' => 'approval.event.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'approval.event.component.destroy', 'label' => 'Approval Event Component Destroy', 'group' => 'approval.event.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'approval.event.component.restore', 'label' => 'Approval Event Component Restore', 'group' => 'approval.event.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'approval.event.contributor.index', 'label' => 'Approval Event Contributor Index', 'group' => 'approval.event.contributor', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'approval.event.contributor.show', 'label' => 'Approval Event Contributor Show', 'group' => 'approval.event.contributor', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'approval.event.contributor.store', 'label' => 'Approval Event Contributor Store', 'group' => 'approval.event.contributor', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'approval.event.contributor.update', 'label' => 'Approval Event Contributor Update', 'group' => 'approval.event.contributor', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'approval.event.contributor.delete', 'label' => 'Approval Event Contributor Delete', 'group' => 'approval.event.contributor', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'approval.event.contributor.destroy', 'label' => 'Approval Event Contributor Destroy', 'group' => 'approval.event.contributor', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'approval.event.contributor.restore', 'label' => 'Approval Event Contributor Restore', 'group' => 'approval.event.contributor', 'guard_name' => 'sanctum']);
 
         /**Items permissions*/
         $collector->push(['name' => 'item.index', 'label' => 'Item Index', 'group' => 'item', 'guard_name' => 'sanctum']);
@@ -229,6 +233,8 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'good.receipt.component.store', 'label' => 'Good Receipt Component Store', 'group' => 'good.receipt.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'good.receipt.component.update', 'label' => 'Good Receipt Component Update', 'group' => 'good.receipt.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'good.receipt.component.delete', 'label' => 'Good Receipt Component Delete', 'group' => 'good.receipt.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'good.receipt.component.destroy', 'label' => 'Good Receipt Component Destroy', 'group' => 'good.receipt.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'good.receipt.component.restore', 'label' => 'Good Receipt Component Restore', 'group' => 'good.receipt.component', 'guard_name' => 'sanctum']);
 
         /**Good Issue permissions*/
         $collector->push(['name' => 'good.issue.index', 'label' => 'Good Issue Index', 'group' => 'good.issue', 'guard_name' => 'sanctum']);
@@ -243,6 +249,8 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'good.issue.component.store', 'label' => 'Good Issue Component Store', 'group' => 'good.issue.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'good.issue.component.update', 'label' => 'Good Issue Component Update', 'group' => 'good.issue.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'good.issue.component.delete', 'label' => 'Good Issue Component Delete', 'group' => 'good.issue.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'good.issue.component.destroy', 'label' => 'Good Issue Component Destroy', 'group' => 'good.issue.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'good.issue.component.restore', 'label' => 'Good Issue Component Restore', 'group' => 'good.issue.component', 'guard_name' => 'sanctum']);
 
         /**Purchase Request permissions*/
         $collector->push(['name' => 'purchase.request.index', 'label' => 'Purchase Request Index', 'group' => 'purchase.request', 'guard_name' => 'sanctum']);
@@ -257,6 +265,8 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'purchase.request.component.store', 'label' => 'Purchase Request Component Store', 'group' => 'purchase.request.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'purchase.request.component.update', 'label' => 'Purchase Request Component Update', 'group' => 'purchase.request.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'purchase.request.component.delete', 'label' => 'Purchase Request Component Delete', 'group' => 'purchase.request.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'purchase.request.component.destroy', 'label' => 'Purchase Request Component Destroy', 'group' => 'purchase.request.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'purchase.request.component.restore', 'label' => 'Purchase Request Component Restore', 'group' => 'purchase.request.component', 'guard_name' => 'sanctum']);
 
         /**Purchase Procurement permissions*/
         $collector->push(['name' => 'purchase.procurement.index', 'label' => 'Purchase Procurement Index', 'group' => 'purchase.procurement', 'guard_name' => 'sanctum']);
@@ -271,6 +281,8 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'purchase.procurement.component.store', 'label' => 'Purchase Procurement Component Store', 'group' => 'purchase.procurement.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'purchase.procurement.component.update', 'label' => 'Purchase Procurement Component Update', 'group' => 'purchase.procurement.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'purchase.procurement.component.delete', 'label' => 'Purchase Procurement Component Delete', 'group' => 'purchase.procurement.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'purchase.procurement.component.destroy', 'label' => 'Purchase Procurement Component Destroy', 'group' => 'purchase.procurement.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'purchase.procurement.component.restore', 'label' => 'Purchase Procurement Component Restore', 'group' => 'purchase.procurement.component', 'guard_name' => 'sanctum']);
 
         /**Purchase Order permissions*/
         $collector->push(['name' => 'purchase.order.index', 'label' => 'Purchase Order Index', 'group' => 'purchase.order', 'guard_name' => 'sanctum']);
@@ -285,6 +297,8 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'purchase.order.component.store', 'label' => 'Purchase Order Component Store', 'group' => 'purchase.order.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'purchase.order.component.update', 'label' => 'Purchase Order Component Update', 'group' => 'purchase.order.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'purchase.order.component.delete', 'label' => 'Purchase Order Component Delete', 'group' => 'purchase.order.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'purchase.order.component.destroy', 'label' => 'Purchase Order Component Destroy', 'group' => 'purchase.order.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'purchase.order.component.restore', 'label' => 'Purchase Order Component Restore', 'group' => 'purchase.order.component', 'guard_name' => 'sanctum']);
 
         /**Purchase Return permissions*/
         $collector->push(['name' => 'purchase.return.index', 'label' => 'Purchase Return Index', 'group' => 'purchase.return', 'guard_name' => 'sanctum']);
@@ -299,6 +313,8 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'purchase.return.component.store', 'label' => 'Purchase Return Component Store', 'group' => 'purchase.return.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'purchase.return.component.update', 'label' => 'Purchase Return Component Update', 'group' => 'purchase.return.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'purchase.return.component.delete', 'label' => 'Purchase Return Component Delete', 'group' => 'purchase.return.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'purchase.return.component.destroy', 'label' => 'Purchase Return Component Destroy', 'group' => 'purchase.return.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'purchase.return.component.restore', 'label' => 'Purchase Return Component Restore', 'group' => 'purchase.return.component', 'guard_name' => 'sanctum']);
 
         /**Purchase Invoice permissions*/
         $collector->push(['name' => 'purchase.invoice.index', 'label' => 'Purchase Invoice Index', 'group' => 'purchase.invoice', 'guard_name' => 'sanctum']);
@@ -313,6 +329,8 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'purchase.invoice.component.store', 'label' => 'Purchase Invoice Component Store', 'group' => 'purchase.invoice.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'purchase.invoice.component.update', 'label' => 'Purchase Invoice Component Update', 'group' => 'purchase.invoice.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'purchase.invoice.component.delete', 'label' => 'Purchase Invoice Component Delete', 'group' => 'purchase.invoice.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'purchase.invoice.component.restore', 'label' => 'Purchase Invoice Component Restore', 'group' => 'purchase.invoice.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'purchase.invoice.component.destroy', 'label' => 'Purchase Invoice Component Destroy', 'group' => 'purchase.invoice.component', 'guard_name' => 'sanctum']);
 
         /**Sales Order permissions*/
         $collector->push(['name' => 'sales.order.index', 'label' => 'Sales Order Index', 'group' => 'sales.order', 'guard_name' => 'sanctum']);
@@ -327,6 +345,8 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'sales.order.component.store', 'label' => 'Sales Order Component Store', 'group' => 'sales.order.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'sales.order.component.update', 'label' => 'Sales Order Component Update', 'group' => 'sales.order.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'sales.order.component.delete', 'label' => 'Sales Order Component Delete', 'group' => 'sales.order.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'sales.order.component.restore', 'label' => 'Sales Order Component Restore', 'group' => 'sales.order.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'sales.order.component.destroy', 'label' => 'Sales Order Component Destroy', 'group' => 'sales.order.component', 'guard_name' => 'sanctum']);
 
         /**Sales Invoice permissions*/
         $collector->push(['name' => 'sales.invoice.index', 'label' => 'Sales Invoice Index', 'group' => 'sales.invoice', 'guard_name' => 'sanctum']);
@@ -341,6 +361,8 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'sales.invoice.component.store', 'label' => 'Sales Invoice Component Store', 'group' => 'sales.invoice.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'sales.invoice.component.update', 'label' => 'Sales Invoice Component Update', 'group' => 'sales.invoice.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'sales.invoice.component.delete', 'label' => 'Sales Invoice Component Delete', 'group' => 'sales.invoice.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'sales.invoice.component.restore', 'label' => 'Sales Invoice Component Restore', 'group' => 'sales.invoice.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'sales.invoice.component.destroy', 'label' => 'Sales Invoice Component Destroy', 'group' => 'sales.invoice.component', 'guard_name' => 'sanctum']);
 
         /**Sales Return permissions*/
         $collector->push(['name' => 'sales.return.index', 'label' => 'Sales Return Index', 'group' => 'sales.return', 'guard_name' => 'sanctum']);
@@ -355,6 +377,8 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'sales.return.component.store', 'label' => 'Sales Return Component Store', 'group' => 'sales.return.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'sales.return.component.update', 'label' => 'Sales Return Component Update', 'group' => 'sales.return.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'sales.return.component.delete', 'label' => 'Sales Return Component Delete', 'group' => 'sales.return.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'sales.return.component.destroy', 'label' => 'Sales Return Component Destroy', 'group' => 'sales.return.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'sales.return.component.restore', 'label' => 'Sales Return Component Restore', 'group' => 'sales.return.component', 'guard_name' => 'sanctum']);
 
         /**Vendor permissions*/
         $collector->push(['name' => 'vendor.index', 'label' => 'Vendor Index', 'group' => 'vendor', 'guard_name' => 'sanctum']);
@@ -369,21 +393,29 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'vendor.component.store', 'label' => 'Vendor Component Store', 'group' => 'vendor.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.component.update', 'label' => 'Vendor Component Update', 'group' => 'vendor.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.component.delete', 'label' => 'Vendor Component Delete', 'group' => 'vendor.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.component.destroy', 'label' => 'Vendor Component Destroy', 'group' => 'vendor.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.component.restore', 'label' => 'Vendor Component Restore', 'group' => 'vendor.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.component.history.index', 'label' => 'Vendor Component History Index', 'group' => 'vendor.component.history', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.component.history.show', 'label' => 'Vendor Component History Show', 'group' => 'vendor.component.history', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.component.history.store', 'label' => 'Vendor Component History Store', 'group' => 'vendor.component.history', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.component.history.update', 'label' => 'Vendor Component History Update', 'group' => 'vendor.component.history', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.component.history.delete', 'label' => 'Vendor Component History Delete', 'group' => 'vendor.component.history', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.component.history.destroy', 'label' => 'Vendor Component History Destroy', 'group' => 'vendor.component.history', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.component.history.restore', 'label' => 'Vendor Component History Restore', 'group' => 'vendor.component.history', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.account.payable.index', 'label' => 'Vendor Account Payable Index', 'group' => 'vendor.account.payable', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.account.payable.show', 'label' => 'Vendor Account Payable Show', 'group' => 'vendor.account.payable', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.account.payable.store', 'label' => 'Vendor Account Payable Store', 'group' => 'vendor.account.payable', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.account.payable.update', 'label' => 'Vendor Account Payable Update', 'group' => 'vendor.account.payable', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.account.payable.delete', 'label' => 'Vendor Account Payable Delete', 'group' => 'vendor.account.payable', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.account.payable.destroy', 'label' => 'Vendor Account Payable Destroy', 'group' => 'vendor.account.payable', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.account.payable.restore', 'label' => 'Vendor Account Payable Restore', 'group' => 'vendor.account.payable', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.account.payable.component.index', 'label' => 'Vendor Account Payable Component Index', 'group' => 'vendor.account.payable.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.account.payable.component.show', 'label' => 'Vendor Account Payable Component Show', 'group' => 'vendor.account.payable.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.account.payable.component.store', 'label' => 'Vendor Account Payable Component Store', 'group' => 'vendor.account.payable.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.account.payable.component.update', 'label' => 'Vendor Account Payable Component Update', 'group' => 'vendor.account.payable.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.account.payable.component.delete', 'label' => 'Vendor Account Payable Component Delete', 'group' => 'vendor.account.payable.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.account.payable.component.destroy', 'label' => 'Vendor Account Payable Component Destroy', 'group' => 'vendor.account.payable.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.account.payable.component.restore', 'label' => 'Vendor Account Payable Component Restore', 'group' => 'vendor.account.payable.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.invoice.index', 'label' => 'Vendor Invoice Index', 'group' => 'vendor.invoice', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.invoice.show', 'label' => 'Vendor Invoice Show', 'group' => 'vendor.invoice', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.invoice.store', 'label' => 'Vendor Invoice Store', 'group' => 'vendor.invoice', 'guard_name' => 'sanctum']);
@@ -396,6 +428,8 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'vendor.invoice.component.store', 'label' => 'Vendor Invoice Component Store', 'group' => 'vendor.invoice.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.invoice.component.update', 'label' => 'Vendor Invoice Component Update', 'group' => 'vendor.invoice.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.invoice.component.delete', 'label' => 'Vendor Invoice Component Delete', 'group' => 'vendor.invoice.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.invoice.component.destroy', 'label' => 'Vendor Invoice Component Destroy', 'group' => 'vendor.invoice.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.invoice.component.restore', 'label' => 'Vendor Invoice Component Restore', 'group' => 'vendor.invoice.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.payment.index', 'label' => 'Vendor Payment Index', 'group' => 'vendor.payment', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.payment.show', 'label' => 'Vendor Payment Show', 'group' => 'vendor.payment', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.payment.store', 'label' => 'Vendor Payment Store', 'group' => 'vendor.payment', 'guard_name' => 'sanctum']);
@@ -408,6 +442,8 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'vendor.payment.component.store', 'label' => 'Vendor Payment Component Store', 'group' => 'vendor.payment.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.payment.component.update', 'label' => 'Vendor Payment Component Update', 'group' => 'vendor.payment.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.payment.component.delete', 'label' => 'Vendor Payment Component Delete', 'group' => 'vendor.payment.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.payment.component.destroy', 'label' => 'Vendor Payment Component Destroy', 'group' => 'vendor.payment.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.payment.component.restore', 'label' => 'Vendor Payment Component Restore', 'group' => 'vendor.payment.component', 'guard_name' => 'sanctum']);
 
         /**Transaction Ledger permissions*/
         $collector->push(['name' => 'ledger.index', 'label' => 'Ledger Index', 'group' => 'ledger', 'guard_name' => 'sanctum']);
@@ -422,6 +458,8 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'ledger.component.store', 'label' => 'Ledger Component Store', 'group' => 'ledger.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'ledger.component.update', 'label' => 'Ledger Component Update', 'group' => 'ledger.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'ledger.component.delete', 'label' => 'Ledger Component Delete', 'group' => 'ledger.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'ledger.component.destroy', 'label' => 'Ledger Component Destroy', 'group' => 'ledger.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'ledger.component.restore', 'label' => 'Ledger Component Restore', 'group' => 'ledger.component', 'guard_name' => 'sanctum']);
 
         /**Transaction Payment Request permissions*/
         $collector->push(['name' => 'payment.request.index', 'label' => 'Payment Request Index', 'group' => 'payment.request', 'guard_name' => 'sanctum']);
@@ -436,6 +474,8 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'payment.request.component.store', 'label' => 'Payment Request Component Store', 'group' => 'payment.request.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'payment.request.component.update', 'label' => 'Payment Request Component Update', 'group' => 'payment.request.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'payment.request.component.delete', 'label' => 'Payment Request Component Delete', 'group' => 'payment.request.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'payment.request.component.destroy', 'label' => 'Payment Request Component Destroy', 'group' => 'payment.request.component', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'payment.request.component.restore', 'label' => 'Payment Request Component Restore', 'group' => 'payment.request.component', 'guard_name' => 'sanctum']);
 
         return $collector;
     }
