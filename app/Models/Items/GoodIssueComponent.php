@@ -20,6 +20,7 @@ use Illuminate\Support\Carbon;
  * @property string $item_batch_id
  * @property string $item_stock_id
  * @property float $quantity
+ * @property float $cogs
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -73,6 +74,7 @@ class GoodIssueComponent extends ModelAbstract
         'item_batch_id',
         'item_stock_id',
         'quantity',
+        'cogs',
         'created_by',
         'updated_by',
         'deleted_by',
