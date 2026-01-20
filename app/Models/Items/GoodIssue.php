@@ -121,12 +121,12 @@ class GoodIssue extends ApprovalAbstract
                         continue;
                     }
 
-                    $stock->quantity += $component->quantity;
+                    $stock->quantity -= $component->quantity;
                     $stock->save();
 
                     $stockHistory = new ItemStockHistory;
                     $stockHistory->item_stock_id = $stock->id;
-                    $stockHistory->quantity = $component->quantity;
+                    $stockHistory->quantity -= $component->quantity;
                     $stockHistory->save();
                 }
             });
