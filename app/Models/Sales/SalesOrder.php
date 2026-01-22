@@ -3,8 +3,11 @@
 namespace App\Models\Sales;
 
 use App\Abstracts\ApprovalAbstract;
+use App\Enums\DiscountTypeEnum;
 use App\Models\Approval\ApprovalEvent;
+use App\Models\Items\ItemBatch;
 use App\Models\User;
+use App\Services\CodeGeneratorService;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,13 +16,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Represents a Sales Order in the system.
  *
  * @property string $id
  * @property string $code
- * @property string $total
+ * @property float $total
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -103,5 +108,64 @@ class SalesOrder extends ApprovalAbstract
         return [
             'total' => 'decimal:2',
         ];
+    }
+
+    protected function onApprove(ApprovalEvent $approvalEvent): void
+    {
+        if ($approvalEvent->is_approved) {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            DB::transaction(function () use ($approvalEvent) {
+                $salesOrder = SalesOrder::find($approvalEvent->id);
+                if (! $salesOrder) {
+                    $approvalEvent->approved_at = null;
+                    $approvalEvent->save();
+
+                    throw ValidationException::withMessages([
+                        'id' => trans('messages.fail.approve', ['target' => 'Sales Order']),
+                    ]);
+                }
+
+                $salesInvoice = new SalesInvoice;
+                $salesInvoice->sales_order_id = $salesOrder->id;
+                $salesInvoice->code = CodeGeneratorService::code('SI')->number(SalesInvoice::count())->generate();
+                $salesInvoice->total = $salesOrder->total;
+                $salesInvoice->discount_type = DiscountTypeEnum::AMOUNT;
+                $salesInvoice->discount = 0;
+                $salesInvoice->grand_total = 0;
+                $salesInvoice->save();
+
+                foreach ($salesOrder->components as $component) {
+                    $remaining = $component->quantity;
+                    $batches = ItemBatch::with([
+                        'stock',
+                    ])->where('item_id', $component->item_id)->where('is_available', true)->orderBy('expired_at')->get();
+
+                    foreach ($batches as $batch) {
+                        if ($remaining <= 0) {
+                            break;
+                        }
+
+                        $stock = $batch->stock;
+                        if (! $stock || $stock->quantity <= 0) {
+                            continue;
+                        }
+
+                        $quantityToTake = min($remaining, $stock->quantity);
+
+                        $salesInvoiceComponent = new SalesInvoiceComponent;
+                        $salesInvoiceComponent->sales_invoice_id = $salesInvoice->id;
+                        $salesInvoiceComponent->item_id = $component->item_id;
+                        $salesInvoiceComponent->item_batch_id = $batch->id;
+                        $salesInvoiceComponent->item_stock_id = $stock->id;
+                        $salesInvoiceComponent->quantity = $quantityToTake;
+                        $salesInvoiceComponent->price = $component->price;
+                        $salesInvoiceComponent->total = $salesInvoiceComponent->quantity * $salesInvoiceComponent->price;
+                        $salesInvoiceComponent->save();
+
+                        $remaining -= $quantityToTake;
+                    }
+                }
+            });
+        }
     }
 }
