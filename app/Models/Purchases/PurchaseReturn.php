@@ -82,15 +82,6 @@ class PurchaseReturn extends ApprovalAbstract
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'total' => 'decimal:2',
-    ];
-
-    /**
      * @return BelongsTo<PurchaseOrder, $this>
      */
     public function order(): BelongsTo
@@ -112,5 +103,12 @@ class PurchaseReturn extends ApprovalAbstract
     public function components(): HasMany
     {
         return $this->hasMany(PurchaseReturnComponent::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'total' => 'decimal:2',
+        ];
     }
 }

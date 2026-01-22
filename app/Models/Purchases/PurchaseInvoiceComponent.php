@@ -75,17 +75,6 @@ class PurchaseInvoiceComponent extends ModelAbstract
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'quantity' => 'decimal:2',
-        'price' => 'decimal:2',
-        'total' => 'decimal:2',
-    ];
-
-    /**
      * @return BelongsTo<PurchaseInvoice, $this>
      */
     public function invoice(): BelongsTo
@@ -99,5 +88,14 @@ class PurchaseInvoiceComponent extends ModelAbstract
     public function orderComponent(): BelongsTo
     {
         return $this->belongsTo(PurchaseOrderComponent::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'quantity' => 'decimal:2',
+            'price' => 'decimal:2',
+            'total' => 'decimal:2',
+        ];
     }
 }

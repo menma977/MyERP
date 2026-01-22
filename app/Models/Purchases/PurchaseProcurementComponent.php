@@ -104,4 +104,13 @@ class PurchaseProcurementComponent extends ModelAbstract
     {
         return $this->belongsTo(Item::class);
     }
+
+    protected function casts(): array
+    {
+        return [
+            'quantity' => 'decimal:2',
+            'price' => 'decimal:2',
+            'total' => 'decimal:2',
+        ];
+    }
 }

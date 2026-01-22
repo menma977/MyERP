@@ -15,9 +15,9 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $vendor_payment_id
  * @property string $vendor_account_payable_component_id
- * @property string $quantity
- * @property string $price
- * @property string $total
+ * @property float $quantity
+ * @property float $price
+ * @property float $total
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -86,5 +86,14 @@ class VendorPaymentComponent extends ModelAbstract
     public function accountPayableComponent(): BelongsTo
     {
         return $this->belongsTo(VendorAccountPayableComponent::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'quantity' => 'decimal:2',
+            'price' => 'decimal:2',
+            'total' => 'decimal:2',
+        ];
     }
 }

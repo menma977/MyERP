@@ -16,9 +16,9 @@ use Illuminate\Support\Carbon;
  * @property string $vendor_invoice_id
  * @property string $vendor_component_id
  * @property string $item_id
- * @property string $quantity
- * @property string $price
- * @property string $total
+ * @property float $quantity
+ * @property float $price
+ * @property float $total
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -89,5 +89,14 @@ class VendorInvoiceComponent extends ModelAbstract
     public function vendorComponent(): BelongsTo
     {
         return $this->belongsTo(VendorComponent::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'quantity' => 'decimal:2',
+            'price' => 'decimal:2',
+            'total' => 'decimal:2',
+        ];
     }
 }

@@ -17,7 +17,7 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $item_bill_id
  * @property string $item_id
- * @property string $quantity
+ * @property float $quantity
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -82,5 +82,12 @@ class ItemBillComponent extends ModelAbstract
     public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'quantity' => 'decimal:2',
+        ];
     }
 }

@@ -76,20 +76,6 @@ class PurchaseRequestComponent extends ModelAbstract
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'price' => 'decimal:2',
-        'quantity' => 'decimal:2',
-        'total' => 'decimal:2',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',
-    ];
-
-    /**
      * @return BelongsTo<PurchaseRequest, $this>
      */
     public function request(): BelongsTo
@@ -103,6 +89,15 @@ class PurchaseRequestComponent extends ModelAbstract
     public function vendor(): BelongsTo
     {
         return $this->belongsTo(Vendor::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'price' => 'decimal:2',
+            'quantity' => 'decimal:2',
+            'total' => 'decimal:2',
+        ];
     }
 
     /**

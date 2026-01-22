@@ -17,7 +17,7 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property int $vendor_id
  * @property string $item_id
- * @property string $price
+ * @property float $price
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -83,5 +83,12 @@ class VendorComponent extends ApprovalAbstract
     public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class, 'item_id');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'price' => 'decimal:2',
+        ];
     }
 }

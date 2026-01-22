@@ -124,4 +124,16 @@ class PurchaseOrderComponent extends ModelAbstract
     {
         return $this->belongsTo(Item::class);
     }
+
+    protected function casts(): array
+    {
+        return [
+            'request_quantity' => 'decimal:2',
+            'request_price' => 'decimal:2',
+            'request_total' => 'decimal:2',
+            'quantity' => 'decimal:2',
+            'price' => 'decimal:2',
+            'total' => 'decimal:2',
+        ];
+    }
 }

@@ -74,4 +74,12 @@ class ItemStock extends ModelAbstract
     {
         return $this->belongsTo(ItemBatch::class);
     }
+
+    protected function casts(): array
+    {
+        return [
+            'quantity' => 'decimal:2',
+            'price' => 'decimal:2',
+        ];
+    }
 }

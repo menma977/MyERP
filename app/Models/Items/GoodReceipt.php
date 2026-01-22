@@ -118,6 +118,13 @@ class GoodReceipt extends ApprovalAbstract
         return $this->hasMany(PurchaseReturn::class, 'good_receipt_id');
     }
 
+    protected function casts(): array
+    {
+        return [
+            'total' => 'decimal:2',
+        ];
+    }
+
     protected function onApprove(ApprovalEvent $approvalEvent): void
     {
         if ($approvalEvent->is_approved) {

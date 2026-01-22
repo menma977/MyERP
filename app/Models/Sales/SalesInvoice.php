@@ -136,7 +136,12 @@ class SalesInvoice extends ApprovalAbstract
     protected function casts(): array
     {
         return [
+            'total' => 'decimal:2',
+            'tax' => 'decimal:2',
             'discount_type' => DiscountTypeEnum::class,
+            'discount' => 'decimal:2',
+            'fee' => 'decimal:2',
+            'grand_total' => 'decimal:2',
         ];
     }
 }

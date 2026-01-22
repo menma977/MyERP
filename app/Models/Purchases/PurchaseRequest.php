@@ -98,6 +98,13 @@ class PurchaseRequest extends ApprovalAbstract
         return $this->hasMany(PurchaseRequestComponent::class);
     }
 
+    protected function casts(): array
+    {
+        return [
+            'total' => 'decimal:2',
+        ];
+    }
+
     protected function onApprove(ApprovalEvent $approvalEvent): void
     {
         if ($approvalEvent->is_approved) {

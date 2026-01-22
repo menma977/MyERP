@@ -133,17 +133,17 @@ class PaymentRequest extends ApprovalAbstract
 
                 $ledger = new Ledger;
                 $ledger->code = CodeGeneratorService::code('LDG')->number(Ledger::count())->generate();
-                $ledger->in = '0';
-                $ledger->out = (string) $paymentRequest->total;
-                $ledger->total = (string) $paymentRequest->total;
+                $ledger->in = 0.0;
+                $ledger->out = $paymentRequest->total;
+                $ledger->total = $paymentRequest->total;
                 $ledger->save();
 
                 foreach ($paymentRequest->components as $component) {
                     $ledgerComponent = new LedgerComponent;
                     $ledgerComponent->ledger_id = $ledger->id;
-                    $ledgerComponent->in = '0';
-                    $ledgerComponent->out = (string) $component->total;
-                    $ledgerComponent->total = (string) $component->total;
+                    $ledgerComponent->in = 0.0;
+                    $ledgerComponent->out = $component->total;
+                    $ledgerComponent->total = $component->total;
                     $ledgerComponent->save();
                 }
             });
@@ -154,6 +154,8 @@ class PaymentRequest extends ApprovalAbstract
     {
         return [
             'method' => PaymentMethodEnum::class,
+            'total' => 'decimal:2',
+            'tax' => 'decimal:2',
         ];
     }
 }

@@ -100,4 +100,11 @@ class SalesReturn extends ApprovalAbstract
     {
         return $this->hasMany(SalesReturnComponent::class, 'sales_return_id');
     }
+
+    protected function casts(): array
+    {
+        return [
+            'total' => 'decimal:2',
+        ];
+    }
 }

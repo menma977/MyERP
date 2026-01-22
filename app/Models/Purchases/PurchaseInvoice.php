@@ -100,6 +100,14 @@ class PurchaseInvoice extends ApprovalAbstract
         return $this->hasMany(PurchaseInvoiceComponent::class, 'purchase_invoice_id');
     }
 
+    protected function casts(): array
+    {
+        return [
+            'total' => 'decimal:2',
+            'tax' => 'decimal:2',
+        ];
+    }
+
     protected function onApprove(ApprovalEvent $approvalEvent): void
     {
         if ($approvalEvent->is_approved) {

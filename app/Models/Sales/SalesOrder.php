@@ -97,4 +97,11 @@ class SalesOrder extends ApprovalAbstract
     {
         return $this->hasMany(SalesReturn::class, 'sales_order_id');
     }
+
+    protected function casts(): array
+    {
+        return [
+            'total' => 'decimal:2',
+        ];
+    }
 }
