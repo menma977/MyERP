@@ -76,6 +76,22 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'user.destroy', 'label' => 'User Destroy', 'group' => 'user', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'user.restore', 'label' => 'User Restore', 'group' => 'user', 'guard_name' => 'sanctum']);
 
+        $collector->push(['name' => 'user.super.index', 'label' => 'Superuser Index', 'group' => 'user.super', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'user.super.show', 'label' => 'Superuser Show', 'group' => 'user.super', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'user.super.store', 'label' => 'Superuser Store', 'group' => 'user.super', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'user.super.update', 'label' => 'Superuser Update', 'group' => 'user.super', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'user.super.delete', 'label' => 'Superuser Delete', 'group' => 'user.super', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'user.super.destroy', 'label' => 'Superuser Destroy', 'group' => 'user.super', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'user.super.restore', 'label' => 'Superuser Restore', 'group' => 'user.super', 'guard_name' => 'sanctum']);
+
+        $collector->push(['name' => 'user.super.developer.index', 'label' => 'Superuser Developer Index', 'group' => 'user.super.developer', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'user.super.developer.show', 'label' => 'Superuser Developer Show', 'group' => 'user.super.developer', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'user.super.developer.store', 'label' => 'Superuser Developer Store', 'group' => 'user.super.developer', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'user.super.developer.update', 'label' => 'Superuser Developer Update', 'group' => 'user.super.developer', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'user.super.developer.delete', 'label' => 'Superuser Developer Delete', 'group' => 'user.super.developer', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'user.super.developer.destroy', 'label' => 'Superuser Developer Destroy', 'group' => 'user.super.developer', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'user.super.developer.restore', 'label' => 'Superuser Developer Restore', 'group' => 'user.super.developer', 'guard_name' => 'sanctum']);
+
         /**Role permissions*/
         $collector->push(['name' => 'role.index', 'label' => 'Role Index', 'group' => 'role', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'role.show', 'label' => 'Role Show', 'group' => 'role', 'guard_name' => 'sanctum']);
