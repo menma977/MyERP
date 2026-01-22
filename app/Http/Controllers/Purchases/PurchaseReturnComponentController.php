@@ -43,7 +43,7 @@ class PurchaseReturnComponentController extends Controller
             return $purchaseReturnComponents->get();
         }
 
-        return $purchaseReturnComponents->withUsers()->paginate($request->input('per_page', 10));
+        return $purchaseReturnComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

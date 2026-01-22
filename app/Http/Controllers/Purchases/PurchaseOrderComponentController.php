@@ -40,7 +40,7 @@ class PurchaseOrderComponentController extends Controller
             return $purchaseOrderComponents->get();
         }
 
-        return $purchaseOrderComponents->withUsers()->paginate($request->input('per_page', 10));
+        return $purchaseOrderComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

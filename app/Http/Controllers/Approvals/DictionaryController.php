@@ -29,7 +29,7 @@ class DictionaryController extends Controller
             return $dictionary->get();
         }
 
-        return $dictionary->withUsers()->paginate($request->input('per_page', 10));
+        return $dictionary->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

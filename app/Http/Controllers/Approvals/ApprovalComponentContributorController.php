@@ -32,7 +32,7 @@ class ApprovalComponentContributorController extends Controller
             return $approvalComponentContributor->get();
         }
 
-        return $approvalComponentContributor->withUsers()->paginate($request->input('per_page', 10));
+        return $approvalComponentContributor->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

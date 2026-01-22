@@ -41,7 +41,7 @@ class PurchaseRequestController extends Controller
             return $purchaseRequests->get();
         }
 
-        return $purchaseRequests->paginate($request->input('per_page', 10));
+        return $purchaseRequests->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

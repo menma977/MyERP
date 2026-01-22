@@ -54,7 +54,7 @@ class StockHistoryController extends Controller
             return $histories->get();
         }
 
-        return $histories->withUsers()->paginate($request->input('per_page', 10));
+        return $histories->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

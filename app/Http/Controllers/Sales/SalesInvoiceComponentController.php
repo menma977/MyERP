@@ -28,7 +28,7 @@ class SalesInvoiceComponentController extends Controller
             return $salesInvoiceComponents->get();
         }
 
-        return $salesInvoiceComponents->withUsers()->paginate($request->input('per_page', 10));
+        return $salesInvoiceComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**
@@ -121,6 +121,7 @@ class SalesInvoiceComponentController extends Controller
     protected function save(Request $request, SalesInvoiceComponent $salesInvoiceComponent): void
     {
         $salesInvoiceComponent->sales_invoice_id = $request->input('sales_invoice_id');
+        /** @noinspection DuplicatedCode */
         $salesInvoiceComponent->item_id = $request->input('item_id');
         $salesInvoiceComponent->item_batch_id = $request->input('item_batch_id');
         $salesInvoiceComponent->item_stock_id = $request->input('item_stock_id');

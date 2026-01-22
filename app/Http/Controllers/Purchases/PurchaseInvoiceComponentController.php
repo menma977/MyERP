@@ -47,7 +47,7 @@ class PurchaseInvoiceComponentController extends Controller
             return $purchaseInvoiceComponents->get();
         }
 
-        return $purchaseInvoiceComponents->withUsers()->paginate($request->input('per_page', 10));
+        return $purchaseInvoiceComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

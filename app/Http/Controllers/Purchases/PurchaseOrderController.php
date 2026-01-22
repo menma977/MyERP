@@ -46,7 +46,7 @@ class PurchaseOrderController extends Controller
             return $purchaseOrders->get();
         }
 
-        return $purchaseOrders->withContributors()->withUsers()->paginate($request->input('per_page', 10));
+        return $purchaseOrders->withContributors()->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

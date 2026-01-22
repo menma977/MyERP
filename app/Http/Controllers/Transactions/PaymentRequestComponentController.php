@@ -48,7 +48,7 @@ class PaymentRequestComponentController extends Controller
             return $paymentRequestComponents->get();
         }
 
-        return $paymentRequestComponents->withUsers()->paginate($request->input('per_page', 10));
+        return $paymentRequestComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

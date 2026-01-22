@@ -38,7 +38,7 @@ class GoodReceiptController extends Controller
             return $goodReceipts->get();
         }
 
-        return $goodReceipts->withContributors()->withUsers()->paginate($request->input('per_page', 10));
+        return $goodReceipts->withContributors()->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

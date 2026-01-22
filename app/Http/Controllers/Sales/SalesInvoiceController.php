@@ -30,7 +30,7 @@ class SalesInvoiceController extends Controller
             return $salesInvoices->get();
         }
 
-        return $salesInvoices->withContributors()->withUsers()->paginate($request->input('per_page', 10));
+        return $salesInvoices->withContributors()->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

@@ -32,7 +32,7 @@ class RoleController extends Controller
             return $roles->get();
         }
 
-        return $roles->paginate($request->input('per_page', 10));
+        return $roles->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

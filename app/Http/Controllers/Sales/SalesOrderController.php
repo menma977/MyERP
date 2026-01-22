@@ -28,7 +28,7 @@ class SalesOrderController extends Controller
             return $salesOrders->get();
         }
 
-        return $salesOrders->withContributors()->withUsers()->paginate($request->input('per_page', 10));
+        return $salesOrders->withContributors()->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**
