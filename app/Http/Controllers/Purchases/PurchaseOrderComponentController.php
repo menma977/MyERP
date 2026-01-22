@@ -27,9 +27,6 @@ class PurchaseOrderComponentController extends Controller
             'requestComponent',
             'procurementComponent',
             'item',
-            'createdBy',
-            'updatedBy',
-            'deletedBy',
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
                 $query->where('note', 'like', '%'.$request->input('search').'%')
@@ -43,7 +40,7 @@ class PurchaseOrderComponentController extends Controller
             return $purchaseOrderComponents->get();
         }
 
-        return $purchaseOrderComponents->paginate($request->input('per_page', 10));
+        return $purchaseOrderComponents->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -75,10 +72,7 @@ class PurchaseOrderComponentController extends Controller
             'requestComponent',
             'procurementComponent',
             'item',
-            'createdBy',
-            'updatedBy',
-            'deletedBy',
-        ])->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
     }
 
     /**

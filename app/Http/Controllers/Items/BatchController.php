@@ -19,29 +19,28 @@ class BatchController extends Controller
      */
     public function index(Request $request): Collection|LengthAwarePaginator
     {
-        $batches = ItemBatch::with(['item', 'stock'])
-            ->when($request->input('search'), function (Builder $build) use ($request): Builder {
-                return $build->where(function (Builder $query) use ($request): Builder {
-                    return $query
-                        ->where('code', 'like', '%'.$request->input('search').'%')
-                        ->orWhereHas('item', function (Builder $query) use ($request): Builder {
-                            return $query->where('name', 'like', '%'.$request->input('search').'%');
-                        });
-                });
-            })
-            ->when($request->input('item_id'), function (Builder $build) use ($request): Builder {
-                return $build->where('item_id', $request->input('item_id'));
-            })
-            ->when($request->input('is_available') !== null, function (Builder $build) use ($request): Builder {
-                return $build->where('is_available', $request->input('is_available'));
-            })
-            ->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
+        $batches = ItemBatch::with([
+            'item',
+            'stock',
+        ])->when($request->input('search'), function (Builder $build) use ($request): Builder {
+            return $build->where(function (Builder $query) use ($request): Builder {
+                return $query
+                    ->where('code', 'like', '%'.$request->input('search').'%')
+                    ->orWhereHas('item', function (Builder $query) use ($request): Builder {
+                        return $query->where('name', 'like', '%'.$request->input('search').'%');
+                    });
+            });
+        })->when($request->input('item_id'), function (Builder $build) use ($request): Builder {
+            return $build->where('item_id', $request->input('item_id'));
+        })->when($request->input('is_available') !== null, function (Builder $build) use ($request): Builder {
+            return $build->where('is_available', $request->input('is_available'));
+        })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {
             return $batches->get();
         }
 
-        return $batches->paginate($request->input('per_page', 10));
+        return $batches->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -55,6 +54,6 @@ class BatchController extends Controller
         return ItemBatch::with([
             'item',
             'stock',
-        ])->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
     }
 }

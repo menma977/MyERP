@@ -31,9 +31,6 @@ class PaymentRequestComponentController extends Controller
             'paymentRequest',
             'purchaseOrderComponent',
             'purchaseInvoiceComponent',
-            'createdBy',
-            'updatedBy',
-            'deletedBy',
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
                 return $query->whereHas('paymentRequest', function (Builder $query) use ($request) {
@@ -51,7 +48,7 @@ class PaymentRequestComponentController extends Controller
             return $paymentRequestComponents->get();
         }
 
-        return $paymentRequestComponents->paginate($request->input('per_page', 10));
+        return $paymentRequestComponents->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -65,10 +62,7 @@ class PaymentRequestComponentController extends Controller
             'paymentRequest',
             'purchaseOrderComponent',
             'purchaseInvoiceComponent',
-            'createdBy',
-            'updatedBy',
-            'deletedBy',
-        ])->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
     }
 
     /**

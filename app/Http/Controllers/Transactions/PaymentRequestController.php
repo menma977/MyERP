@@ -27,10 +27,6 @@ class PaymentRequestController extends Controller
             'order',
             'invoice',
             'components',
-            'event.components.contributors.user',
-            'createdBy',
-            'updatedBy',
-            'deletedBy',
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
                 return $query->where('code', 'like', '%'.$request->input('search').'%')
@@ -47,7 +43,7 @@ class PaymentRequestController extends Controller
             return $paymentRequests->get();
         }
 
-        return $paymentRequests->paginate($request->input('per_page', 10));
+        return $paymentRequests->withContributors()->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -61,11 +57,7 @@ class PaymentRequestController extends Controller
             'order',
             'invoice',
             'components',
-            'event.components.contributors.user',
-            'createdBy',
-            'updatedBy',
-            'deletedBy',
-        ])->where('id', $request->route('id'))->firstOrFail();
+        ])->withContributors()->withUsers()->where('id', $request->route('id'))->firstOrFail();
     }
 
     /**

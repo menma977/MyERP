@@ -29,7 +29,7 @@ class DictionaryController extends Controller
             return $dictionary->get();
         }
 
-        return $dictionary->paginate($request->input('per_page', 10));
+        return $dictionary->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -67,7 +67,7 @@ class DictionaryController extends Controller
     {
         return ApprovalDictionary::with([
             'components',
-        ])->findOrFail($request->route('id'));
+        ])->withUsers()->findOrFail($request->route('id'));
     }
 
     /**

@@ -32,10 +32,6 @@ class PurchaseOrderController extends Controller
             'request',
             'procurement',
             'components',
-            'event.components.contributors.user',
-            'createdBy',
-            'updatedBy',
-            'deletedBy',
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
                 return $query->where('code', 'like', '%'.$request->input('search').'%')->orWhereHas('request', function (Builder $query) use ($request) {
@@ -50,7 +46,7 @@ class PurchaseOrderController extends Controller
             return $purchaseOrders->get();
         }
 
-        return $purchaseOrders->paginate($request->input('per_page', 10));
+        return $purchaseOrders->withContributors()->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -68,7 +64,7 @@ class PurchaseOrderController extends Controller
             'createdBy',
             'updatedBy',
             'deletedBy',
-        ])->where('id', $request->route('id'))->firstOrFail();
+        ])->withContributors()->withUsers()->where('id', $request->route('id'))->firstOrFail();
     }
 
     /**

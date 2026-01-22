@@ -43,7 +43,7 @@ class PurchaseReturnComponentController extends Controller
             return $purchaseReturnComponents->get();
         }
 
-        return $purchaseReturnComponents->paginate($request->input('per_page', 10));
+        return $purchaseReturnComponents->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -86,7 +86,7 @@ class PurchaseReturnComponentController extends Controller
             'createdBy',
             'updatedBy',
             'deletedBy',
-        ])->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
     }
 
     /**

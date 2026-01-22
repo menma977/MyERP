@@ -3,6 +3,7 @@
 namespace App\Models\Sales;
 
 use App\Abstracts\ApprovalAbstract;
+use App\Enums\DiscountTypeEnum;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\Items\GoodIssue;
 use App\Models\User;
@@ -21,12 +22,12 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $sales_order_id
  * @property string $code
- * @property string $total
- * @property string $tax
- * @property string $discount_type
- * @property string $discount
- * @property string $fee
- * @property string $grand_total
+ * @property float $total
+ * @property float $tax
+ * @property DiscountTypeEnum $discount_type
+ * @property float $discount
+ * @property float $fee
+ * @property float $grand_total
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -130,5 +131,12 @@ class SalesInvoice extends ApprovalAbstract
     public function salesReturns(): HasMany
     {
         return $this->hasMany(SalesReturn::class, 'sales_invoice_id');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'discount_type' => DiscountTypeEnum::class,
+        ];
     }
 }

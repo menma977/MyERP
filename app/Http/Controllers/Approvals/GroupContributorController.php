@@ -37,7 +37,7 @@ class GroupContributorController extends Controller
             return $groupContributors->get();
         }
 
-        return $groupContributors->paginate($request->input('per_page', 10));
+        return $groupContributors->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -87,7 +87,7 @@ class GroupContributorController extends Controller
         return ApprovalGroupContributor::with([
             'group',
             'user',
-        ])->findOrFail($request->route('id'));
+        ])->withUsers()->findOrFail($request->route('id'));
     }
 
     /**

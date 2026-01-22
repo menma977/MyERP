@@ -51,8 +51,6 @@ class RoleController extends Controller
      * Store a newly created resource in storage.
      *
      * @return array{message: string}
-     *
-     * @noinspection PhpMultipleClassDeclarationsInspection
      */
     public function store(Request $request): array
     {

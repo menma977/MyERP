@@ -26,34 +26,16 @@ class PurchaseRequestController extends Controller
      */
     public function index(Request $request): LengthAwarePaginator|Collection
     {
-        $purchaseRequests = PurchaseRequest::with([
-            'components',
-            'event.components.contributors.user',
-            'createdBy',
-            'updatedBy',
-            'deletedBy',
-        ])->when($request->input('search'), function (Builder $query) use ($request) {
-            return $query->where(function (Builder $query) use ($request) {
-                return $query->where('code', 'like', '%'.$request->input('search').'%');
-            });
-        })->when(function () use ($request) {
-            return $request->boolean('is_approved') || $request->boolean('is_canceled') || $request->boolean('is_rejected') || $request->boolean('is_rollback');
-        }, function (Builder $query) use ($request) {
-            $query->where(function (Builder $query) use ($request) {
-                if ($request->boolean('is_approved')) {
-                    $query->orWhereHas('event', fn (Builder $query) => $query->whereNotNull('approved_at'));
-                }
-                if ($request->boolean('is_canceled')) {
-                    $query->orWhereHas('event', fn (Builder $query) => $query->whereNotNull('cancelled_at'));
-                }
-                if ($request->boolean('is_rejected')) {
-                    $query->orWhereHas('event', fn (Builder $query) => $query->whereNotNull('rejected_at'));
-                }
-                if ($request->boolean('is_rollback')) {
-                    $query->orWhereHas('event', fn (Builder $query) => $query->whereNotNull('rollback_at'));
-                }
-            });
-        })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
+        $purchaseRequests = PurchaseRequest::query()
+            ->withContributors()
+            ->withUsers()
+            ->with([
+                'components',
+            ])->when($request->input('search'), function (Builder $query) use ($request) {
+                return $query->where(function (Builder $query) use ($request) {
+                    return $query->where('code', 'like', '%'.$request->input('search').'%');
+                });
+            })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type', 'paginate') === 'collection') {
             return $purchaseRequests->get();
@@ -97,13 +79,12 @@ class PurchaseRequestController extends Controller
      */
     public function show(Request $request): PurchaseRequest
     {
-        return PurchaseRequest::with([
-            'components',
-            'event.components.contributors.user',
-            'createdBy',
-            'updatedBy',
-            'deletedBy',
-        ])->where('id', $request->route('id'))->firstOrFail();
+        return PurchaseRequest::query()
+            ->withContributors()
+            ->withUsers()
+            ->with([
+                'components',
+            ])->where('id', $request->route('id'))->firstOrFail();
     }
 
     /**

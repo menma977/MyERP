@@ -32,7 +32,7 @@ class ApprovalComponentContributorController extends Controller
             return $approvalComponentContributor->get();
         }
 
-        return $approvalComponentContributor->paginate($request->input('per_page', 10));
+        return $approvalComponentContributor->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -74,7 +74,7 @@ class ApprovalComponentContributorController extends Controller
         return ApprovalContributor::with([
             'component',
             'approvable',
-        ])->findOrFail($request->route('id'));
+        ])->withUsers()->findOrFail($request->route('id'));
     }
 
     /**

@@ -42,7 +42,7 @@ class GoodReceiptComponentController extends Controller
             return $goodReceiptComponents->get();
         }
 
-        return $goodReceiptComponents->paginate($request->input('per_page', 10));
+        return $goodReceiptComponents->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**

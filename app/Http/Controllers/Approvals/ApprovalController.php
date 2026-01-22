@@ -33,7 +33,7 @@ class ApprovalController extends Controller
             return $approvals->get();
         }
 
-        return $approvals->paginate($request->input('per_page', 10));
+        return $approvals->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -76,7 +76,7 @@ class ApprovalController extends Controller
             'flow',
             'flow.components',
             'components',
-        ])->findOrFail($request->route('id'));
+        ])->withUsers()->findOrFail($request->route('id'));
     }
 
     /**

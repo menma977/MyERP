@@ -24,21 +24,20 @@ class ItemBillController extends Controller
      */
     public function index(Request $request): LengthAwarePaginator|Collection
     {
-        $itemBills = ItemBill::query()
-            ->with(['item', 'component.item', 'createdBy', 'updatedBy'])
-            ->when($request->has('item_id'), function (Builder $query) use ($request) {
-                $query->where('item_id', $request->input('item_id'));
-            })
-            ->when($request->has('code'), function (Builder $query) use ($request) {
-                $query->where('code', 'like', '%'.$request->input('code').'%');
-            })
-            ->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
+        $itemBills = ItemBill::with([
+            'item',
+            'component.item',
+        ])->when($request->has('item_id'), function (Builder $query) use ($request) {
+            $query->where('item_id', $request->input('item_id'));
+        })->when($request->has('code'), function (Builder $query) use ($request) {
+            $query->where('code', 'like', '%'.$request->input('code').'%');
+        })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type', 'paginate') === 'collection') {
             return $itemBills->get();
         }
 
-        return $itemBills->paginate($request->input('limit', 10));
+        return $itemBills->withUsers()->paginate($request->input('limit', 10));
     }
 
     /**
@@ -49,7 +48,10 @@ class ItemBillController extends Controller
     public function show(Request $request): ItemBill
     {
         /** @var ItemBill */
-        return ItemBill::with(['item', 'component.item', 'createdBy', 'updatedBy'])->findOrFail($request->route('id'));
+        return ItemBill::with([
+            'item',
+            'component.item',
+        ])->withUsers()->findOrFail($request->route('id'));
     }
 
     /**
@@ -58,6 +60,8 @@ class ItemBillController extends Controller
      * Store a newly created resource in storage.
      *
      * @return array{message: string}
+     *
+     * @throws \Throwable
      */
     public function store(Request $request): array
     {
@@ -97,6 +101,8 @@ class ItemBillController extends Controller
      * Update the specified resource in storage.
      *
      * @return array{message: string}
+     *
+     * @throws \Throwable
      */
     public function update(Request $request): array
     {
@@ -157,6 +163,8 @@ class ItemBillController extends Controller
      * Remove the specified resource from storage.
      *
      * @return array{message: string}
+     *
+     * @throws \Throwable
      */
     public function delete(Request $request): array
     {
@@ -197,6 +205,8 @@ class ItemBillController extends Controller
      * Permanently remove the specified resource from storage.
      *
      * @return array{message: string}
+     *
+     * @throws \Throwable
      */
     public function destroy(Request $request): array
     {

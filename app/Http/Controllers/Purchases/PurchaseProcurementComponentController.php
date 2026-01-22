@@ -25,9 +25,6 @@ class PurchaseProcurementComponentController extends Controller
     {
         $purchaseProcurementComponents = PurchaseProcurementComponent::with([
             'procurement',
-            'createdBy',
-            'updatedBy',
-            'deletedBy',
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
                 $query->where('note', 'like', '%'.$request->input('search').'%');
@@ -38,7 +35,7 @@ class PurchaseProcurementComponentController extends Controller
             return $purchaseProcurementComponents->get();
         }
 
-        return $purchaseProcurementComponents->paginate($request->input('per_page', 10));
+        return $purchaseProcurementComponents->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -79,10 +76,7 @@ class PurchaseProcurementComponentController extends Controller
     {
         return PurchaseProcurementComponent::with([
             'procurement',
-            'createdBy',
-            'updatedBy',
-            'deletedBy',
-        ])->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
     }
 
     /**

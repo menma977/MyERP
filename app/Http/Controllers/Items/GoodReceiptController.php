@@ -26,10 +26,6 @@ class GoodReceiptController extends Controller
         $goodReceipts = GoodReceipt::with([
             'order',
             'components',
-            'event.components.contributors.user',
-            'createdBy',
-            'updatedBy',
-            'deletedBy',
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
                 return $query->where('code', 'like', '%'.$request->input('search').'%')->orWhereHas('order', function (Builder $query) use ($request) {
@@ -42,7 +38,7 @@ class GoodReceiptController extends Controller
             return $goodReceipts->get();
         }
 
-        return $goodReceipts->paginate($request->input('per_page', 10));
+        return $goodReceipts->withContributors()->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**

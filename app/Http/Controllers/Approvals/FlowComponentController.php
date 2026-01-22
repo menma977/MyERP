@@ -29,7 +29,7 @@ class FlowComponentController extends Controller
             return $flowComponent->get();
         }
 
-        return $flowComponent->paginate($request->input('per_page', 10));
+        return $flowComponent->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -71,7 +71,7 @@ class FlowComponentController extends Controller
         return ApprovalFlowComponent::with([
             'flow',
             'dictionary',
-        ])->findOrFail($request->route('id'));
+        ])->withUsers()->findOrFail($request->route('id'));
     }
 
     /**
