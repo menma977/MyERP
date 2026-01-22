@@ -32,7 +32,7 @@ class ItemController extends Controller
             return $items->get();
         }
 
-        return $items->paginate($request->input('per_page', 10));
+        return $items->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -45,7 +45,7 @@ class ItemController extends Controller
     {
         return Item::with([
             'batches.stock',
-        ])->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
     }
 
     /**

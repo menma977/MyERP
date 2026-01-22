@@ -20,11 +20,13 @@ class SalesOrderComponentController extends Controller
                 $query->whereHas('item', function ($query) use ($request) {
                     $query->where('name', 'like', '%'.$request->input('search').'%');
                 });
-            })->orderBy('id', 'desc');
+            })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
-        return $request->input('type') === 'collection'
-            ? $salesOrderComponents->get()
-            : $salesOrderComponents->paginate($request->input('per_page', 10));
+        if ($request->input('type') === 'collection') {
+            return $salesOrderComponents->get();
+        }
+
+        return $salesOrderComponents->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -53,7 +55,7 @@ class SalesOrderComponentController extends Controller
 
     public function show(Request $request): SalesOrderComponent
     {
-        return SalesOrderComponent::with(['order', 'item'])->where('id', $request->route('id'))->firstOrFail();
+        return SalesOrderComponent::with(['order', 'item'])->withUsers()->where('id', $request->route('id'))->firstOrFail();
     }
 
     /**

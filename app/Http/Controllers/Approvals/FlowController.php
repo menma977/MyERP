@@ -29,7 +29,7 @@ class FlowController extends Controller
             return $flow->get();
         }
 
-        return $flow->paginate($request->input('per_page', 10));
+        return $flow->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -65,7 +65,7 @@ class FlowController extends Controller
     {
         return ApprovalFlow::with([
             'components',
-        ])->findOrFail($request->route('id'));
+        ])->withUsers()->findOrFail($request->route('id'));
     }
 
     /**

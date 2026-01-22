@@ -25,33 +25,12 @@ class PurchaseProcurementController extends Controller
      */
     public function index(Request $request): LengthAwarePaginator|Collection
     {
-        $purchaseProcurements = PurchaseProcurement::with([
+        $purchaseProcurements = PurchaseProcurement::query()->with([
             'request',
             'components',
-            'event.components.contributors.user',
-            'createdBy',
-            'updatedBy',
-            'deletedBy',
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
                 $query->where('code', 'like', '%'.$request->input('search').'%');
-            });
-        })->when(function () use ($request) {
-            return $request->boolean('is_approved') || $request->boolean('is_canceled') || $request->boolean('is_rejected') || $request->boolean('is_rollback');
-        }, function (Builder $query) use ($request) {
-            $query->where(function (Builder $query) use ($request) {
-                if ($request->boolean('is_approved')) {
-                    $query->orWhereHas('event', fn (Builder $query) => $query->whereNotNull('approved_at'));
-                }
-                if ($request->boolean('is_canceled')) {
-                    $query->orWhereHas('event', fn (Builder $query) => $query->whereNotNull('cancelled_at'));
-                }
-                if ($request->boolean('is_rejected')) {
-                    $query->orWhereHas('event', fn (Builder $query) => $query->whereNotNull('rejected_at'));
-                }
-                if ($request->boolean('is_rollback')) {
-                    $query->orWhereHas('event', fn (Builder $query) => $query->whereNotNull('rollback_at'));
-                }
             });
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
@@ -59,7 +38,7 @@ class PurchaseProcurementController extends Controller
             return $purchaseProcurements->get();
         }
 
-        return $purchaseProcurements->paginate($request->input('per_page', 10));
+        return $purchaseProcurements->withContributors()->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -69,14 +48,13 @@ class PurchaseProcurementController extends Controller
      */
     public function show(Request $request): PurchaseProcurement
     {
-        return PurchaseProcurement::with([
-            'request',
-            'components',
-            'event.components.contributors.user',
-            'createdBy',
-            'updatedBy',
-            'deletedBy',
-        ])->where('id', $request->route('id'))->firstOrFail();
+        return PurchaseProcurement::query()
+            ->withContributors()
+            ->withUsers()
+            ->with([
+                'request',
+                'components',
+            ])->where('id', $request->route('id'))->firstOrFail();
     }
 
     /**

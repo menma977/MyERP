@@ -31,10 +31,6 @@ class PurchaseInvoiceController extends Controller
         $purchaseInvoices = PurchaseInvoice::with([
             'order',
             'components',
-            'event.components.contributors.user',
-            'createdBy',
-            'updatedBy',
-            'deletedBy',
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
                 return $query->where('code', 'like', '%'.$request->input('search').'%')->orWhereHas('order', function (Builder $query) use ($request) {
@@ -47,7 +43,7 @@ class PurchaseInvoiceController extends Controller
             return $purchaseInvoices->get();
         }
 
-        return $purchaseInvoices->paginate($request->input('per_page', 10));
+        return $purchaseInvoices->withContributors()->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -60,11 +56,7 @@ class PurchaseInvoiceController extends Controller
         return PurchaseInvoice::with([
             'order',
             'components',
-            'event.components.contributors.user',
-            'createdBy',
-            'updatedBy',
-            'deletedBy',
-        ])->where('id', $request->route('id'))->firstOrFail();
+        ])->withContributors()->withUsers()->where('id', $request->route('id'))->firstOrFail();
     }
 
     /**

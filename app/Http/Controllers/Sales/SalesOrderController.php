@@ -18,14 +18,17 @@ class SalesOrderController extends Controller
      */
     public function index(Request $request): LengthAwarePaginator|Collection
     {
-        $salesOrders = SalesOrder::with('components')
-            ->when($request->input('search'), function ($query) use ($request) {
-                $query->where('code', 'like', '%'.$request->input('search').'%');
-            })->orderBy('id', 'desc');
+        $salesOrders = SalesOrder::query()->with([
+            'components',
+        ])->when($request->input('search'), function ($query) use ($request) {
+            return $query->where('code', 'like', '%'.$request->input('search').'%');
+        })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
-        return $request->input('type') === 'collection'
-            ? $salesOrders->get()
-            : $salesOrders->paginate($request->input('per_page', 10));
+        if ($request->input('type') === 'collection') {
+            return $salesOrders->get();
+        }
+
+        return $salesOrders->withContributors()->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -47,7 +50,12 @@ class SalesOrderController extends Controller
 
     public function show(Request $request): SalesOrder
     {
-        return SalesOrder::with('components')->where('id', $request->route('id'))->firstOrFail();
+        return SalesOrder::query()
+            ->withContributors()
+            ->withUsers()
+            ->with('components')
+            ->where('id', $request->route('id'))
+            ->firstOrFail();
     }
 
     /**

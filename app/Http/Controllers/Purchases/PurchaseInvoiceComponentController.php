@@ -30,9 +30,6 @@ class PurchaseInvoiceComponentController extends Controller
         $purchaseInvoiceComponents = PurchaseInvoiceComponent::with([
             'invoice',
             'orderComponent',
-            'createdBy',
-            'updatedBy',
-            'deletedBy',
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
                 return $query->whereHas('invoice', function (Builder $query) use ($request) {
@@ -41,14 +38,16 @@ class PurchaseInvoiceComponentController extends Controller
                     $query->where('item_id', 'like', '%'.$request->input('search').'%');
                 });
             });
-        })->where('purchase_invoice_id', $request->route('purchase_invoice_id'))
-            ->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
+        })->where('purchase_invoice_id', $request->route('purchase_invoice_id'))->orderBy(
+            $request->input('sort_by', 'id'),
+            $request->input('sort_order', 'desc')
+        );
 
         if ($request->input('type', 'paginate') === 'collection') {
             return $purchaseInvoiceComponents->get();
         }
 
-        return $purchaseInvoiceComponents->paginate($request->input('per_page', 10));
+        return $purchaseInvoiceComponents->withUsers()->paginate($request->input('per_page', 10));
     }
 
     /**
@@ -64,7 +63,7 @@ class PurchaseInvoiceComponentController extends Controller
             'createdBy',
             'updatedBy',
             'deletedBy',
-        ])->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
     }
 
     /**
