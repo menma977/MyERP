@@ -16,7 +16,7 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property int $vendor_id
  * @property string $vendor_account_payable_id
- * @property string $amount
+ * @property float $amount
  * @property string $method
  * @property string|null $note
  * @property string|null $paid_at
@@ -91,5 +91,12 @@ class VendorPayment extends ApprovalAbstract
     public function accountPayable(): BelongsTo
     {
         return $this->belongsTo(VendorAccountPayable::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'amount' => 'decimal:2',
+        ];
     }
 }

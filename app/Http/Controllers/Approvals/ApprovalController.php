@@ -33,7 +33,7 @@ class ApprovalController extends Controller
             return $approvals->get();
         }
 
-        return $approvals->withUsers()->paginate($request->input('per_page', 10));
+        return $approvals->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

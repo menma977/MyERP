@@ -37,7 +37,7 @@ class GroupContributorController extends Controller
             return $groupContributors->get();
         }
 
-        return $groupContributors->withUsers()->paginate($request->input('per_page', 10));
+        return $groupContributors->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

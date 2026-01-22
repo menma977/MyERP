@@ -40,7 +40,7 @@ class BatchController extends Controller
             return $batches->get();
         }
 
-        return $batches->withUsers()->paginate($request->input('per_page', 10));
+        return $batches->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

@@ -20,9 +20,9 @@ use Illuminate\Support\Carbon;
  * @property string $item_id
  * @property string $item_batch_id
  * @property string $item_stock_id
- * @property string $quantity
- * @property string $price
- * @property string $total
+ * @property float $quantity
+ * @property float $price
+ * @property float $total
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -113,5 +113,14 @@ class SalesReturnComponent extends ModelAbstract
     public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'quantity' => 'decimal:2',
+            'price' => 'decimal:2',
+            'total' => 'decimal:2',
+        ];
     }
 }

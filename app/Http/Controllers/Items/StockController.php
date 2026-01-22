@@ -44,7 +44,7 @@ class StockController extends Controller
             return $stocks->get();
         }
 
-        return $stocks->withUsers()->paginate($request->input('per_page', 10));
+        return $stocks->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

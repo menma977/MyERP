@@ -32,7 +32,7 @@ class ItemController extends Controller
             return $items->get();
         }
 
-        return $items->withUsers()->paginate($request->input('per_page', 10));
+        return $items->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

@@ -14,7 +14,7 @@ use Illuminate\Support\Carbon;
 /**
  * @property string $id
  * @property string $vendor_component_id
- * @property string $price
+ * @property float $price
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -68,5 +68,12 @@ class VendorComponentHistory extends ModelAbstract
     public function vendorComponent(): BelongsTo
     {
         return $this->belongsTo(VendorComponent::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'price' => 'decimal:2',
+        ];
     }
 }

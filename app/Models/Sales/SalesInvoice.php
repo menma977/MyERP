@@ -6,7 +6,10 @@ use App\Abstracts\ApprovalAbstract;
 use App\Enums\DiscountTypeEnum;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\Items\GoodIssue;
+use App\Models\Transactions\Ledger;
+use App\Models\Transactions\LedgerComponent;
 use App\Models\User;
+use App\Services\CodeGeneratorService;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -15,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Represents a Sales Invoice in the system.
@@ -136,7 +141,53 @@ class SalesInvoice extends ApprovalAbstract
     protected function casts(): array
     {
         return [
+            'total' => 'decimal:2',
+            'tax' => 'decimal:2',
             'discount_type' => DiscountTypeEnum::class,
+            'discount' => 'decimal:2',
+            'fee' => 'decimal:2',
+            'grand_total' => 'decimal:2',
         ];
+    }
+
+    protected function onApprove(ApprovalEvent $approvalEvent): void
+    {
+        if ($approvalEvent->is_approved) {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            DB::transaction(function () use ($approvalEvent) {
+                $salesInvoice = SalesInvoice::find($approvalEvent->id);
+                if (! $salesInvoice) {
+                    $approvalEvent->approved_at = null;
+                    $approvalEvent->save();
+
+                    throw ValidationException::withMessages([
+                        'id' => trans('messages.fail.approve', ['target' => 'Sales Invoice']),
+                    ]);
+                }
+
+                $ledger = new Ledger;
+                $ledger->code = CodeGeneratorService::code('LDG')->number(Ledger::count())->generate();
+                $ledger->in = 0.0;
+                $ledger->out = 0.0;
+                $ledger->total = 0.0;
+                $ledger->save();
+
+                $total = 0;
+                foreach ($salesInvoice->components as $component) {
+                    $ledgerComponent = new LedgerComponent;
+                    $ledgerComponent->ledger_id = $ledger->id;
+                    $ledgerComponent->in = $component->total;
+                    $ledgerComponent->out = 0.0;
+                    $ledgerComponent->total = LedgerComponent::where('ledger_id', $ledger->id)->sum('total') + $ledgerComponent->in;
+                    $ledgerComponent->save();
+
+                    $total += $ledgerComponent->in;
+                }
+
+                $ledger->in = $total;
+                $ledger->total = Ledger::sum('total') + $ledger->in;
+                $ledger->save();
+            });
+        }
     }
 }

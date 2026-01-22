@@ -26,7 +26,7 @@ class SalesOrderComponentController extends Controller
             return $salesOrderComponents->get();
         }
 
-        return $salesOrderComponents->withUsers()->paginate($request->input('per_page', 10));
+        return $salesOrderComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

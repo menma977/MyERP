@@ -29,7 +29,7 @@ class GroupController extends Controller
             return $group->get();
         }
 
-        return $group->withUsers()->paginate($request->input('per_page', 10));
+        return $group->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

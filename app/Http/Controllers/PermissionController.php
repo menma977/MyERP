@@ -37,7 +37,7 @@ class PermissionController extends Controller
             return $permissions->get();
         }
 
-        return $permissions->paginate($request->input('per_page', 10));
+        return $permissions->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

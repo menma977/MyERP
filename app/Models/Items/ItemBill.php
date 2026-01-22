@@ -19,7 +19,7 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $item_id
  * @property string $code
- * @property string $quantity
+ * @property float $quantity
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -85,5 +85,12 @@ class ItemBill extends ModelAbstract
     public function component(): HasMany
     {
         return $this->hasMany(ItemBillComponent::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'quantity' => 'decimal:2',
+        ];
     }
 }

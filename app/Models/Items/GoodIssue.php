@@ -102,6 +102,14 @@ class GoodIssue extends ApprovalAbstract
         return $this->hasMany(GoodIssueComponent::class);
     }
 
+    protected function casts(): array
+    {
+        return [
+            'cogs' => 'decimal:2',
+            'total' => 'decimal:2',
+        ];
+    }
+
     protected function onApprove(ApprovalEvent $approvalEvent): void
     {
         if ($approvalEvent->is_approved) {

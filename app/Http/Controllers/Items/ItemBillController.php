@@ -37,7 +37,7 @@ class ItemBillController extends Controller
             return $itemBills->get();
         }
 
-        return $itemBills->withUsers()->paginate($request->input('limit', 10));
+        return $itemBills->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

@@ -44,7 +44,7 @@ class PurchaseReturnController extends Controller
             return $purchaseReturns->get();
         }
 
-        return $purchaseReturns->paginate($request->input('per_page', 10));
+        return $purchaseReturns->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

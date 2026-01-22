@@ -21,7 +21,7 @@ use Illuminate\Support\Carbon;
  * @property string $sales_order_id
  * @property string $sales_invoice_id
  * @property string $code
- * @property string $total
+ * @property float $total
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -99,5 +99,12 @@ class SalesReturn extends ApprovalAbstract
     public function components(): HasMany
     {
         return $this->hasMany(SalesReturnComponent::class, 'sales_return_id');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'total' => 'decimal:2',
+        ];
     }
 }

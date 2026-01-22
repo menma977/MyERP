@@ -16,9 +16,9 @@ use Illuminate\Support\Carbon;
  *
  * @property string $id
  * @property string $ledger_id
- * @property string $in
- * @property string $out
- * @property string $total
+ * @property float $in
+ * @property float $out
+ * @property float $total
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -76,5 +76,14 @@ class LedgerComponent extends ModelAbstract
     public function ledger(): BelongsTo
     {
         return $this->belongsTo(Ledger::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'in' => 'decimal:2',
+            'out' => 'decimal:2',
+            'total' => 'decimal:2',
+        ];
     }
 }

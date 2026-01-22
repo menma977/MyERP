@@ -18,7 +18,7 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property int $vendor_id
  * @property string $code
- * @property string $total
+ * @property float $total
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -85,5 +85,12 @@ class VendorInvoice extends ApprovalAbstract
     public function components(): HasMany
     {
         return $this->hasMany(VendorInvoiceComponent::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'total' => 'decimal:2',
+        ];
     }
 }

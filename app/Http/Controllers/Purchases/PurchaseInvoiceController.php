@@ -43,7 +43,7 @@ class PurchaseInvoiceController extends Controller
             return $purchaseInvoices->get();
         }
 
-        return $purchaseInvoices->withContributors()->withUsers()->paginate($request->input('per_page', 10));
+        return $purchaseInvoices->withContributors()->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

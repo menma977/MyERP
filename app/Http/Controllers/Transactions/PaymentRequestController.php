@@ -43,7 +43,7 @@ class PaymentRequestController extends Controller
             return $paymentRequests->get();
         }
 
-        return $paymentRequests->withContributors()->withUsers()->paginate($request->input('per_page', 10));
+        return $paymentRequests->withContributors()->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
     /**

@@ -130,4 +130,12 @@ class GoodIssueComponent extends ModelAbstract
     {
         return $this->belongsTo(ItemStock::class);
     }
+
+    protected function casts(): array
+    {
+        return [
+            'quantity' => 'decimal:2',
+            'cogs' => 'decimal:2',
+        ];
+    }
 }
