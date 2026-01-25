@@ -20,9 +20,9 @@ use Illuminate\Support\Carbon;
  * @property string $item_id
  * @property string $item_batch_id
  * @property string $item_stock_id
- * @property float $quantity
- * @property float $price
- * @property float $total
+ * @property numeric $quantity
+ * @property numeric $price
+ * @property numeric $total
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -33,7 +33,7 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read Item $item
- * @property-read SalesReturn|null $return
+ * @property-read \App\Models\Sales\SalesReturn|null $return
  * @property-read ItemStock|null $stock
  * @property-read User|null $updatedBy
  *
@@ -56,6 +56,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|SalesReturnComponent whereUpdatedAt($value)
  * @method static Builder<static>|SalesReturnComponent whereUpdatedBy($value)
  * @method static Builder<static>|SalesReturnComponent withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|SalesReturnComponent withUsers()
  * @method static Builder<static>|SalesReturnComponent withoutTrashed()
  *
  * @mixin Eloquent

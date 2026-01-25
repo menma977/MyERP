@@ -28,8 +28,8 @@ use Illuminate\Validation\ValidationException;
  * @property string $purchase_invoice_id
  * @property string $code
  * @property PaymentMethodEnum $method
- * @property float $total
- * @property float $tax
+ * @property numeric $total
+ * @property numeric $tax
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -37,7 +37,7 @@ use Illuminate\Validation\ValidationException;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, PaymentRequestComponent> $components
+ * @property-read Collection<int, \App\Models\Transactions\PaymentRequestComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
@@ -64,7 +64,9 @@ use Illuminate\Validation\ValidationException;
  * @method static Builder<static>|PaymentRequest whereTotal($value)
  * @method static Builder<static>|PaymentRequest whereUpdatedAt($value)
  * @method static Builder<static>|PaymentRequest whereUpdatedBy($value)
+ * @method static Builder<static>|PaymentRequest withContributors()
  * @method static Builder<static>|PaymentRequest withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|PaymentRequest withUsers()
  * @method static Builder<static>|PaymentRequest withoutTrashed()
  *
  * @mixin Eloquent

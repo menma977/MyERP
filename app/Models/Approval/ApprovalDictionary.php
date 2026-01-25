@@ -22,7 +22,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, ApprovalFlowComponent> $components
+ * @property-read Collection<int, \App\Models\Approval\ApprovalFlowComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
@@ -42,6 +42,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalDictionary whereUpdatedAt($value)
  * @method static Builder<static>|ApprovalDictionary whereUpdatedBy($value)
  * @method static Builder<static>|ApprovalDictionary withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|ApprovalDictionary withUsers()
  * @method static Builder<static>|ApprovalDictionary withoutTrashed()
  *
  * @mixin Eloquent

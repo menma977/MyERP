@@ -30,12 +30,12 @@ use Spatie\Permission\Models\Role as SpatieRole;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read User|null $createdBy
- * @property-read User|null $deletedBy
+ * @property-read \App\Models\User|null $createdBy
+ * @property-read \App\Models\User|null $deletedBy
  * @property-read Collection<int, \Spatie\Permission\Models\Permission> $permissions
  * @property-read int|null $permissions_count
- * @property-read User|null $updatedBy
- * @property-read Collection<int, User> $users
+ * @property-read \App\Models\User|null $updatedBy
+ * @property-read Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
  *
  * @method static Builder<static>|Role newModelQuery()

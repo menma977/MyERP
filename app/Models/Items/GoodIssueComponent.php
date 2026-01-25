@@ -19,21 +19,21 @@ use Illuminate\Support\Carbon;
  * @property string $item_id
  * @property string $item_batch_id
  * @property string $item_stock_id
- * @property float $quantity
- * @property float $cogs
+ * @property numeric $quantity
+ * @property numeric $cogs
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read ItemBatch|null $batch
+ * @property-read \App\Models\Items\ItemBatch|null $batch
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read GoodIssue|null $good
- * @property-read Item $item
+ * @property-read \App\Models\Items\GoodIssue|null $good
+ * @property-read \App\Models\Items\Item $item
  * @property-read SalesInvoiceComponent $salesInvoiceComponent
- * @property-read ItemStock|null $stock
+ * @property-read \App\Models\Items\ItemStock|null $stock
  * @property-read User|null $updatedBy
  *
  * @method static Builder<static>|GoodIssueComponent newModelQuery()
@@ -45,6 +45,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|GoodIssueComponent whereDeletedAt($value)
  * @method static Builder<static>|GoodIssueComponent whereDeletedBy($value)
  * @method static Builder<static>|GoodIssueComponent whereGoodIssueId($value)
+ * @method static Builder<static>|GoodIssueComponent whereHpp($value)
  * @method static Builder<static>|GoodIssueComponent whereId($value)
  * @method static Builder<static>|GoodIssueComponent whereItemBatchId($value)
  * @method static Builder<static>|GoodIssueComponent whereItemId($value)
@@ -54,6 +55,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|GoodIssueComponent whereUpdatedAt($value)
  * @method static Builder<static>|GoodIssueComponent whereUpdatedBy($value)
  * @method static Builder<static>|GoodIssueComponent withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|GoodIssueComponent withUsers()
  * @method static Builder<static>|GoodIssueComponent withoutTrashed()
  *
  * @mixin Eloquent

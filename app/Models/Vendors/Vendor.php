@@ -24,17 +24,20 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string|null $deleted_at
- * @property-read Collection<int, VendorComponent> $components
+ * @property-read Collection<int, \App\Models\Vendors\VendorComponent> $components
  * @property-read int|null $components_count
+ * @property-read \App\Models\User|null $createdBy
+ * @property-read \App\Models\User|null $deletedBy
  * @property-read Collection<int, PurchaseProcurementComponent> $purchaseProcurementComponents
  * @property-read int|null $purchase_procurement_components_count
  * @property-read Collection<int, PurchaseRequestComponent> $purchaseRequestComponents
  * @property-read int|null $purchase_request_components_count
- * @property-read Collection<int, VendorAccountPayable> $vendorAccountPayables
+ * @property-read \App\Models\User|null $updatedBy
+ * @property-read Collection<int, \App\Models\Vendors\VendorAccountPayable> $vendorAccountPayables
  * @property-read int|null $vendor_account_payables_count
- * @property-read Collection<int, VendorInvoice> $vendorInvoices
+ * @property-read Collection<int, \App\Models\Vendors\VendorInvoice> $vendorInvoices
  * @property-read int|null $vendor_invoices_count
- * @property-read Collection<int, VendorPayment> $vendorPayments
+ * @property-read Collection<int, \App\Models\Vendors\VendorPayment> $vendorPayments
  * @property-read int|null $vendor_payments_count
  *
  * @method static Builder<static>|Vendor newModelQuery()
@@ -52,6 +55,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Vendor wherePhone($value)
  * @method static Builder<static>|Vendor whereUpdatedAt($value)
  * @method static Builder<static>|Vendor whereUpdatedBy($value)
+ * @method static Builder<static>|Vendor withUsers()
  *
  * @mixin Eloquent
  */

@@ -16,16 +16,16 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $vendor_account_payable_id
  * @property string $purchase_invoice_component_id
- * @property float $quantity
- * @property float $price
- * @property float $total
+ * @property numeric $quantity
+ * @property numeric $price
+ * @property numeric $total
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read VendorAccountPayable|null $accountPayable
+ * @property-read \App\Models\Vendors\VendorAccountPayable|null $accountPayable
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read PurchaseInvoiceComponent $purchaseInvoiceComponent
@@ -48,6 +48,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|VendorAccountPayableComponent whereUpdatedBy($value)
  * @method static Builder<static>|VendorAccountPayableComponent whereVendorAccountPayableId($value)
  * @method static Builder<static>|VendorAccountPayableComponent withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|VendorAccountPayableComponent withUsers()
  * @method static Builder<static>|VendorAccountPayableComponent withoutTrashed()
  *
  * @mixin Eloquent

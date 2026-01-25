@@ -32,11 +32,11 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, ApprovalEventContributor> $contributors
+ * @property-read Collection<int, \App\Models\Approval\ApprovalEventContributor> $contributors
  * @property-read int|null $contributors_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read ApprovalEvent $event
+ * @property-read \App\Models\Approval\ApprovalEvent $event
  * @property-read mixed $is_approved
  * @property-read mixed $is_cancelled
  * @property-read mixed $is_rejected
@@ -64,6 +64,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalEventComponent whereUpdatedAt($value)
  * @method static Builder<static>|ApprovalEventComponent whereUpdatedBy($value)
  * @method static Builder<static>|ApprovalEventComponent withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|ApprovalEventComponent withUsers()
  * @method static Builder<static>|ApprovalEventComponent withoutTrashed()
  *
  * @mixin Eloquent

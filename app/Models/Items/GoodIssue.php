@@ -24,8 +24,8 @@ use Illuminate\Validation\ValidationException;
  * @property string $id
  * @property string $sales_invoice_id
  * @property string $code
- * @property float $cogs
- * @property float $total
+ * @property numeric $cogs
+ * @property numeric $total
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -33,7 +33,7 @@ use Illuminate\Validation\ValidationException;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, GoodIssueComponent> $components
+ * @property-read Collection<int, \App\Models\Items\GoodIssueComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
@@ -50,13 +50,16 @@ use Illuminate\Validation\ValidationException;
  * @method static Builder<static>|GoodIssue whereCreatedBy($value)
  * @method static Builder<static>|GoodIssue whereDeletedAt($value)
  * @method static Builder<static>|GoodIssue whereDeletedBy($value)
+ * @method static Builder<static>|GoodIssue whereHpp($value)
  * @method static Builder<static>|GoodIssue whereId($value)
  * @method static Builder<static>|GoodIssue whereNote($value)
  * @method static Builder<static>|GoodIssue whereSalesInvoiceId($value)
  * @method static Builder<static>|GoodIssue whereTotal($value)
  * @method static Builder<static>|GoodIssue whereUpdatedAt($value)
  * @method static Builder<static>|GoodIssue whereUpdatedBy($value)
+ * @method static Builder<static>|GoodIssue withContributors()
  * @method static Builder<static>|GoodIssue withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|GoodIssue withUsers()
  * @method static Builder<static>|GoodIssue withoutTrashed()
  *
  * @mixin Eloquent
@@ -127,7 +130,7 @@ class GoodIssue extends ApprovalAbstract
 
                 $cogs = 0;
                 foreach ($goodIssue->components as $component) {
-                    $stock = ItemStock::find($component->item_stock_id);
+                    $stock = ItemStock::with('batch.item')->find($component->item_stock_id);
                     if (! $stock) {
                         continue;
                     }
@@ -140,6 +143,8 @@ class GoodIssue extends ApprovalAbstract
 
                     $stock->quantity -= $component->quantity;
                     $stock->save();
+
+                    $stock->batch?->item?->updateWeightedAverageCost();
 
                     $stockHistory = new ItemStockHistory;
                     $stockHistory->code = $goodIssue->code;

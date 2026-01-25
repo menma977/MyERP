@@ -22,20 +22,20 @@ use Illuminate\Validation\ValidationException;
  *
  * @property string $id
  * @property string $code
- * @property float $total
+ * @property numeric $total
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, PurchaseRequestComponent> $components
+ * @property-read Collection<int, \App\Models\Purchases\PurchaseRequestComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
- * @property-read PurchaseOrder|null $order
- * @property-read PurchaseProcurement|null $procurement
+ * @property-read \App\Models\Purchases\PurchaseOrder|null $order
+ * @property-read \App\Models\Purchases\PurchaseProcurement|null $procurement
  * @property-read User|null $updatedBy
  *
  * @method static Builder<static>|PurchaseRequest newModelQuery()
@@ -51,7 +51,9 @@ use Illuminate\Validation\ValidationException;
  * @method static Builder<static>|PurchaseRequest whereTotal($value)
  * @method static Builder<static>|PurchaseRequest whereUpdatedAt($value)
  * @method static Builder<static>|PurchaseRequest whereUpdatedBy($value)
+ * @method static Builder<static>|PurchaseRequest withContributors()
  * @method static Builder<static>|PurchaseRequest withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|PurchaseRequest withUsers()
  * @method static Builder<static>|PurchaseRequest withoutTrashed()
  *
  * @mixin Eloquent

@@ -14,7 +14,7 @@ use Illuminate\Support\Carbon;
 /**
  * @property string $id
  * @property string $vendor_component_id
- * @property float $price
+ * @property numeric $price
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -24,7 +24,7 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
- * @property-read VendorComponent $vendorComponent
+ * @property-read \App\Models\Vendors\VendorComponent $vendorComponent
  *
  * @method static Builder<static>|VendorComponentHistory newModelQuery()
  * @method static Builder<static>|VendorComponentHistory newQuery()
@@ -40,6 +40,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|VendorComponentHistory whereUpdatedBy($value)
  * @method static Builder<static>|VendorComponentHistory whereVendorComponentId($value)
  * @method static Builder<static>|VendorComponentHistory withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|VendorComponentHistory withUsers()
  * @method static Builder<static>|VendorComponentHistory withoutTrashed()
  *
  * @mixin Eloquent

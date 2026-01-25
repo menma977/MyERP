@@ -14,19 +14,23 @@ class RoleHasUserSeeder extends Seeder
     public function run(): void
     {
         $developer = User::where('username', 'dev')->first();
-        if (! $developer) {
+
+        if (! $developer instanceof User) {
             return;
         }
 
-        $developerRole = Role::where('name', 'developer')->first();
-        if (! $developerRole) {
+        $developerRole = Role::where('name', 'developer')
+            ->where('guard_name', 'web')
+            ->first();
+
+        if (! $developerRole instanceof Role) {
             return;
         }
 
-        if ($developer->hasRole('developer')) {
+        if ($developer->hasRole($developerRole)) {
             return;
         }
 
-        $developer->assignRole('developer');
+        $developer->assignRole($developerRole);
     }
 }

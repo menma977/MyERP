@@ -16,9 +16,9 @@ use Illuminate\Support\Carbon;
  * @property string $purchase_invoice_id
  * @property string $purchase_order_component_id
  * @property string $item_id
- * @property float $quantity
- * @property float $price
- * @property float $total
+ * @property numeric $quantity
+ * @property numeric $price
+ * @property numeric $total
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -27,8 +27,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read PurchaseInvoice|null $invoice
- * @property-read PurchaseOrderComponent|null $orderComponent
+ * @property-read \App\Models\Purchases\PurchaseInvoice|null $invoice
+ * @property-read \App\Models\Purchases\PurchaseOrderComponent|null $orderComponent
  * @property-read User|null $updatedBy
  *
  * @method static Builder<static>|PurchaseInvoiceComponent newModelQuery()
@@ -49,6 +49,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|PurchaseInvoiceComponent whereUpdatedAt($value)
  * @method static Builder<static>|PurchaseInvoiceComponent whereUpdatedBy($value)
  * @method static Builder<static>|PurchaseInvoiceComponent withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|PurchaseInvoiceComponent withUsers()
  * @method static Builder<static>|PurchaseInvoiceComponent withoutTrashed()
  *
  * @mixin Eloquent
