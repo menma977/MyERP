@@ -3,6 +3,7 @@
 namespace App\Models\Vendors;
 
 use App\Abstracts\ModelAbstract;
+use App\Models\Items\Item;
 use App\Models\User;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -90,6 +91,14 @@ class VendorInvoiceComponent extends ModelAbstract
     public function vendorComponent(): BelongsTo
     {
         return $this->belongsTo(VendorComponent::class);
+    }
+
+    /**
+     * @return BelongsTo<Item, $this>
+     */
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class);
     }
 
     protected function casts(): array

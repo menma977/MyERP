@@ -3,12 +3,14 @@
 namespace App\Models\Vendors;
 
 use App\Abstracts\ApprovalAbstract;
+use App\Enums\PaymentMethodEnum;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\User;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -17,7 +19,7 @@ use Illuminate\Support\Carbon;
  * @property int $vendor_id
  * @property string $vendor_account_payable_id
  * @property numeric $amount
- * @property string $method
+ * @property PaymentMethodEnum $method
  * @property string|null $note
  * @property string|null $paid_at
  * @property int|null $created_by
@@ -95,9 +97,18 @@ class VendorPayment extends ApprovalAbstract
         return $this->belongsTo(VendorAccountPayable::class);
     }
 
+    /**
+     * @return HasMany<VendorPaymentComponent, $this>
+     */
+    public function components(): HasMany
+    {
+        return $this->hasMany(VendorPaymentComponent::class, 'vendor_payment_id');
+    }
+
     protected function casts(): array
     {
         return [
+            'method' => PaymentMethodEnum::class,
             'amount' => 'decimal:2',
         ];
     }
