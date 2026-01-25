@@ -59,8 +59,8 @@ class ItemController extends Controller
         $request->validate([
             'code' => ['required', 'string', 'max:255', new ValidationWithoutTrashed(Item::class)],
             'name' => ['required', 'string', 'max:255'],
-            'type' => ['required', 'integer', 'in:'.collect(ItemTypeEnum::cases())->implode(',')],
-            'unit' => ['required', 'string', 'max:255', 'in:'.collect(ItemUnitEnum::cases())->implode(',')],
+            'type' => ['required', 'string', 'in:'.implode(',', array_column(ItemTypeEnum::cases(), 'value'))],
+            'unit' => ['required', 'string', 'max:255', 'in:'.implode(',', array_column(ItemUnitEnum::cases(), 'value'))],
         ]);
 
         $item = new Item;
@@ -86,8 +86,8 @@ class ItemController extends Controller
         $request->validate([
             'code' => ['required', 'string', 'max:255', new ValidationWithoutTrashed(Item::class, 'code', $request->route('id'))],
             'name' => ['required', 'string', 'max:255'],
-            'type' => ['required', 'integer', 'in:'.collect(ItemTypeEnum::cases())->implode(',')],
-            'unit' => ['required', 'string', 'max:255', 'in:'.collect(ItemUnitEnum::cases())->implode(',')],
+            'type' => ['required', 'string', 'in:'.implode(',', array_column(ItemTypeEnum::cases(), 'value'))],
+            'unit' => ['required', 'string', 'max:255', 'in:'.implode(',', array_column(ItemUnitEnum::cases(), 'value'))],
         ]);
 
         /** @var Item $item */
