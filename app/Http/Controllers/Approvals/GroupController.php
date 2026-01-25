@@ -120,4 +120,40 @@ class GroupController extends Controller
             'message' => trans('messages.success.delete', ['target' => $groupName], App::getLocale()),
         ];
     }
+
+    /**
+     * Group Restore
+     *
+     * Restore the specified resource from storage.
+     *
+     * @return array<string, string>
+     */
+    public function restore(Request $request): array
+    {
+        /** @var ApprovalGroup $group */
+        $group = ApprovalGroup::onlyTrashed()->findOrFail($request->route('id'));
+        $group->restore();
+
+        return [
+            'message' => trans('messages.success.restore', ['target' => $group->name], App::getLocale()),
+        ];
+    }
+
+    /**
+     * Group Destroy
+     *
+     * Permanently remove the specified resource from storage.
+     *
+     * @return array<string, string>
+     */
+    public function destroy(Request $request): array
+    {
+        /** @var ApprovalGroup $group */
+        $group = ApprovalGroup::onlyTrashed()->findOrFail($request->route('id'));
+        $group->forceDelete();
+
+        return [
+            'message' => trans('messages.success.destroy', ['target' => $group->name], App::getLocale()),
+        ];
+    }
 }

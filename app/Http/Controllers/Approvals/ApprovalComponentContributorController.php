@@ -124,4 +124,40 @@ class ApprovalComponentContributorController extends Controller
             'message' => trans('messages.success.delete', ['target' => 'contributor'], App::getLocale()),
         ];
     }
+
+    /**
+     * Approval Component Contributor Restore
+     *
+     * Restore the specified resource from storage.
+     *
+     * @return array<string, string>
+     */
+    public function restore(Request $request): array
+    {
+        /** @var ApprovalContributor $approvalComponentContributor */
+        $approvalComponentContributor = ApprovalContributor::onlyTrashed()->findOrFail($request->route('id'));
+        $approvalComponentContributor->restore();
+
+        return [
+            'message' => trans('messages.success.restore', ['target' => 'contributor'], App::getLocale()),
+        ];
+    }
+
+    /**
+     * Approval Component Contributor Destroy
+     *
+     * Permanently remove the specified resource from storage.
+     *
+     * @return array<string, string>
+     */
+    public function destroy(Request $request): array
+    {
+        /** @var ApprovalContributor $approvalComponentContributor */
+        $approvalComponentContributor = ApprovalContributor::onlyTrashed()->findOrFail($request->route('id'));
+        $approvalComponentContributor->forceDelete();
+
+        return [
+            'message' => trans('messages.success.destroy', ['target' => 'contributor'], App::getLocale()),
+        ];
+    }
 }

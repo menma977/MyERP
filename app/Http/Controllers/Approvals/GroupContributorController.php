@@ -141,4 +141,41 @@ class GroupContributorController extends Controller
             'message' => trans('messages.success.delete', ['target' => $userName], App::getLocale()),
         ];
     }
+
+    /**
+     * Group Contributor Restore
+     *
+     * Restore the specified resource from storage.
+     *
+     * @return array<string, string>
+     */
+    public function restore(Request $request): array
+    {
+        /** @var ApprovalGroupContributor $contributor */
+        $contributor = ApprovalGroupContributor::onlyTrashed()->findOrFail($request->route('id'));
+        $contributor->restore();
+
+        return [
+            'message' => trans('messages.success.restore', ['target' => $contributor->user->name], App::getLocale()),
+        ];
+    }
+
+    /**
+     * Group Contributor Destroy
+     *
+     * Permanently remove the specified resource from storage.
+     *
+     * @return array<string, string>
+     */
+    public function destroy(Request $request): array
+    {
+        /** @var ApprovalGroupContributor $contributor */
+        $contributor = ApprovalGroupContributor::onlyTrashed()->findOrFail($request->route('id'));
+        $userName = $contributor->user->name;
+        $contributor->forceDelete();
+
+        return [
+            'message' => trans('messages.success.destroy', ['target' => $userName], App::getLocale()),
+        ];
+    }
 }

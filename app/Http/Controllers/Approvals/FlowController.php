@@ -121,4 +121,40 @@ class FlowController extends Controller
             'message' => trans('messages.success.delete', ['target' => $flowName], App::getLocale()),
         ];
     }
+
+    /**
+     * Flow Restore
+     *
+     * Restore the specified resource from storage.
+     *
+     * @return array<string, string>
+     */
+    public function restore(Request $request): array
+    {
+        /** @var ApprovalFlow $flow */
+        $flow = ApprovalFlow::onlyTrashed()->findOrFail($request->route('id'));
+        $flow->restore();
+
+        return [
+            'message' => trans('messages.success.restore', ['target' => $flow->name], App::getLocale()),
+        ];
+    }
+
+    /**
+     * Flow Destroy
+     *
+     * Permanently remove the specified resource from storage.
+     *
+     * @return array<string, string>
+     */
+    public function destroy(Request $request): array
+    {
+        /** @var ApprovalFlow $flow */
+        $flow = ApprovalFlow::onlyTrashed()->findOrFail($request->route('id'));
+        $flow->forceDelete();
+
+        return [
+            'message' => trans('messages.success.destroy', ['target' => $flow->name], App::getLocale()),
+        ];
+    }
 }

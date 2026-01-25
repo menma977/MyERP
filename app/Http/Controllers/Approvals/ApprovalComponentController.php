@@ -148,6 +148,47 @@ class ApprovalComponentController extends Controller
     }
 
     /**
+     * Approval Component Restore
+     *
+     * Restore the specified resource from storage.
+     *
+     * @return array<string, mixed>
+     */
+    public function restore(Request $request): array
+    {
+        /** @var ApprovalComponent $approvalComponent */
+        $approvalComponent = ApprovalComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $approvalComponent->restore();
+
+        $this->synchronizeSteps($approvalComponent->approval_id);
+
+        return [
+            'message' => trans('messages.success.restore', ['target' => $approvalComponent->name], App::getLocale()),
+        ];
+    }
+
+    /**
+     * Approval Component Destroy
+     *
+     * Permanently remove the specified resource from storage.
+     *
+     * @return array<string, mixed>
+     */
+    public function destroy(Request $request): array
+    {
+        /** @var ApprovalComponent $approvalComponent */
+        $approvalComponent = ApprovalComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $approvalId = $approvalComponent->approval_id;
+        $approvalComponent->forceDelete();
+
+        $this->synchronizeSteps($approvalId);
+
+        return [
+            'message' => trans('messages.success.destroy', ['target' => $approvalComponent->name], App::getLocale()),
+        ];
+    }
+
+    /**
      * Synchronize steps for approval components
      */
     private function synchronizeSteps(int $approvalId): void

@@ -125,4 +125,40 @@ class FlowComponentController extends Controller
             'message' => trans('messages.success.delete', ['target' => $flowComponentKey], App::getLocale()),
         ];
     }
+
+    /**
+     * Flow Component Restore
+     *
+     * Restore the specified resource from storage.
+     *
+     * @return array<string, string>
+     */
+    public function restore(Request $request): array
+    {
+        /** @var ApprovalFlowComponent $flowComponent */
+        $flowComponent = ApprovalFlowComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $flowComponent->restore();
+
+        return [
+            'message' => trans('messages.success.restore', ['target' => $flowComponent->key], App::getLocale()),
+        ];
+    }
+
+    /**
+     * Flow Component Destroy
+     *
+     * Permanently remove the specified resource from storage.
+     *
+     * @return array<string, string>
+     */
+    public function destroy(Request $request): array
+    {
+        /** @var ApprovalFlowComponent $flowComponent */
+        $flowComponent = ApprovalFlowComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $flowComponent->forceDelete();
+
+        return [
+            'message' => trans('messages.success.destroy', ['target' => $flowComponent->key], App::getLocale()),
+        ];
+    }
 }
