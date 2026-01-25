@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Transactions;
 
+use App\Enums\PaymentMethodEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Transactions\PaymentRequest;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -46,11 +48,6 @@ class PaymentRequestController extends Controller
         return $paymentRequests->withContributors()->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
     }
 
-    /**
-     * Payment Request Show
-     *
-     * Show specified resource.
-     */
     public function show(Request $request): PaymentRequest
     {
         return PaymentRequest::with([
@@ -61,10 +58,6 @@ class PaymentRequestController extends Controller
     }
 
     /**
-     * Payment Request Update
-     *
-     * Update specified resource in storage.
-     *
      * @return array{message: string}
      */
     public function update(Request $request): array
@@ -72,7 +65,7 @@ class PaymentRequestController extends Controller
         $request->validate([
             'purchase_order_id' => ['required', 'string', 'exists:purchase_orders,id'],
             'purchase_invoice_id' => ['required', 'string', 'exists:purchase_invoices,id'],
-            'method' => ['required', 'string', 'in:cash,transfer,check,other'],
+            'method' => ['required', 'string', 'in:'.implode(',', array_column(PaymentMethodEnum::cases(), 'value'))],
             'total' => ['required', 'numeric', 'min:0'],
             'tax' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string'],
@@ -82,10 +75,10 @@ class PaymentRequestController extends Controller
         $paymentRequest = PaymentRequest::findOrFail($request->route('id'));
         $paymentRequest->purchase_order_id = $request->input('purchase_order_id');
         $paymentRequest->purchase_invoice_id = $request->input('purchase_invoice_id');
-        $paymentRequest->code = $request->input('code');
-        $paymentRequest->method = $request->input('method');
-        $paymentRequest->total = $request->input('total');
-        $paymentRequest->tax = $request->input('tax');
+        $paymentRequest->code = $request->input('code', $paymentRequest->code);
+        $paymentRequest->method = PaymentMethodEnum::from($request->input('method'));
+        $paymentRequest->total = (float) $request->input('total');
+        $paymentRequest->tax = (float) $request->input('tax');
         $paymentRequest->note = $request->input('note');
         $paymentRequest->save();
 
@@ -95,10 +88,6 @@ class PaymentRequestController extends Controller
     }
 
     /**
-     * Payment Request Delete
-     *
-     * Remove specified resource from storage.
-     *
      * @return array{message: string}
      */
     public function delete(Request $request): array
@@ -113,10 +102,6 @@ class PaymentRequestController extends Controller
     }
 
     /**
-     * Payment Request Restore
-     *
-     * Restore specified resource from storage.
-     *
      * @return array{message: string}
      */
     public function restore(Request $request): array
@@ -131,10 +116,6 @@ class PaymentRequestController extends Controller
     }
 
     /**
-     * Payment Request Destroy
-     *
-     * Permanently remove specified resource from storage.
-     *
      * @return array{message: string}
      */
     public function destroy(Request $request): array
@@ -149,10 +130,6 @@ class PaymentRequestController extends Controller
     }
 
     /**
-     * Payment Request Approve
-     *
-     * Approve specified resource.
-     *
      * @return array{message: string}
      */
     public function approve(Request $request): array
@@ -161,7 +138,7 @@ class PaymentRequestController extends Controller
         $paymentRequest = PaymentRequest::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (! $user) {
+        if (! $user instanceof User) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Payment Request', 'target' => 'Access'], App::getLocale()),
             ]);
@@ -175,10 +152,6 @@ class PaymentRequestController extends Controller
     }
 
     /**
-     * Payment Request Reject
-     *
-     * Reject specified resource.
-     *
      * @return array{message: string}
      */
     public function reject(Request $request): array
@@ -187,7 +160,7 @@ class PaymentRequestController extends Controller
         $paymentRequest = PaymentRequest::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (! $user) {
+        if (! $user instanceof User) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'reject', 'attribute' => 'Payment Request', 'target' => 'Access'], App::getLocale()),
             ]);
@@ -201,10 +174,6 @@ class PaymentRequestController extends Controller
     }
 
     /**
-     * Payment Request Cancel
-     *
-     * Cancel specified resource.
-     *
      * @return array{message: string}
      */
     public function cancel(Request $request): array
@@ -213,7 +182,7 @@ class PaymentRequestController extends Controller
         $paymentRequest = PaymentRequest::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (! $user) {
+        if (! $user instanceof User) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Payment Request', 'target' => 'Access'], App::getLocale()),
             ]);
@@ -227,10 +196,6 @@ class PaymentRequestController extends Controller
     }
 
     /**
-     * Payment Request Rollback
-     *
-     * Roll back specified resource.
-     *
      * @return array{message: string}
      */
     public function rollback(Request $request): array
@@ -239,7 +204,7 @@ class PaymentRequestController extends Controller
         $paymentRequest = PaymentRequest::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (! $user) {
+        if (! $user instanceof User) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Payment Request', 'target' => 'Access'], App::getLocale()),
             ]);
@@ -253,10 +218,6 @@ class PaymentRequestController extends Controller
     }
 
     /**
-     * Payment Request Force
-     *
-     * Force to execute action on a specified resource.
-     *
      * @return array{message: string}
      */
     public function force(Request $request): array
@@ -269,13 +230,13 @@ class PaymentRequestController extends Controller
         $paymentRequest = PaymentRequest::findOrFail($request->route('id'));
 
         $user = Auth::user();
-        if (! $user) {
+        if (! $user instanceof User) {
             throw ValidationException::withMessages([
                 'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Payment Request', 'target' => 'Access'], App::getLocale()),
             ]);
         }
 
-        $paymentRequest->force($user, $request->input('step'));
+        $paymentRequest->force($user, (int) $request->input('step'));
 
         return [
             'message' => trans('messages.success.force', ['target' => 'Payment Request'], App::getLocale()),

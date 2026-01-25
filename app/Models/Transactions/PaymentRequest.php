@@ -13,6 +13,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -73,7 +74,8 @@ use Illuminate\Validation\ValidationException;
  */
 class PaymentRequest extends ApprovalAbstract
 {
-    use HasUlids, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Transactions\PaymentRequestFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -99,7 +101,7 @@ class PaymentRequest extends ApprovalAbstract
      */
     public function order(): BelongsTo
     {
-        return $this->belongsTo(PurchaseOrder::class);
+        return $this->belongsTo(PurchaseOrder::class, 'purchase_order_id');
     }
 
     /**
@@ -107,7 +109,7 @@ class PaymentRequest extends ApprovalAbstract
      */
     public function invoice(): BelongsTo
     {
-        return $this->belongsTo(PurchaseInvoice::class);
+        return $this->belongsTo(PurchaseInvoice::class, 'purchase_invoice_id');
     }
 
     /**
@@ -132,7 +134,7 @@ class PaymentRequest extends ApprovalAbstract
         if ($approvalEvent->is_approved) {
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
-                $paymentRequest = PaymentRequest::find($approvalEvent->id);
+                $paymentRequest = PaymentRequest::find($approvalEvent->requestable_id);
                 if (! $paymentRequest) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();
@@ -158,7 +160,7 @@ class PaymentRequest extends ApprovalAbstract
                     $ledgerComponent->total = $component->total;
                     $ledgerComponent->save();
 
-                    $total += $ledgerComponent->out;
+                    $total += (float) $ledgerComponent->out;
                 }
 
                 $ledger->out = $total;

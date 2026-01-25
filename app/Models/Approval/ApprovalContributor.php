@@ -7,6 +7,7 @@ use App\Models\User;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -52,7 +53,8 @@ use Illuminate\Support\Carbon;
  */
 class ApprovalContributor extends ModelAbstract
 {
-    use HasUlids, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Approval\ApprovalContributorFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -73,7 +75,7 @@ class ApprovalContributor extends ModelAbstract
      */
     public function component(): BelongsTo
     {
-        return $this->belongsTo(ApprovalComponent::class)->withTrashed();
+        return $this->belongsTo(ApprovalComponent::class, 'approval_component_id')->withTrashed();
     }
 
     /**

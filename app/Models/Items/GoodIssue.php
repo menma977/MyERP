@@ -118,7 +118,7 @@ class GoodIssue extends ApprovalAbstract
         if ($approvalEvent->is_approved) {
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
-                $goodIssue = GoodIssue::find($approvalEvent->id);
+                $goodIssue = GoodIssue::find($approvalEvent->requestable_id);
                 if (! $goodIssue) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();

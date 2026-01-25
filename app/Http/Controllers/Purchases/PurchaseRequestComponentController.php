@@ -54,6 +54,7 @@ class PurchaseRequestComponentController extends Controller
         $request->validate([
             'purchase_request_id' => ['required', 'string', 'exists:purchase_requests,id'],
             'vendor_id' => ['required', 'integer', 'exists:vendors,id'],
+            'item_id' => ['required', 'string', 'exists:items,id'],
             'price' => ['required', 'numeric', 'min:0'],
             'quantity' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string', 'max:255'],
@@ -102,6 +103,7 @@ class PurchaseRequestComponentController extends Controller
         $request->validate([
             'purchase_request_id' => ['required', 'string', 'exists:purchase_requests,id'],
             'vendor_id' => ['required', 'integer', 'exists:vendors,id'],
+            'item_id' => ['required', 'string', 'exists:items,id'],
             'price' => ['required', 'numeric', 'min:0'],
             'quantity' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string', 'max:255'],
@@ -177,6 +179,7 @@ class PurchaseRequestComponentController extends Controller
     {
         $purchaseRequestComponent->purchase_request_id = $request->input('purchase_request_id');
         $purchaseRequestComponent->vendor_id = $request->input('vendor_id');
+        $purchaseRequestComponent->item_id = $request->input('item_id');
         $purchaseRequestComponent->price = $request->integer('price');
         $purchaseRequestComponent->quantity = $request->float('quantity');
         $purchaseRequestComponent->total = $purchaseRequestComponent->price * $purchaseRequestComponent->quantity;

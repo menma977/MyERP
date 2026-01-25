@@ -7,6 +7,7 @@ use App\Models\User;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -50,7 +51,8 @@ use Illuminate\Support\Carbon;
  */
 class ApprovalFlowComponent extends ModelAbstract
 {
-    use HasUlids, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Approval\ApprovalFlowComponentFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -81,6 +83,6 @@ class ApprovalFlowComponent extends ModelAbstract
      */
     public function dictionary(): BelongsTo
     {
-        return $this->belongsTo(ApprovalDictionary::class);
+        return $this->belongsTo(ApprovalDictionary::class, 'approval_dictionary_id');
     }
 }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->ulid('id')->primary()->index();
             $table->foreignUlid('purchase_request_id')->constrained('purchase_requests')->cascadeOnDelete();
             $table->foreignId('vendor_id')->constrained('vendors')->cascadeOnDelete();
+            $table->foreignUlid('item_id')->constrained('items')->cascadeOnDelete();
             $table->decimal('price', 18, 4)->default(0);
             $table->decimal('quantity', 18, 4)->default(0);
             $table->decimal('total', 18, 4)->default(0);

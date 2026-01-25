@@ -136,4 +136,40 @@ class ApprovalController extends Controller
             'message' => trans('messages.success.delete', ['target' => $approvalName], App::getLocale()),
         ];
     }
+
+    /**
+     * Approval Restore
+     *
+     * Restore the specified resource from storage.
+     *
+     * @return array<string, string>
+     */
+    public function restore(Request $request): array
+    {
+        /** @var Approval $approval */
+        $approval = Approval::onlyTrashed()->findOrFail($request->route('id'));
+        $approval->restore();
+
+        return [
+            'message' => trans('messages.success.restore', ['target' => $approval->name], App::getLocale()),
+        ];
+    }
+
+    /**
+     * Approval Destroy
+     *
+     * Permanently remove the specified resource from storage.
+     *
+     * @return array<string, string>
+     */
+    public function destroy(Request $request): array
+    {
+        /** @var Approval $approval */
+        $approval = Approval::onlyTrashed()->findOrFail($request->route('id'));
+        $approval->forceDelete();
+
+        return [
+            'message' => trans('messages.success.destroy', ['target' => $approval->name], App::getLocale()),
+        ];
+    }
 }

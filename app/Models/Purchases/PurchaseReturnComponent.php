@@ -4,10 +4,12 @@ namespace App\Models\Purchases;
 
 use App\Abstracts\ModelAbstract;
 use App\Models\Items\GoodReceiptComponent;
+use App\Models\Items\Item;
 use App\Models\User;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -30,8 +32,9 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read GoodReceiptComponent $goodReceiptComponent
- * @property-read \App\Models\Purchases\PurchaseOrderComponent $purchaseOrderComponent
+ * @property-read GoodReceiptComponent|null $goodReceiptComponent
+ * @property-read Item|null $item
+ * @property-read \App\Models\Purchases\PurchaseOrderComponent|null $orderComponent
  * @property-read \App\Models\Purchases\PurchaseReturn|null $return
  * @property-read User|null $updatedBy
  *
@@ -62,7 +65,8 @@ use Illuminate\Support\Carbon;
  */
 class PurchaseReturnComponent extends ModelAbstract
 {
-    use HasUlids, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Purchases\PurchaseReturnComponentFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -89,15 +93,15 @@ class PurchaseReturnComponent extends ModelAbstract
      */
     public function return(): BelongsTo
     {
-        return $this->belongsTo(PurchaseReturn::class);
+        return $this->belongsTo(PurchaseReturn::class, 'purchase_return_id');
     }
 
     /**
      * @return BelongsTo<PurchaseOrderComponent, $this>
      */
-    public function purchaseOrderComponent(): BelongsTo
+    public function orderComponent(): BelongsTo
     {
-        return $this->belongsTo(PurchaseOrderComponent::class);
+        return $this->belongsTo(PurchaseOrderComponent::class, 'purchase_order_component_id');
     }
 
     /**
@@ -105,7 +109,15 @@ class PurchaseReturnComponent extends ModelAbstract
      */
     public function goodReceiptComponent(): BelongsTo
     {
-        return $this->belongsTo(GoodReceiptComponent::class);
+        return $this->belongsTo(GoodReceiptComponent::class, 'good_receipt_component_id');
+    }
+
+    /**
+     * @return BelongsTo<Item, $this>
+     */
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class);
     }
 
     protected function casts(): array

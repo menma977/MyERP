@@ -26,7 +26,7 @@ class PurchaseReturnComponentController extends Controller
     {
         $purchaseReturnComponents = PurchaseReturnComponent::with([
             'return',
-            'purchaseOrderComponent',
+            'orderComponent',
             'goodReceiptComponent',
             'createdBy',
             'updatedBy',
@@ -81,7 +81,7 @@ class PurchaseReturnComponentController extends Controller
     {
         return PurchaseReturnComponent::with([
             'return',
-            'purchaseOrderComponent',
+            'orderComponent',
             'goodReceiptComponent',
             'createdBy',
             'updatedBy',
