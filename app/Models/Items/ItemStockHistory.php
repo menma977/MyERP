@@ -7,6 +7,7 @@ use App\Models\User;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -53,7 +54,8 @@ use Illuminate\Support\Carbon;
  */
 class ItemStockHistory extends ModelAbstract
 {
-    use HasUlids, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Items\ItemStockHistoryFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -76,7 +78,7 @@ class ItemStockHistory extends ModelAbstract
      */
     public function stock(): BelongsTo
     {
-        return $this->belongsTo(ItemStock::class);
+        return $this->belongsTo(ItemStock::class, 'item_stock_id');
     }
 
     protected function casts(): array

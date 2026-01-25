@@ -7,6 +7,7 @@ use App\Models\User;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -56,7 +57,8 @@ use Illuminate\Support\Carbon;
  */
 class PurchaseInvoiceComponent extends ModelAbstract
 {
-    use HasUlids, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Purchases\PurchaseInvoiceComponentFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -73,6 +75,7 @@ class PurchaseInvoiceComponent extends ModelAbstract
         'created_by',
         'updated_by',
         'deleted_by',
+        'deleted_at',
     ];
 
     /**
@@ -80,7 +83,7 @@ class PurchaseInvoiceComponent extends ModelAbstract
      */
     public function invoice(): BelongsTo
     {
-        return $this->belongsTo(PurchaseInvoice::class);
+        return $this->belongsTo(PurchaseInvoice::class, 'purchase_invoice_id');
     }
 
     /**
@@ -88,7 +91,7 @@ class PurchaseInvoiceComponent extends ModelAbstract
      */
     public function orderComponent(): BelongsTo
     {
-        return $this->belongsTo(PurchaseOrderComponent::class);
+        return $this->belongsTo(PurchaseOrderComponent::class, 'purchase_order_component_id');
     }
 
     protected function casts(): array

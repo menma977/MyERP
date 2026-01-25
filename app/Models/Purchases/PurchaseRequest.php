@@ -10,6 +10,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -60,7 +61,8 @@ use Illuminate\Validation\ValidationException;
  */
 class PurchaseRequest extends ApprovalAbstract
 {
-    use HasUlids, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Purchases\PurchaseRequestFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -112,7 +114,7 @@ class PurchaseRequest extends ApprovalAbstract
         if ($approvalEvent->is_approved) {
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
-                $purchaseRequest = PurchaseRequest::find($approvalEvent->id);
+                $purchaseRequest = PurchaseRequest::find($approvalEvent->requestable_id);
                 if (! $purchaseRequest) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();
@@ -130,6 +132,7 @@ class PurchaseRequest extends ApprovalAbstract
                 foreach ($purchaseRequest->components as $component) {
                     $purchaseProcurementComponent = new PurchaseProcurementComponent;
                     $purchaseProcurementComponent->purchase_procurement_id = $purchaseProcurement->id;
+                    $purchaseProcurementComponent->item_id = $component->item_id;
                     $purchaseProcurementComponent->vendor_id = $component->vendor_id;
                     $purchaseProcurementComponent->price = $component->price;
                     $purchaseProcurementComponent->quantity = $component->quantity;

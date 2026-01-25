@@ -7,6 +7,7 @@ use App\Models\User;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -52,7 +53,8 @@ use Illuminate\Support\Carbon;
  */
 class ItemBillComponent extends ModelAbstract
 {
-    use HasUlids, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Items\ItemBillComponentFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -74,7 +76,7 @@ class ItemBillComponent extends ModelAbstract
      */
     public function bill(): BelongsTo
     {
-        return $this->belongsTo(ItemBill::class);
+        return $this->belongsTo(ItemBill::class, 'item_bill_id');
     }
 
     /**

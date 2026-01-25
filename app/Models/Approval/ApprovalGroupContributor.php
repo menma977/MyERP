@@ -7,6 +7,7 @@ use App\Models\User;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -48,7 +49,8 @@ use Illuminate\Support\Carbon;
  */
 class ApprovalGroupContributor extends ModelAbstract
 {
-    use HasUlids, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Approval\ApprovalGroupContributorFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -78,6 +80,6 @@ class ApprovalGroupContributor extends ModelAbstract
      */
     public function group(): BelongsTo
     {
-        return $this->belongsTo(ApprovalGroup::class);
+        return $this->belongsTo(ApprovalGroup::class, 'approval_group_id');
     }
 }

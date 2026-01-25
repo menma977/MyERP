@@ -13,6 +13,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,7 +22,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Represents a Pro forma Invoice in the system.
+ * Represents a Pro form Invoice in the system.
  *
  * @property string $id
  * @property string $purchase_order_id
@@ -66,7 +67,8 @@ use Illuminate\Validation\ValidationException;
  */
 class PurchaseInvoice extends ApprovalAbstract
 {
-    use HasUlids, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Purchases\PurchaseInvoiceFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     const float TAX = 0.12;
 
@@ -91,7 +93,7 @@ class PurchaseInvoice extends ApprovalAbstract
      */
     public function order(): BelongsTo
     {
-        return $this->belongsTo(PurchaseOrder::class);
+        return $this->belongsTo(PurchaseOrder::class, 'purchase_order_id');
     }
 
     /**
@@ -115,7 +117,7 @@ class PurchaseInvoice extends ApprovalAbstract
         if ($approvalEvent->is_approved) {
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
-                $purchaseInvoice = PurchaseInvoice::find($approvalEvent->id);
+                $purchaseInvoice = PurchaseInvoice::find($approvalEvent->requestable_id);
                 if (! $purchaseInvoice) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();
@@ -127,6 +129,7 @@ class PurchaseInvoice extends ApprovalAbstract
 
                 $payment = new PaymentRequest;
                 $payment->purchase_invoice_id = $purchaseInvoice->id;
+                $payment->purchase_order_id = $purchaseInvoice->purchase_order_id;
                 $payment->code = CodeGeneratorService::code('PYR')->number(PaymentRequest::count())->generate();
                 $payment->total = $purchaseInvoice->total;
                 $payment->tax = $purchaseInvoice->tax;
@@ -138,6 +141,7 @@ class PurchaseInvoice extends ApprovalAbstract
                     $paymentComponent = new PaymentRequestComponent;
                     $paymentComponent->payment_request_id = $payment->id;
                     $paymentComponent->purchase_invoice_component_id = $component->id;
+                    $paymentComponent->purchase_order_component_id = $component->purchase_order_component_id;
                     $paymentComponent->quantity = $component->quantity;
                     $paymentComponent->price = $component->price;
                     $paymentComponent->total = $component->total;
