@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('type')->default(ItemTypeEnum::RAW->value);
             $table->string('unit')->default(ItemUnitEnum::PCS->value);
+            $table->decimal('cost', 18, 4)->default(0);
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('deleted_by')->nullable()->constrained('users')->nullOnDelete();
