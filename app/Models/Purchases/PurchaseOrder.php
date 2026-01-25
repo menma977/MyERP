@@ -27,8 +27,8 @@ use Illuminate\Validation\ValidationException;
  * @property string $purchase_request_id
  * @property string $purchase_procurement_id
  * @property string $code
- * @property float $request_total
- * @property float $total
+ * @property numeric $request_total
+ * @property numeric $total
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -36,14 +36,14 @@ use Illuminate\Validation\ValidationException;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, PurchaseOrderComponent> $components
- * @property-read int|null $component_count
+ * @property-read Collection<int, \App\Models\Purchases\PurchaseOrderComponent> $components
+ * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
- * @property-read PurchaseProcurement|null $procurement
- * @property-read PurchaseRequest|null $request
- * @property-read PurchaseReturn|null $return
+ * @property-read \App\Models\Purchases\PurchaseProcurement|null $procurement
+ * @property-read \App\Models\Purchases\PurchaseRequest|null $request
+ * @property-read \App\Models\Purchases\PurchaseReturn|null $return
  * @property-read User|null $updatedBy
  *
  * @method static Builder<static>|PurchaseOrder newModelQuery()
@@ -63,7 +63,9 @@ use Illuminate\Validation\ValidationException;
  * @method static Builder<static>|PurchaseOrder whereTotal($value)
  * @method static Builder<static>|PurchaseOrder whereUpdatedAt($value)
  * @method static Builder<static>|PurchaseOrder whereUpdatedBy($value)
+ * @method static Builder<static>|PurchaseOrder withContributors()
  * @method static Builder<static>|PurchaseOrder withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|PurchaseOrder withUsers()
  * @method static Builder<static>|PurchaseOrder withoutTrashed()
  *
  * @mixin Eloquent

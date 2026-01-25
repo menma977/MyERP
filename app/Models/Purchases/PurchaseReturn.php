@@ -22,7 +22,7 @@ use Illuminate\Support\Carbon;
  * @property string $purchase_order_id
  * @property string $good_receipt_id
  * @property string $code
- * @property float $total
+ * @property numeric $total
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -30,13 +30,13 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, PurchaseReturnComponent> $components
+ * @property-read Collection<int, \App\Models\Purchases\PurchaseReturnComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
  * @property-read GoodReceipt $goodReceipt
- * @property-read PurchaseOrder|null $order
+ * @property-read \App\Models\Purchases\PurchaseOrder|null $order
  * @property-read User|null $updatedBy
  *
  * @method static Builder<static>|PurchaseReturn newModelQuery()
@@ -55,7 +55,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|PurchaseReturn whereTotal($value)
  * @method static Builder<static>|PurchaseReturn whereUpdatedAt($value)
  * @method static Builder<static>|PurchaseReturn whereUpdatedBy($value)
+ * @method static Builder<static>|PurchaseReturn withContributors()
  * @method static Builder<static>|PurchaseReturn withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|PurchaseReturn withUsers()
  * @method static Builder<static>|PurchaseReturn withoutTrashed()
  *
  * @mixin Eloquent

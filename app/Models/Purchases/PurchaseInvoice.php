@@ -26,20 +26,20 @@ use Illuminate\Validation\ValidationException;
  * @property string $id
  * @property string $purchase_order_id
  * @property string $code
- * @property float $total
- * @property float $tax
+ * @property numeric $total
+ * @property numeric $tax
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, PurchaseInvoiceComponent> $components
+ * @property-read Collection<int, \App\Models\Purchases\PurchaseInvoiceComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
- * @property-read PurchaseOrder|null $order
+ * @property-read \App\Models\Purchases\PurchaseOrder|null $order
  * @property-read User|null $updatedBy
  *
  * @method static Builder<static>|PurchaseInvoice newModelQuery()
@@ -57,7 +57,9 @@ use Illuminate\Validation\ValidationException;
  * @method static Builder<static>|PurchaseInvoice whereTotal($value)
  * @method static Builder<static>|PurchaseInvoice whereUpdatedAt($value)
  * @method static Builder<static>|PurchaseInvoice whereUpdatedBy($value)
+ * @method static Builder<static>|PurchaseInvoice withContributors()
  * @method static Builder<static>|PurchaseInvoice withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|PurchaseInvoice withUsers()
  * @method static Builder<static>|PurchaseInvoice withoutTrashed()
  *
  * @mixin Eloquent

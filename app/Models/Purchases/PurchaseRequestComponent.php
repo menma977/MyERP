@@ -16,9 +16,9 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $purchase_request_id
  * @property int $vendor_id
- * @property float $price
- * @property float $quantity
- * @property float $total
+ * @property numeric $price
+ * @property numeric $quantity
+ * @property numeric $total
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -28,7 +28,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read PurchaseRequest|null $request
+ * @property-read \App\Models\Purchases\PurchaseRequest|null $request
  * @property-read User|null $updatedBy
  * @property-read Vendor $vendor
  *
@@ -50,6 +50,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|PurchaseRequestComponent whereUpdatedBy($value)
  * @method static Builder<static>|PurchaseRequestComponent whereVendorId($value)
  * @method static Builder<static>|PurchaseRequestComponent withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|PurchaseRequestComponent withUsers()
  * @method static Builder<static>|PurchaseRequestComponent withoutTrashed()
  *
  * @mixin Eloquent
