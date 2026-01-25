@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignUlid('item_batch_id')->constrained('item_batches')->cascadeOnDelete();
             $table->foreignUlid('item_stock_id')->constrained('item_stocks')->cascadeOnDelete();
             $table->decimal('quantity', 18, 4)->default(0);
-            $table->decimal('hpp', 18, 4)->default(0);
+            $table->decimal('cogs', 18, 4)->default(0);
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('deleted_by')->nullable()->constrained('users')->nullOnDelete();
