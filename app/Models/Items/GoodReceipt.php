@@ -28,7 +28,7 @@ use Illuminate\Validation\ValidationException;
  * @property string $id
  * @property string $purchase_order_id
  * @property string $code
- * @property float $total
+ * @property numeric $total
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -36,7 +36,7 @@ use Illuminate\Validation\ValidationException;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, GoodReceiptComponent> $components
+ * @property-read Collection<int, \App\Models\Items\GoodReceiptComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
@@ -61,7 +61,9 @@ use Illuminate\Validation\ValidationException;
  * @method static Builder<static>|GoodReceipt whereTotal($value)
  * @method static Builder<static>|GoodReceipt whereUpdatedAt($value)
  * @method static Builder<static>|GoodReceipt whereUpdatedBy($value)
+ * @method static Builder<static>|GoodReceipt withContributors()
  * @method static Builder<static>|GoodReceipt withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|GoodReceipt withUsers()
  * @method static Builder<static>|GoodReceipt withoutTrashed()
  *
  * @mixin Eloquent
@@ -164,6 +166,8 @@ class GoodReceipt extends ApprovalAbstract
                     $itemStock->quantity = $component->quantity;
                     $itemStock->price = $component->price;
                     $itemStock->save();
+
+                    $item->updateWeightedAverageCost();
 
                     $stockHistory = new ItemStockHistory;
                     $stockHistory->item_stock_id = $itemStock->id;

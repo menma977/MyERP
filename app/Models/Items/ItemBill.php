@@ -19,18 +19,18 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $item_id
  * @property string $code
- * @property float $quantity
+ * @property numeric $quantity
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, ItemBillComponent> $component
+ * @property-read Collection<int, \App\Models\Items\ItemBillComponent> $component
  * @property-read int|null $component_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read Item $item
+ * @property-read \App\Models\Items\Item $item
  * @property-read User|null $updatedBy
  *
  * @method static Builder<static>|ItemBill newModelQuery()
@@ -48,6 +48,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ItemBill whereUpdatedAt($value)
  * @method static Builder<static>|ItemBill whereUpdatedBy($value)
  * @method static Builder<static>|ItemBill withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|ItemBill withUsers()
  * @method static Builder<static>|ItemBill withoutTrashed()
  *
  * @mixin Eloquent

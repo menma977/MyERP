@@ -17,8 +17,8 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $item_stock_id
  * @property string $code
- * @property float $quantity
- * @property float $price
+ * @property numeric $quantity
+ * @property numeric $price
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -27,7 +27,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read ItemStock|null $stock
+ * @property-read \App\Models\Items\ItemStock|null $stock
  * @property-read User|null $updatedBy
  *
  * @method static Builder<static>|ItemStockHistory newModelQuery()
@@ -46,6 +46,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ItemStockHistory whereUpdatedAt($value)
  * @method static Builder<static>|ItemStockHistory whereUpdatedBy($value)
  * @method static Builder<static>|ItemStockHistory withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|ItemStockHistory withUsers()
  * @method static Builder<static>|ItemStockHistory withoutTrashed()
  *
  * @mixin Eloquent

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -22,13 +23,14 @@ use Illuminate\Support\Carbon;
  * @property string $name
  * @property ItemTypeEnum $type
  * @property ItemUnitEnum $unit
+ * @property numeric $cost
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, ItemBatch> $batches
+ * @property-read Collection<int, \App\Models\Items\ItemBatch> $batches
  * @property-read int|null $batches_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
@@ -50,6 +52,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Item whereUpdatedAt($value)
  * @method static Builder<static>|Item whereUpdatedBy($value)
  * @method static Builder<static>|Item withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Item withUsers()
  * @method static Builder<static>|Item withoutTrashed()
  *
  * @mixin Eloquent
@@ -68,6 +71,7 @@ class Item extends ModelAbstract
         'name',
         'type',
         'unit',
+        'cost',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -81,11 +85,36 @@ class Item extends ModelAbstract
         return $this->hasMany(ItemBatch::class);
     }
 
+    /**
+     * @return HasManyThrough<ItemStock, ItemBatch, $this>
+     */
+    public function stocks(): HasManyThrough
+    {
+        return $this->hasManyThrough(ItemStock::class, ItemBatch::class);
+    }
+
+    /**
+     * Calculate and update the weighted average cost of the item.
+     * This should be called whenever stock is added or removed.
+     */
+    public function updateWeightedAverageCost(): void
+    {
+        $aggregate = $this->stocks()->where('quantity', '>', 0)->selectRaw('SUM(quantity * price) as total_value, SUM(quantity) as total_quantity')->first();
+
+        $totalValue = $aggregate->total_value ?? 0;
+        $totalQuantity = $aggregate->total_quantity ?? 0;
+
+        $this->cost = $totalQuantity > 0 ? round($totalValue / $totalQuantity, 2) : 0;
+
+        $this->save();
+    }
+
     protected function casts(): array
     {
         return [
             'type' => ItemTypeEnum::class,
             'unit' => ItemUnitEnum::class,
+            'cost' => 'decimal:2',
         ];
     }
 }

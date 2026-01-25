@@ -28,8 +28,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read Item $item
- * @property-read ItemStock|null $stock
+ * @property-read \App\Models\Items\Item $item
+ * @property-read \App\Models\Items\ItemStock|null $stock
  * @property-read User|null $updatedBy
  *
  * @method static Builder<static>|ItemBatch newModelQuery()
@@ -41,13 +41,14 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ItemBatch whereCreatedBy($value)
  * @method static Builder<static>|ItemBatch whereDeletedAt($value)
  * @method static Builder<static>|ItemBatch whereDeletedBy($value)
- * @method static Builder<static>|ItemBatch whereExpiryAt($value)
+ * @method static Builder<static>|ItemBatch whereExpiredAt($value)
  * @method static Builder<static>|ItemBatch whereId($value)
  * @method static Builder<static>|ItemBatch whereIsAvailable($value)
  * @method static Builder<static>|ItemBatch whereItemId($value)
  * @method static Builder<static>|ItemBatch whereUpdatedAt($value)
  * @method static Builder<static>|ItemBatch whereUpdatedBy($value)
  * @method static Builder<static>|ItemBatch withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|ItemBatch withUsers()
  * @method static Builder<static>|ItemBatch withoutTrashed()
  *
  * @mixin Eloquent
