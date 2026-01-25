@@ -18,9 +18,9 @@ use Illuminate\Support\Carbon;
  * @property string $payment_request_id
  * @property string $purchase_order_component_id
  * @property string $purchase_invoice_component_id
- * @property float $quantity
- * @property float $price
- * @property float $total
+ * @property numeric $quantity
+ * @property numeric $price
+ * @property numeric $total
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -30,7 +30,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read PaymentRequest $paymentRequest
+ * @property-read \App\Models\Transactions\PaymentRequest $paymentRequest
  * @property-read PurchaseInvoiceComponent $purchaseInvoiceComponent
  * @property-read PurchaseOrderComponent $purchaseOrderComponent
  * @property-read User|null $updatedBy
@@ -54,6 +54,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|PaymentRequestComponent whereUpdatedAt($value)
  * @method static Builder<static>|PaymentRequestComponent whereUpdatedBy($value)
  * @method static Builder<static>|PaymentRequestComponent withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|PaymentRequestComponent withUsers()
  * @method static Builder<static>|PaymentRequestComponent withoutTrashed()
  *
  * @mixin Eloquent

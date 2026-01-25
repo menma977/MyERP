@@ -16,9 +16,9 @@ use Illuminate\Support\Carbon;
  *
  * @property string $id
  * @property string $ledger_id
- * @property float $in
- * @property float $out
- * @property float $total
+ * @property numeric $in
+ * @property numeric $out
+ * @property numeric $total
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -27,7 +27,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read Ledger $ledger
+ * @property-read \App\Models\Transactions\Ledger $ledger
  * @property-read User|null $updatedBy
  *
  * @method static Builder<static>|LedgerComponent newModelQuery()
@@ -46,6 +46,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|LedgerComponent whereUpdatedAt($value)
  * @method static Builder<static>|LedgerComponent whereUpdatedBy($value)
  * @method static Builder<static>|LedgerComponent withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|LedgerComponent withUsers()
  * @method static Builder<static>|LedgerComponent withoutTrashed()
  *
  * @mixin Eloquent

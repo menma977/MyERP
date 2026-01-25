@@ -17,16 +17,16 @@ use Illuminate\Support\Carbon;
  *
  * @property string $id
  * @property string $code
- * @property float $in
- * @property float $out
- * @property float $total
+ * @property numeric $in
+ * @property numeric $out
+ * @property numeric $total
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, LedgerComponent> $component
+ * @property-read Collection<int, \App\Models\Transactions\LedgerComponent> $component
  * @property-read int|null $component_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
@@ -48,6 +48,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Ledger whereUpdatedAt($value)
  * @method static Builder<static>|Ledger whereUpdatedBy($value)
  * @method static Builder<static>|Ledger withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Ledger withUsers()
  * @method static Builder<static>|Ledger withoutTrashed()
  *
  * @mixin Eloquent
