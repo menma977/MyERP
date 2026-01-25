@@ -24,20 +24,20 @@ use Illuminate\Validation\ValidationException;
  *
  * @property string $id
  * @property string $code
- * @property float $total
+ * @property numeric $total
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, SalesOrderComponent> $components
+ * @property-read Collection<int, \App\Models\Sales\SalesOrderComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
- * @property-read SalesInvoice|null $invoice
- * @property-read Collection<int, SalesReturn> $salesReturns
+ * @property-read \App\Models\Sales\SalesInvoice|null $invoice
+ * @property-read Collection<int, \App\Models\Sales\SalesReturn> $salesReturns
  * @property-read int|null $sales_returns_count
  * @property-read User|null $updatedBy
  *
@@ -54,7 +54,9 @@ use Illuminate\Validation\ValidationException;
  * @method static Builder<static>|SalesOrder whereTotal($value)
  * @method static Builder<static>|SalesOrder whereUpdatedAt($value)
  * @method static Builder<static>|SalesOrder whereUpdatedBy($value)
+ * @method static Builder<static>|SalesOrder withContributors()
  * @method static Builder<static>|SalesOrder withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|SalesOrder withUsers()
  * @method static Builder<static>|SalesOrder withoutTrashed()
  *
  * @mixin Eloquent

@@ -27,12 +27,12 @@ use Illuminate\Validation\ValidationException;
  * @property string $id
  * @property string $sales_order_id
  * @property string $code
- * @property float $total
- * @property float $tax
+ * @property numeric $total
+ * @property numeric $tax
  * @property DiscountTypeEnum $discount_type
- * @property float $discount
- * @property float $fee
- * @property float $grand_total
+ * @property numeric $discount
+ * @property numeric $fee
+ * @property numeric $grand_total
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -40,15 +40,15 @@ use Illuminate\Validation\ValidationException;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, SalesInvoiceComponent> $components
+ * @property-read Collection<int, \App\Models\Sales\SalesInvoiceComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
  * @property-read Collection<int, GoodIssue> $goodIssues
  * @property-read int|null $good_issues_count
- * @property-read SalesOrder|null $order
- * @property-read Collection<int, SalesReturn> $salesReturns
+ * @property-read \App\Models\Sales\SalesOrder|null $order
+ * @property-read Collection<int, \App\Models\Sales\SalesReturn> $salesReturns
  * @property-read int|null $sales_returns_count
  * @property-read User|null $updatedBy
  *
@@ -72,7 +72,9 @@ use Illuminate\Validation\ValidationException;
  * @method static Builder<static>|SalesInvoice whereTotal($value)
  * @method static Builder<static>|SalesInvoice whereUpdatedAt($value)
  * @method static Builder<static>|SalesInvoice whereUpdatedBy($value)
+ * @method static Builder<static>|SalesInvoice withContributors()
  * @method static Builder<static>|SalesInvoice withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|SalesInvoice withUsers()
  * @method static Builder<static>|SalesInvoice withoutTrashed()
  *
  * @mixin Eloquent

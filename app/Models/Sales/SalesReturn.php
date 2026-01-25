@@ -21,20 +21,20 @@ use Illuminate\Support\Carbon;
  * @property string $sales_order_id
  * @property string $sales_invoice_id
  * @property string $code
- * @property float $total
+ * @property numeric $total
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection<int, SalesReturnComponent> $components
+ * @property-read Collection<int, \App\Models\Sales\SalesReturnComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
- * @property-read SalesInvoice|null $invoice
- * @property-read SalesOrder|null $order
+ * @property-read \App\Models\Sales\SalesInvoice|null $invoice
+ * @property-read \App\Models\Sales\SalesOrder|null $order
  * @property-read User|null $updatedBy
  *
  * @method static Builder<static>|SalesReturn newModelQuery()
@@ -52,7 +52,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|SalesReturn whereTotal($value)
  * @method static Builder<static>|SalesReturn whereUpdatedAt($value)
  * @method static Builder<static>|SalesReturn whereUpdatedBy($value)
+ * @method static Builder<static>|SalesReturn withContributors()
  * @method static Builder<static>|SalesReturn withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|SalesReturn withUsers()
  * @method static Builder<static>|SalesReturn withoutTrashed()
  *
  * @mixin Eloquent
