@@ -425,6 +425,11 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'vendor.account.payable.delete', 'label' => 'Vendor Account Payable Delete', 'group' => 'vendor.account.payable', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.account.payable.destroy', 'label' => 'Vendor Account Payable Destroy', 'group' => 'vendor.account.payable', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.account.payable.restore', 'label' => 'Vendor Account Payable Restore', 'group' => 'vendor.account.payable', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.account.payable.approve', 'label' => 'Vendor Account Payable Approve', 'group' => 'vendor.account.payable', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.account.payable.reject', 'label' => 'Vendor Account Payable Reject', 'group' => 'vendor.account.payable', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.account.payable.cancel', 'label' => 'Vendor Account Payable Cancel', 'group' => 'vendor.account.payable', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.account.payable.rollback', 'label' => 'Vendor Account Payable Rollback', 'group' => 'vendor.account.payable', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.account.payable.force', 'label' => 'Vendor Account Payable Force', 'group' => 'vendor.account.payable', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.account.payable.component.index', 'label' => 'Vendor Account Payable Component Index', 'group' => 'vendor.account.payable.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.account.payable.component.show', 'label' => 'Vendor Account Payable Component Show', 'group' => 'vendor.account.payable.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.account.payable.component.store', 'label' => 'Vendor Account Payable Component Store', 'group' => 'vendor.account.payable.component', 'guard_name' => 'sanctum']);
@@ -439,6 +444,11 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'vendor.invoice.delete', 'label' => 'Vendor Invoice Delete', 'group' => 'vendor.invoice', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.invoice.destroy', 'label' => 'Vendor Invoice Destroy', 'group' => 'vendor.invoice', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.invoice.restore', 'label' => 'Vendor Invoice Restore', 'group' => 'vendor.invoice', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.invoice.approve', 'label' => 'Vendor Invoice Approve', 'group' => 'vendor.invoice', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.invoice.reject', 'label' => 'Vendor Invoice Reject', 'group' => 'vendor.invoice', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.invoice.cancel', 'label' => 'Vendor Invoice Cancel', 'group' => 'vendor.invoice', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.invoice.rollback', 'label' => 'Vendor Invoice Rollback', 'group' => 'vendor.invoice', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.invoice.force', 'label' => 'Vendor Invoice Force', 'group' => 'vendor.invoice', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.invoice.component.index', 'label' => 'Vendor Invoice Component Index', 'group' => 'vendor.invoice.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.invoice.component.show', 'label' => 'Vendor Invoice Component Show', 'group' => 'vendor.invoice.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.invoice.component.store', 'label' => 'Vendor Invoice Component Store', 'group' => 'vendor.invoice.component', 'guard_name' => 'sanctum']);
@@ -453,6 +463,11 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'vendor.payment.delete', 'label' => 'Vendor Payment Delete', 'group' => 'vendor.payment', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.payment.destroy', 'label' => 'Vendor Payment Destroy', 'group' => 'vendor.payment', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.payment.restore', 'label' => 'Vendor Payment Restore', 'group' => 'vendor.payment', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.payment.approve', 'label' => 'Vendor Payment Approve', 'group' => 'vendor.payment', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.payment.reject', 'label' => 'Vendor Payment Reject', 'group' => 'vendor.payment', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.payment.cancel', 'label' => 'Vendor Payment Cancel', 'group' => 'vendor.payment', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.payment.rollback', 'label' => 'Vendor Payment Rollback', 'group' => 'vendor.payment', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'vendor.payment.force', 'label' => 'Vendor Payment Force', 'group' => 'vendor.payment', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.payment.component.index', 'label' => 'Vendor Payment Component Index', 'group' => 'vendor.payment.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.payment.component.show', 'label' => 'Vendor Payment Component Show', 'group' => 'vendor.payment.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'vendor.payment.component.store', 'label' => 'Vendor Payment Component Store', 'group' => 'vendor.payment.component', 'guard_name' => 'sanctum']);

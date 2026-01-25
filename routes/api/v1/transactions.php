@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Transactions\LedgerComponentController;
+use App\Http\Controllers\Transactions\LedgerController;
 use App\Http\Controllers\Transactions\PaymentRequestComponentController;
 use App\Http\Controllers\Transactions\PaymentRequestController;
 
@@ -26,5 +28,15 @@ Route::prefix('payment')->name('payment.')->middleware(['auth:sanctum'])->group(
             Route::post('restore/{id}', [PaymentRequestComponentController::class, 'restore'])->name('restore')->middleware('can:payment.request.component.restore');
             Route::delete('destroy/{id}', [PaymentRequestComponentController::class, 'destroy'])->name('destroy')->middleware('can:payment.request.component.destroy');
         });
+    });
+});
+
+Route::prefix('ledger')->name('ledger.')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('index', [LedgerController::class, 'index'])->name('index')->middleware('can:ledger.index');
+    Route::get('show/{id}', [LedgerController::class, 'show'])->name('show')->middleware('can:ledger.show');
+
+    Route::prefix('component/{ledger_id}')->name('component.')->middleware('can:ledger.component.index')->group(function () {
+        Route::get('index', [LedgerComponentController::class, 'index'])->name('index');
+        Route::get('show/{id}', [LedgerComponentController::class, 'show'])->name('show')->middleware('can:ledger.component.show');
     });
 });
