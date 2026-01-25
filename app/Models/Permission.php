@@ -22,22 +22,22 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
  * @property int $id
  * @property string $name
  * @property string $label
- * @property string $group
  * @property string $guard_name
+ * @property string $group
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read User|null $createdBy
- * @property-read User|null $deletedBy
+ * @property-read \App\Models\User|null $createdBy
+ * @property-read \App\Models\User|null $deletedBy
  * @property-read Collection<int, SpatiePermission> $permissions
  * @property-read int|null $permissions_count
  * @property-read Collection<int, \Spatie\Permission\Models\Role> $roles
  * @property-read int|null $roles_count
- * @property-read User|null $updatedBy
- * @property-read Collection<int, User> $users
+ * @property-read \App\Models\User|null $updatedBy
+ * @property-read Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
  *
  * @method static Builder<static>|Permission newModelQuery()
@@ -50,8 +50,10 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
  * @method static Builder<static>|Permission whereCreatedBy($value)
  * @method static Builder<static>|Permission whereDeletedAt($value)
  * @method static Builder<static>|Permission whereDeletedBy($value)
+ * @method static Builder<static>|Permission whereGroup($value)
  * @method static Builder<static>|Permission whereGuardName($value)
  * @method static Builder<static>|Permission whereId($value)
+ * @method static Builder<static>|Permission whereLabel($value)
  * @method static Builder<static>|Permission whereName($value)
  * @method static Builder<static>|Permission whereUpdatedAt($value)
  * @method static Builder<static>|Permission whereUpdatedBy($value)
