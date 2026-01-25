@@ -29,8 +29,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Approval $approval
- * @property-read Collection<int, ApprovalContributor> $contributors
+ * @property-read \App\Models\Approval\Approval $approval
+ * @property-read Collection<int, \App\Models\Approval\ApprovalContributor> $contributors
  * @property-read int|null $contributors_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
@@ -56,6 +56,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalComponent whereUpdatedAt($value)
  * @method static Builder<static>|ApprovalComponent whereUpdatedBy($value)
  * @method static Builder<static>|ApprovalComponent withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|ApprovalComponent withUsers()
  * @method static Builder<static>|ApprovalComponent withoutTrashed()
  *
  * @mixin Eloquent

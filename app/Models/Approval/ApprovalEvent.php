@@ -39,12 +39,12 @@ use Illuminate\Support\Facades\Auth;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Approval|null $approval
+ * @property-read \App\Models\Approval\Approval|null $approval
  * @property-read mixed $can_approve
  * @property-read mixed $component
- * @property-read Collection<int, ApprovalEventComponent> $components
+ * @property-read Collection<int, \App\Models\Approval\ApprovalEventComponent> $components
  * @property-read int|null $components_count
- * @property-read Collection<int, ApprovalEventContributor> $contributors
+ * @property-read Collection<int, \App\Models\Approval\ApprovalEventContributor> $contributors
  * @property-read int|null $contributors_count
  * @property-read User|null $createdBy
  * @property-read mixed $current_component
@@ -53,7 +53,7 @@ use Illuminate\Support\Facades\Auth;
  * @property-read mixed $is_cancelled
  * @property-read mixed $is_rejected
  * @property-read mixed $is_rollback
- * @property-read Model $requestable
+ * @property-read \Illuminate\Database\Eloquent\Model $requestable
  * @property-read User|null $updatedBy
  *
  * @method static Builder<static>|ApprovalEvent newModelQuery()
@@ -79,6 +79,7 @@ use Illuminate\Support\Facades\Auth;
  * @method static Builder<static>|ApprovalEvent whereUpdatedAt($value)
  * @method static Builder<static>|ApprovalEvent whereUpdatedBy($value)
  * @method static Builder<static>|ApprovalEvent withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|ApprovalEvent withUsers()
  * @method static Builder<static>|ApprovalEvent withoutTrashed()
  *
  * @mixin Eloquent

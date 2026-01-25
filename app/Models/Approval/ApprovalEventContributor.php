@@ -26,7 +26,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read ApprovalEventComponent|null $component
+ * @property-read \App\Models\Approval\ApprovalEventComponent|null $component
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read mixed $is_approved
@@ -54,6 +54,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalEventContributor whereUpdatedBy($value)
  * @method static Builder<static>|ApprovalEventContributor whereUserId($value)
  * @method static Builder<static>|ApprovalEventContributor withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|ApprovalEventContributor withUsers()
  * @method static Builder<static>|ApprovalEventContributor withoutTrashed()
  *
  * @mixin Eloquent
