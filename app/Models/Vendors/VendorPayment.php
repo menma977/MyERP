@@ -16,7 +16,7 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property int $vendor_id
  * @property string $vendor_account_payable_id
- * @property float $amount
+ * @property numeric $amount
  * @property string $method
  * @property string|null $note
  * @property string|null $paid_at
@@ -26,12 +26,12 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read VendorAccountPayable|null $accountPayable
+ * @property-read \App\Models\Vendors\VendorAccountPayable|null $accountPayable
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
  * @property-read User|null $updatedBy
- * @property-read Vendor $vendor
+ * @property-read \App\Models\Vendors\Vendor $vendor
  *
  * @method static Builder<static>|VendorPayment newModelQuery()
  * @method static Builder<static>|VendorPayment newQuery()
@@ -50,7 +50,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|VendorPayment whereUpdatedBy($value)
  * @method static Builder<static>|VendorPayment whereVendorAccountPayableId($value)
  * @method static Builder<static>|VendorPayment whereVendorId($value)
+ * @method static Builder<static>|VendorPayment withContributors()
  * @method static Builder<static>|VendorPayment withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|VendorPayment withUsers()
  * @method static Builder<static>|VendorPayment withoutTrashed()
  *
  * @mixin Eloquent

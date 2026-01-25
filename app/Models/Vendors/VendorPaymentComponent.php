@@ -15,19 +15,19 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $vendor_payment_id
  * @property string $vendor_account_payable_component_id
- * @property float $quantity
- * @property float $price
- * @property float $total
+ * @property numeric $quantity
+ * @property numeric $price
+ * @property numeric $total
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read VendorAccountPayableComponent|null $accountPayableComponent
+ * @property-read \App\Models\Vendors\VendorAccountPayableComponent|null $accountPayableComponent
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read VendorPayment|null $payment
+ * @property-read \App\Models\Vendors\VendorPayment|null $payment
  * @property-read User|null $updatedBy
  *
  * @method static Builder<static>|VendorPaymentComponent newModelQuery()
@@ -47,6 +47,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|VendorPaymentComponent whereVendorAccountPayableComponentId($value)
  * @method static Builder<static>|VendorPaymentComponent whereVendorPaymentId($value)
  * @method static Builder<static>|VendorPaymentComponent withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|VendorPaymentComponent withUsers()
  * @method static Builder<static>|VendorPaymentComponent withoutTrashed()
  *
  * @mixin Eloquent
