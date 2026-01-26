@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Services\FakeIdTranslationService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -42,7 +43,10 @@ class RoleController extends Controller
      */
     public function show(Request $request): Role
     {
-        return Role::where('id', $request->route('id'))->firstOrFail();
+        return Role::where(
+            'id',
+            FakeIdTranslationService::model(new Role)->key($request->route('id'))->translateUlid()
+        )->firstOrFail();
     }
 
     /**
@@ -79,12 +83,17 @@ class RoleController extends Controller
     public function update(Request $request): array
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:roles,name,'.$request->route('id')],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:roles,name,'.FakeIdTranslationService::model(new Role)->key($request->route('id'))->translateUlid(),
+            ],
             'guard_name' => ['required', 'string', 'max:255', 'in:web,api,sanctum'],
         ]);
 
         /** @var Role $role */
-        $role = Role::findOrFail($request->route('id'));
+        $role = Role::findOrFail(FakeIdTranslationService::model(new Role)->key($request->route('id'))->translateUlid());
 
         $role->name = $request->input('name');
         $role->guard_name = $request->input('guard_name');
@@ -105,7 +114,7 @@ class RoleController extends Controller
     public function delete(Request $request): array
     {
         /** @var Role $role */
-        $role = Role::findOrFail($request->route('id'));
+        $role = Role::findOrFail(FakeIdTranslationService::model(new Role)->key($request->route('id'))->translateUlid());
         $role->delete();
 
         return [

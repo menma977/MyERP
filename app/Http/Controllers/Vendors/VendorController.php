@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Vendors;
 use App\Http\Controllers\Controller;
 use App\Models\Vendors\Vendor;
 use App\Rules\ValidationWithoutTrashed;
+use App\Services\FakeIdTranslationService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -50,7 +51,10 @@ class VendorController extends Controller
     {
         return Vendor::with([
             'components',
-        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where(
+            'id',
+            FakeIdTranslationService::model(new Vendor)->key($request->route('id'))->translateUlid()
+        )->firstOrFail();
     }
 
     /**
@@ -93,7 +97,12 @@ class VendorController extends Controller
     public function update(Request $request): array
     {
         $request->validate([
-            'code' => ['required', 'string', 'max:255', new ValidationWithoutTrashed(Vendor::class, 'code', $request->route('id'))],
+            'code' => [
+                'required',
+                'string',
+                'max:255',
+                new ValidationWithoutTrashed(Vendor::class, 'code', FakeIdTranslationService::model(new Vendor)->key($request->route('id'))->translateUlid()),
+            ],
             'name' => ['required', 'string', 'max:255'],
             'address' => ['nullable', 'string'],
             'phone' => ['nullable', 'string', 'max:255'],
@@ -101,7 +110,7 @@ class VendorController extends Controller
         ]);
 
         /** @var Vendor $vendor */
-        $vendor = Vendor::findOrFail($request->route('id'));
+        $vendor = Vendor::findOrFail(FakeIdTranslationService::model(new Vendor)->key($request->route('id'))->translateUlid());
         $vendor->code = $request->input('code');
         $vendor->name = $request->input('name');
         $vendor->address = $request->input('address');
@@ -124,7 +133,7 @@ class VendorController extends Controller
     public function delete(Request $request): array
     {
         /** @var Vendor $vendor */
-        $vendor = Vendor::findOrFail($request->route('id'));
+        $vendor = Vendor::findOrFail(FakeIdTranslationService::model(new Vendor)->key($request->route('id'))->translateUlid());
 
         if ($vendor->vendorInvoices()->exists() || $vendor->vendorAccountPayables()->exists() || $vendor->vendorPayments()->exists()) {
             throw ValidationException::withMessages([

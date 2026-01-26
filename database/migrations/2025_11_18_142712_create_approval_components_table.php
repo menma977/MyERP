@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('approval_components', function (Blueprint $table) {
             $table->id();
+            $table->ulid()->unique();
             $table->foreignId('approval_id')->constrained('approvals')->cascadeOnDelete();
             $table->string('name');
             $table->integer('step')->default(0)->comment('The step using binary system: 1, 2, 3, 4, etc.');

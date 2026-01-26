@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Approvals;
 
 use App\Http\Controllers\Controller;
+use App\Models\Approval\Approval;
 use App\Models\Approval\ApprovalComponent;
+use App\Services\FakeIdTranslationService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -24,7 +26,10 @@ class ApprovalComponentController extends Controller
         $approvalComponent = ApprovalComponent::with([
             'approval',
             'contributors.approvable',
-        ])->where('approval_id', $request->route('approval_id'))->when($request->input('search'), function ($build) use ($request) {
+        ])->where(
+            'approval_id',
+            FakeIdTranslationService::model(new Approval)->key($request->route('approval_id'))->translateUlid()
+        )->when($request->input('search'), function ($build) use ($request) {
             return $build->where('name', 'like', '%'.$request->input('search').'%');
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
@@ -50,8 +55,9 @@ class ApprovalComponentController extends Controller
             'color' => ['required', 'string', 'max:255'],
         ]);
 
+        $approvalId = FakeIdTranslationService::model(new Approval)->key($request->route('approval_id'))->translateUlid();
         $approvalComponent = new ApprovalComponent;
-        $approvalComponent->approval_id = (int) $request->route('approval_id');
+        $approvalComponent->approval_id = $approvalId;
         $approvalComponent->name = $request->input('name');
         $approvalComponent->type = $request->input('type');
         $approvalComponent->color = $request->input('color');
@@ -61,7 +67,7 @@ class ApprovalComponentController extends Controller
         $approvalComponent->can_delete = true;
         $approvalComponent->save();
 
-        $this->synchronizeSteps((int) $request->route('approval_id'));
+        $this->synchronizeSteps($approvalId);
 
         return [
             'message' => trans('messages.success.store', ['target' => $approvalComponent->name], App::getLocale()),
@@ -80,7 +86,7 @@ class ApprovalComponentController extends Controller
         return ApprovalComponent::with([
             'approval',
             'contributors.approvable',
-        ])->withUsers()->findOrFail($request->route('id'));
+        ])->withUsers()->findOrFail(FakeIdTranslationService::model(new ApprovalComponent)->key($request->route('id'))->translateUlid());
     }
 
     /**
@@ -99,22 +105,18 @@ class ApprovalComponentController extends Controller
             'step' => ['required', 'integer', 'min:0'],
         ]);
 
-        $approvalComponent = ApprovalComponent::findOrFail($request->route('id'));
-        if ($approvalComponent instanceof ApprovalComponent) {
-            $approvalComponent->approval_id = (int) $request->route('approval_id');
-            $approvalComponent->name = $request->input('name');
-            $approvalComponent->type = $request->input('type');
-            $approvalComponent->color = $request->input('color');
-            $approvalComponent->step = (int) $request->input('step');
-            $approvalComponent->save();
-        }
+        $approvalComponent = ApprovalComponent::findOrFail(FakeIdTranslationService::model(new ApprovalComponent)->key($request->route('id'))->translateUlid());
+        $approvalComponent->approval_id = FakeIdTranslationService::model(new Approval)->key($request->route('approval_id'))->translateUlid();
+        $approvalComponent->name = $request->input('name');
+        $approvalComponent->type = $request->input('type');
+        $approvalComponent->color = $request->input('color');
+        $approvalComponent->step = (int) $request->input('step');
+        $approvalComponent->save();
 
-        $this->synchronizeSteps((int) $request->route('approval_id'));
-
-        $componentName = ($approvalComponent instanceof ApprovalComponent) ? $approvalComponent->name : 'Component';
+        $this->synchronizeSteps(FakeIdTranslationService::model(new Approval)->key($request->route('approval_id'))->translateUlid());
 
         return [
-            'message' => trans('messages.success.update', ['target' => $componentName], App::getLocale()),
+            'message' => trans('messages.success.update', ['target' => $approvalComponent->name], App::getLocale()),
         ];
     }
 
@@ -127,20 +129,17 @@ class ApprovalComponentController extends Controller
      */
     public function delete(Request $request): array
     {
-        $approvalComponent = ApprovalComponent::findOrFail($request->route('id'));
-        if ($approvalComponent instanceof ApprovalComponent && $approvalComponent->contributors()->exists()) {
+        $approvalComponent = ApprovalComponent::findOrFail(FakeIdTranslationService::model(new ApprovalComponent)->key($request->route('id'))->translateUlid());
+        if ($approvalComponent->contributors()->exists()) {
             throw ValidationException::withMessages([
                 'message' => trans('messages.fail.delete.cost', ['attribute' => $approvalComponent->name, 'target' => 'Contributor'], App::getLocale()),
             ]);
         }
-        $approvalId = ($approvalComponent instanceof ApprovalComponent) ? $approvalComponent->approval_id : 0;
-        if ($approvalComponent instanceof ApprovalComponent) {
-            $approvalComponent->delete();
-        }
+        $approvalId = $approvalComponent->approval_id;
+        $componentName = $approvalComponent->name;
+        $approvalComponent->delete();
 
         $this->synchronizeSteps($approvalId);
-
-        $componentName = ($approvalComponent instanceof ApprovalComponent) ? $approvalComponent->name : 'Component';
 
         return [
             'message' => trans('messages.success.delete', ['target' => $componentName], App::getLocale()),
@@ -157,7 +156,7 @@ class ApprovalComponentController extends Controller
     public function restore(Request $request): array
     {
         /** @var ApprovalComponent $approvalComponent */
-        $approvalComponent = ApprovalComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $approvalComponent = ApprovalComponent::onlyTrashed()->findOrFail(FakeIdTranslationService::model(new ApprovalComponent)->key($request->route('id'))->translateUlid());
         $approvalComponent->restore();
 
         $this->synchronizeSteps($approvalComponent->approval_id);
@@ -177,7 +176,7 @@ class ApprovalComponentController extends Controller
     public function destroy(Request $request): array
     {
         /** @var ApprovalComponent $approvalComponent */
-        $approvalComponent = ApprovalComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $approvalComponent = ApprovalComponent::onlyTrashed()->findOrFail(FakeIdTranslationService::model(new ApprovalComponent)->key($request->route('id'))->translateUlid());
         $approvalId = $approvalComponent->approval_id;
         $approvalComponent->forceDelete();
 

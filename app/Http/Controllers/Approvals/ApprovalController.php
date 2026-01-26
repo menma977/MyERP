@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Approvals;
 
 use App\Http\Controllers\Controller;
 use App\Models\Approval\Approval;
+use App\Services\FakeIdTranslationService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -76,7 +77,7 @@ class ApprovalController extends Controller
             'flow',
             'flow.components',
             'components',
-        ])->withUsers()->findOrFail($request->route('id'));
+        ])->withUsers()->findOrFail(FakeIdTranslationService::model(new Approval)->key($request->route('id'))->translateUlid());
     }
 
     /**
@@ -95,18 +96,14 @@ class ApprovalController extends Controller
             'type' => ['required', 'integer', 'in:0,1'],
         ]);
 
-        $approval = Approval::findOrFail($request->route('id'));
-        if ($approval instanceof Approval) {
-            $approval->approval_flow_id = $request->input('flow_id');
-            $approval->name = $request->input('name');
-            $approval->type = $request->input('type');
-            $approval->save();
-        }
-
-        $approvalName = ($approval instanceof Approval) ? $approval->name : 'Approval';
+        $approval = Approval::findOrFail(FakeIdTranslationService::model(new Approval)->key($request->route('id'))->translateUlid());
+        $approval->approval_flow_id = $request->input('flow_id');
+        $approval->name = $request->input('name');
+        $approval->type = $request->input('type');
+        $approval->save();
 
         return [
-            'message' => trans('messages.success.update', ['target' => $approvalName], App::getLocale()),
+            'message' => trans('messages.success.update', ['target' => $approval->name], App::getLocale()),
         ];
     }
 
@@ -120,17 +117,14 @@ class ApprovalController extends Controller
      */
     public function delete(Request $request): array
     {
-        $approval = Approval::findOrFail($request->route('id'));
-        if ($approval instanceof Approval && $approval->components()->exists()) {
+        $approval = Approval::findOrFail(FakeIdTranslationService::model(new Approval)->key($request->route('id'))->translateUlid());
+        if ($approval->components()->exists()) {
             throw ValidationException::withMessages([
                 'message' => trans('messages.fail.delete.cost', ['attribute' => $approval->name, 'target' => 'Component'], App::getLocale()),
             ]);
         }
-        if ($approval instanceof Approval) {
-            $approval->delete();
-        }
-
-        $approvalName = ($approval instanceof Approval) ? $approval->name : 'Approval';
+        $approvalName = $approval;
+        $approval->delete();
 
         return [
             'message' => trans('messages.success.delete', ['target' => $approvalName], App::getLocale()),
@@ -147,7 +141,7 @@ class ApprovalController extends Controller
     public function restore(Request $request): array
     {
         /** @var Approval $approval */
-        $approval = Approval::onlyTrashed()->findOrFail($request->route('id'));
+        $approval = Approval::onlyTrashed()->findOrFail(FakeIdTranslationService::model(new Approval)->key($request->route('id'))->translateUlid());
         $approval->restore();
 
         return [
@@ -165,7 +159,7 @@ class ApprovalController extends Controller
     public function destroy(Request $request): array
     {
         /** @var Approval $approval */
-        $approval = Approval::onlyTrashed()->findOrFail($request->route('id'));
+        $approval = Approval::onlyTrashed()->findOrFail(FakeIdTranslationService::model(new Approval)->key($request->route('id'))->translateUlid());
         $approval->forceDelete();
 
         return [

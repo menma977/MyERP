@@ -12,6 +12,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Spatie\Permission\Models\Permission as SpatiePermission;
@@ -20,6 +21,7 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
  * This class represents a Permission and extends the SpatiePermission class.
  *
  * @property int $id
+ * @property string $ulid
  * @property string $name
  * @property string $label
  * @property string $guard_name
@@ -68,7 +70,7 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
 class Permission extends SpatiePermission
 {
     use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
-    use SoftDeletes;
+    use HasUlids, SoftDeletes;
 
     protected $fillable = [
         'group',
@@ -80,4 +82,12 @@ class Permission extends SpatiePermission
         'updated_by',
         'deleted_by',
     ];
+
+    /**
+     * @return array<int, string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['ulid'];
+    }
 }

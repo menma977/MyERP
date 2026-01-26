@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\FakeIdTranslationService;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 
 class UserController extends Controller
@@ -16,9 +19,9 @@ class UserController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return Collection<int, User>|LengthAwarePaginator<int, User>|int
+     * @return LengthAwarePaginator<int, User>|Collection<int, User>|JsonResource|int
      */
-    public function index(Request $request): Collection|LengthAwarePaginator|int
+    public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
         $users = User::when($request->input('search'), function ($query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
@@ -30,7 +33,7 @@ class UserController extends Controller
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type', 'paginate') === 'collection') {
-            return $users->get();
+            return UserResource::collection($users->get());
         }
 
         if ($request->input('type', 'paginate') === 'count') {
@@ -45,9 +48,9 @@ class UserController extends Controller
      *
      * Show the specified resource.
      */
-    public function show(Request $request): User
+    public function show(Request $request): JsonResource
     {
-        return User::where('id', $request->route('id'))->firstOrFail();
+        return User::findOrFail(FakeIdTranslationService::model(new User)->key($request->route('id'))->translateUlid())->toResource();
     }
 
     /**
@@ -55,7 +58,7 @@ class UserController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, user: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -75,6 +78,7 @@ class UserController extends Controller
 
         return [
             'message' => trans('messages.success.store', ['target' => 'User'], App::getLocale()),
+            'user' => $user->toResource(),
         ];
     }
 
@@ -83,18 +87,18 @@ class UserController extends Controller
      *
      * Update the specified resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, user: JsonResource}
      */
     public function update(Request $request): array
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', 'unique:users,username,'.$request->route('id')],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email,'.$request->route('id')],
+            'username' => ['required', 'string', 'max:255', 'unique:users,username,'.FakeIdTranslationService::model(new User)->key($request->route('id'))->translateUlid()],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,'.FakeIdTranslationService::model(new User)->key($request->route('id'))->translateUlid()],
         ]);
 
         /** @var User $user */
-        $user = User::findOrFail($request->route('id'));
+        $user = User::findOrFail(FakeIdTranslationService::model(new User)->key($request->route('id'))->translateUlid());
         $user->name = $request->input('name');
         $user->username = $request->input('username');
         $user->email = $request->input('email');
@@ -107,6 +111,7 @@ class UserController extends Controller
 
         return [
             'message' => trans('messages.success.update', ['target' => 'User'], App::getLocale()),
+            'user' => $user->toResource(),
         ];
     }
 
@@ -115,16 +120,17 @@ class UserController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, user: JsonResource}
      */
     public function delete(Request $request): array
     {
         /** @var User $user */
-        $user = User::findOrFail($request->route('id'));
+        $user = User::findOrFail(FakeIdTranslationService::model(new User)->key($request->route('id'))->translateUlid());
         $user->delete();
 
         return [
             'message' => trans('messages.success.delete', ['target' => 'User'], App::getLocale()),
+            'user' => $user->toResource(),
         ];
     }
 
@@ -133,16 +139,17 @@ class UserController extends Controller
      *
      * Restore a soft deleted resource.
      *
-     * @return array{message: string}
+     * @return array{message: string, user: JsonResource}
      */
     public function restore(Request $request): array
     {
         /** @var User $user */
-        $user = User::onlyTrashed()->findOrFail($request->route('id'));
+        $user = User::onlyTrashed()->findOrFail(FakeIdTranslationService::model(new User)->key($request->route('id'))->translateUlid());
         $user->restore();
 
         return [
             'message' => trans('messages.success.update', ['target' => 'User'], App::getLocale()),
+            'user' => $user->toResource(),
         ];
     }
 }
