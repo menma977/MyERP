@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Permission;
+use App\Services\FakeIdTranslationService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -27,11 +28,9 @@ class PermissionController extends Controller
                     ->orWhere('label', 'like', '%'.$request->input('search').'%')
                     ->orWhere('group', 'like', '%'.$request->input('search').'%');
             });
-        })
-            ->when($request->input('group'), function ($query) use ($request) {
-                return $query->where('group', $request->input('group'));
-            })
-            ->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
+        })->when($request->input('group'), function ($query) use ($request) {
+            return $query->where('group', $request->input('group'));
+        })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type', 'paginate') === 'collection') {
             return $permissions->get();
@@ -47,7 +46,10 @@ class PermissionController extends Controller
      */
     public function show(Request $request): Permission
     {
-        return Permission::where('id', $request->route('id'))->firstOrFail();
+        return Permission::where(
+            'id',
+            FakeIdTranslationService::model(new Permission)->key($request->route('id'))->translateUlid()
+        )->firstOrFail();
     }
 
     /**
@@ -86,14 +88,19 @@ class PermissionController extends Controller
     public function update(Request $request): array
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:permissions,name,'.$request->route('id')],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:permissions,name,'.FakeIdTranslationService::model(new Permission)->key($request->route('id'))->translateUlid(),
+            ],
             'label' => ['required', 'string', 'max:255'],
             'group' => ['required', 'string', 'max:255'],
             'guard_name' => ['required', 'string', 'max:255', 'in:web,api,sanctum'],
         ]);
 
         /** @var Permission $permission */
-        $permission = Permission::findOrFail($request->route('id'));
+        $permission = Permission::findOrFail(FakeIdTranslationService::model(new Permission)->key($request->route('id'))->translateUlid());
 
         $permission->name = $request->input('name');
         $permission->label = $request->input('label');
@@ -116,7 +123,7 @@ class PermissionController extends Controller
     public function delete(Request $request): array
     {
         /** @var Permission $permission */
-        $permission = Permission::findOrFail($request->route('id'));
+        $permission = Permission::findOrFail(FakeIdTranslationService::model(new Permission)->key($request->route('id'))->translateUlid());
         $permission->delete();
 
         return [

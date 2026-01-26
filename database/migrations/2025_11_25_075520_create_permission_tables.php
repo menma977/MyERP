@@ -25,6 +25,7 @@ return new class extends Migration
         Schema::create('permissions', static function (Blueprint $table) {
             // $table->engine('InnoDB');
             $table->bigIncrements('id'); // permission id
+            $table->ulid()->unique();
             $table->string('name');       // For MyISAM use string('name', 225); // (or 166 for InnoDB with Redundant/Compact row format)
             $table->string('label');
             $table->string('guard_name'); // For MyISAM use string('guard_name', 25);
@@ -41,6 +42,7 @@ return new class extends Migration
         Schema::create('roles', static function (Blueprint $table) use ($teams, $columnNames) {
             // $table->engine('InnoDB');
             $table->bigIncrements('id'); // role id
+            $table->ulid()->unique();
             if ($teams || config('permission.testing')) { // permission.testing is a fix for sqlite testing
                 $table->unsignedBigInteger($columnNames['team_foreign_key'])->nullable();
                 $table->index($columnNames['team_foreign_key'], 'roles_team_foreign_key_index');
