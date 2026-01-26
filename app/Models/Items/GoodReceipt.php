@@ -3,6 +3,7 @@
 namespace App\Models\Items;
 
 use App\Abstracts\ApprovalAbstract;
+use App\Http\Resources\Items\GoodReceiptResource;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\Purchases\PurchaseInvoice;
 use App\Models\Purchases\PurchaseInvoiceComponent;
@@ -11,6 +12,7 @@ use App\Models\Purchases\PurchaseReturn;
 use App\Models\User;
 use App\Services\CodeGeneratorService;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -69,6 +71,7 @@ use Illuminate\Validation\ValidationException;
  *
  * @mixin Eloquent
  */
+#[UseResource(GoodReceiptResource::class)]
 class GoodReceipt extends ApprovalAbstract
 {
     /** @use HasFactory<\Database\Factories\Items\GoodReceiptFactory> */

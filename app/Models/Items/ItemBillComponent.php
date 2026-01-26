@@ -3,8 +3,10 @@
 namespace App\Models\Items;
 
 use App\Abstracts\ModelAbstract;
+use App\Http\Resources\Items\ItemBillComponentResource;
 use App\Models\User;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -51,6 +53,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
+#[UseResource(ItemBillComponentResource::class)]
 class ItemBillComponent extends ModelAbstract
 {
     /** @use HasFactory<\Database\Factories\Items\ItemBillComponentFactory> */

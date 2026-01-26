@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Http\Resources\PersonalAccessTokenResource;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
@@ -35,6 +37,7 @@ use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
  *
  * @mixin \Eloquent
  */
+#[UseResource(PersonalAccessTokenResource::class)]
 class PersonalAccessToken extends SanctumPersonalAccessToken
 {
     use HasUlids;

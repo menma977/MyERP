@@ -3,8 +3,10 @@
 namespace App\Models\Vendors;
 
 use App\Abstracts\ModelAbstract;
+use App\Http\Resources\Vendors\VendorPaymentComponentResource;
 use App\Models\User;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -52,6 +54,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
+#[UseResource(VendorPaymentComponentResource::class)]
 class VendorPaymentComponent extends ModelAbstract
 {
     use HasUlids, SoftDeletes;

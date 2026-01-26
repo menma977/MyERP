@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Resources\RoleResource;
 use App\Observers\CreatedByObserver;
 use App\Observers\DeletedByObserver;
 use App\Observers\UpdatedByObserver;
@@ -10,6 +11,7 @@ use App\Traits\DeletedByTrait;
 use App\Traits\UpdatedByTrait;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -61,6 +63,7 @@ use Spatie\Permission\Models\Role as SpatieRole;
  * @mixin Eloquent
  */
 #[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
+#[UseResource(RoleResource::class)]
 class Role extends SpatieRole
 {
     use CreatedByTrait, DeletedByTrait, UpdatedByTrait;

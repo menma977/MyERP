@@ -3,9 +3,11 @@
 namespace App\Models\Items;
 
 use App\Abstracts\ModelAbstract;
+use App\Http\Resources\Items\GoodReceiptComponentResource;
 use App\Models\Purchases\PurchaseOrderComponent;
 use App\Models\User;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -59,6 +61,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
+#[UseResource(GoodReceiptComponentResource::class)]
 class GoodReceiptComponent extends ModelAbstract
 {
     /** @use HasFactory<\Database\Factories\Items\GoodReceiptComponentFactory> */
