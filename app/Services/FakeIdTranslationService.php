@@ -33,7 +33,7 @@ class FakeIdTranslationService
             return 0;
         }
 
-        $model = $this->model->newQuery()->where('ulid', $this->key)->first();
+        $model = $this->model->newQuery()->select('id')->where('ulid', $this->key)->first();
 
         return (int) $model?->getKey();
     }
