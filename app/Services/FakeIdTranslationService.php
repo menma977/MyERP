@@ -35,8 +35,9 @@ class FakeIdTranslationService
 
         $query = $this->model->newQuery();
 
-        if (method_exists($query, 'withTrashed')) {
-            $query->withTrashed();
+        if (method_exists($query, 'withTrashed') || method_exists($this->model, 'runSoftDelete')) {
+            // @phpstan-ignore method.notFound
+            $query = $query->withTrashed();
         }
 
         $model = $query->select('id')->where('ulid', $this->key)->first();
