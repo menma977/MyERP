@@ -2,14 +2,14 @@
 
 namespace App\Http\Resources;
 
-use App\Models\User;
+use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin User
+ * @mixin Permission
  */
-class UserResource extends JsonResource
+class PermissionResource extends JsonResource
 {
     public bool $preserveKeys = true;
 
@@ -21,14 +21,16 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'ulid' => $this->ulid,
-            'username' => $this->username,
+            'id' => $this->ulid,
             'name' => $this->name,
-            'email' => $this->email,
-            'email_verified_at' => $this->email_verified_at,
+            'label' => $this->label,
+            'guard_name' => $this->guard_name,
+            'group' => $this->group,
             'roles' => RoleResource::collection($this->whenLoaded('roles')),
-            'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
-            'tokens' => PersonalAccessTokenResource::collection($this->whenLoaded('tokens')),
+            'users' => UserResource::collection($this->whenLoaded('users')),
+            'created_by' => UserResource::make($this->whenLoaded('createdBy')),
+            'updated_by' => UserResource::make($this->whenLoaded('updatedBy')),
+            'deleted_by' => UserResource::make($this->whenLoaded('deletedBy')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
