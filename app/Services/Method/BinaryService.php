@@ -146,7 +146,7 @@ class BinaryService implements ApprovalServiceInterface
     public function store(): ApprovalEvent
     {
         return DB::transaction(function () {
-            $approvalEvent = ApprovalEvent::where('requestable_type', $this->model->getMorphClass())->where('requestable_id', $this->model->getKey())->first();
+            $approvalEvent = ApprovalEvent::where('requestable_type', $this->model->getMorphClass())->where('requestable_id', $this->model->getKey())->lockForUpdate()->first();
             if (! $approvalEvent) {
                 $flowComponent = ApprovalFlowComponent::where('key', $this->model->getMorphClass())->first();
                 if ($flowComponent) {
@@ -299,11 +299,21 @@ class BinaryService implements ApprovalServiceInterface
             if ($approvalEventContributorIsNotEmpty) {
                 $approvalEventContributor = ApprovalEventContributor::where('approval_event_component_id', $approvalEventComponent->id)
                     ->where('user_id', $this->user->id)
+                    ->lockForUpdate()
                     ->first();
-                if ($approvalEventContributor) {
-                    $approvalEventContributor->approved_at = now();
-                    $approvalEventContributor->save();
+
+                if (! $approvalEventContributor) {
+                    throw ValidationException::withMessages([
+                        'approval_event_contributor' => trans('messages.fail.action.cost', [
+                            'action' => 'Approve',
+                            'attribute' => $approvalEventComponent->name,
+                            'target' => $this->user->name,
+                        ]),
+                    ]);
                 }
+
+                $approvalEventContributor->approved_at = now();
+                $approvalEventContributor->save();
 
                 if ($approvalEventComponent->type === ContributorTypeEnum::OR) {
                     $shouldApproveComponent = true;
@@ -639,6 +649,7 @@ class BinaryService implements ApprovalServiceInterface
                         ->orWhereRaw('(step & ?) = 0', [$approvalEvent->step]);
                 })
                 ->orderBy('step')
+                ->lockForUpdate()
                 ->first();
         } else {
             $approvalEventComponent = ApprovalEventComponent::where('approval_event_id', $approvalEvent->id)
@@ -648,6 +659,7 @@ class BinaryService implements ApprovalServiceInterface
                         ->orWhereRaw('(step & ?) = 0', [$this->binary]);
                 })
                 ->orderBy('step')
+                ->lockForUpdate()
                 ->first();
         }
 
