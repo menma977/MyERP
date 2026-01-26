@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Vendors;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Vendors\VendorAccountPayableComponentResource;
 use App\Models\Vendors\VendorAccountPayableComponent;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 
 class VendorAccountPayableComponentController extends Controller
@@ -17,9 +19,9 @@ class VendorAccountPayableComponentController extends Controller
      *
      * Display a listing of resources.
      *
-     * @return LengthAwarePaginator<int, VendorAccountPayableComponent>|Collection<int, VendorAccountPayableComponent>
+     * @return LengthAwarePaginator<int, VendorAccountPayableComponent>|Collection<int, VendorAccountPayableComponent>|JsonResource|int
      */
-    public function index(Request $request): LengthAwarePaginator|Collection
+    public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
         $vendorAccountPayableComponents = VendorAccountPayableComponent::with([
             'accountPayable',
@@ -34,10 +36,14 @@ class VendorAccountPayableComponentController extends Controller
             ->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type', 'paginate') === 'collection') {
-            return $vendorAccountPayableComponents->get();
+            return VendorAccountPayableComponentResource::collection($vendorAccountPayableComponents->get());
         }
 
-        return $vendorAccountPayableComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type', 'paginate') === 'count') {
+            return $vendorAccountPayableComponents->count();
+        }
+
+        return VendorAccountPayableComponentResource::collection($vendorAccountPayableComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
@@ -45,12 +51,12 @@ class VendorAccountPayableComponentController extends Controller
      *
      * Show specified resource.
      */
-    public function show(Request $request): VendorAccountPayableComponent
+    public function show(Request $request): JsonResource
     {
         return VendorAccountPayableComponent::with([
             'accountPayable',
             'purchaseInvoiceComponent',
-        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 
     /**
@@ -58,7 +64,7 @@ class VendorAccountPayableComponentController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_account_payable_component: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -74,6 +80,7 @@ class VendorAccountPayableComponentController extends Controller
 
         return [
             'message' => trans('messages.success.store', ['target' => 'Vendor Account Payable Component'], App::getLocale()),
+            'vendor_account_payable_component' => $vendorAccountPayableComponent->toResource(),
         ];
     }
 
@@ -82,7 +89,7 @@ class VendorAccountPayableComponentController extends Controller
      *
      * Update specified resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_account_payable_component: JsonResource}
      */
     public function update(Request $request): array
     {
@@ -94,11 +101,12 @@ class VendorAccountPayableComponentController extends Controller
         ]);
 
         /** @var VendorAccountPayableComponent $vendorAccountPayableComponent */
-        $vendorAccountPayableComponent = VendorAccountPayableComponent::findOrFail($request->route('id'));
+        $vendorAccountPayableComponent = VendorAccountPayableComponent::where('id', $request->route('id'))->firstOrFail();
         $this->save($request, $vendorAccountPayableComponent);
 
         return [
             'message' => trans('messages.success.update', ['target' => 'Vendor Account Payable Component'], App::getLocale()),
+            'vendor_account_payable_component' => $vendorAccountPayableComponent->toResource(),
         ];
     }
 
@@ -107,16 +115,17 @@ class VendorAccountPayableComponentController extends Controller
      *
      * Remove specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_account_payable_component: JsonResource}
      */
     public function delete(Request $request): array
     {
         /** @var VendorAccountPayableComponent $vendorAccountPayableComponent */
-        $vendorAccountPayableComponent = VendorAccountPayableComponent::findOrFail($request->route('id'));
+        $vendorAccountPayableComponent = VendorAccountPayableComponent::where('id', $request->route('id'))->firstOrFail();
         $vendorAccountPayableComponent->delete();
 
         return [
             'message' => trans('messages.success.delete', ['target' => 'Vendor Account Payable Component'], App::getLocale()),
+            'vendor_account_payable_component' => $vendorAccountPayableComponent->toResource(),
         ];
     }
 
@@ -125,16 +134,17 @@ class VendorAccountPayableComponentController extends Controller
      *
      * Restore specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_account_payable_component: JsonResource}
      */
     public function restore(Request $request): array
     {
         /** @var VendorAccountPayableComponent $vendorAccountPayableComponent */
-        $vendorAccountPayableComponent = VendorAccountPayableComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $vendorAccountPayableComponent = VendorAccountPayableComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $vendorAccountPayableComponent->restore();
 
         return [
             'message' => trans('messages.success.restore', ['target' => 'Vendor Account Payable Component'], App::getLocale()),
+            'vendor_account_payable_component' => $vendorAccountPayableComponent->toResource(),
         ];
     }
 
@@ -143,16 +153,17 @@ class VendorAccountPayableComponentController extends Controller
      *
      * Permanently remove specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_account_payable_component: JsonResource}
      */
     public function destroy(Request $request): array
     {
         /** @var VendorAccountPayableComponent $vendorAccountPayableComponent */
-        $vendorAccountPayableComponent = VendorAccountPayableComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $vendorAccountPayableComponent = VendorAccountPayableComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $vendorAccountPayableComponent->forceDelete();
 
         return [
             'message' => trans('messages.success.destroy', ['target' => 'Vendor Account Payable Component'], App::getLocale()),
+            'vendor_account_payable_component' => $vendorAccountPayableComponent->toResource(),
         ];
     }
 

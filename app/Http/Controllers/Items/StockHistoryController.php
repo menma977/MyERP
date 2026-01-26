@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Items;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Items\ItemStockHistoryResource;
 use App\Models\Items\ItemStockHistory;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class StockHistoryController extends Controller
 {
@@ -15,9 +17,9 @@ class StockHistoryController extends Controller
      * List item stock histories with optional filtering and pagination.
      *
      * @param  Request  $request  The HTTP request containing search, sort, and pagination parameters
-     * @return Collection<int, ItemStockHistory>|LengthAwarePaginator<int, ItemStockHistory>
+     * @return LengthAwarePaginator<int, ItemStockHistory>|Collection<int, ItemStockHistory>|JsonResource|int
      */
-    public function index(Request $request): Collection|LengthAwarePaginator
+    public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
         $histories = ItemStockHistory::with([
             'stock',
@@ -51,24 +53,27 @@ class StockHistoryController extends Controller
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {
-            return $histories->get();
+            return ItemStockHistoryResource::collection($histories->get());
         }
 
-        return $histories->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type') === 'count') {
+            return $histories->count();
+        }
+
+        return ItemStockHistoryResource::collection($histories->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
      * Show a specific item stock history with its related information.
      *
      * @param  Request  $request  The HTTP request
-     * @return ItemStockHistory The item stock history with loaded relationships
      */
-    public function show(Request $request): ItemStockHistory
+    public function show(Request $request): JsonResource
     {
         return ItemStockHistory::with([
             'stock',
             'stock.batch',
             'stock.batch.item',
-        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 }

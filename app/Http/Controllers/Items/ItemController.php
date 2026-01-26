@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Items;
 use App\Enums\ItemTypeEnum;
 use App\Enums\ItemUnitEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Items\ItemResource;
 use App\Models\Items\Item;
 use App\Rules\ValidationWithoutTrashed;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\ValidationException;
 
@@ -20,39 +22,42 @@ class ItemController extends Controller
      * List items with optional filtering and pagination.
      *
      * @param  Request  $request  The HTTP request containing search, sort, and pagination parameters
-     * @return Collection<int, Item>|LengthAwarePaginator<int, Item>
+     * @return LengthAwarePaginator<int, Item>|Collection<int, Item>|JsonResource|int
      */
-    public function index(Request $request): Collection|LengthAwarePaginator
+    public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
         $items = Item::withCount('batches')->when($request->input('search'), function (Builder $build) use ($request): Builder {
             return $build->where('name', 'like', '%'.$request->input('search').'%');
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {
-            return $items->get();
+            return ItemResource::collection($items->get());
         }
 
-        return $items->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type') === 'count') {
+            return $items->count();
+        }
+
+        return ItemResource::collection($items->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
      * Show a specific item with its batches and stock information.
      *
      * @param  Request  $request  The HTTP request
-     * @return Item The item with loaded relationships
      */
-    public function show(Request $request): Item
+    public function show(Request $request): JsonResource
     {
         return Item::with([
             'batches.stock',
-        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 
     /**
      * Store a new item in storage.
      *
      * @param  Request  $request  The HTTP request containing item data
-     * @return array{message: string}
+     * @return array{message: string, item: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -72,6 +77,7 @@ class ItemController extends Controller
 
         return [
             'message' => trans('messages.success.store', ['target' => 'Item'], App::getLocale()),
+            'item' => $item->toResource(),
         ];
     }
 
@@ -79,7 +85,7 @@ class ItemController extends Controller
      * Update an existing item in storage.
      *
      * @param  Request  $request  The HTTP request containing updated item data
-     * @return array{message: string}
+     * @return array{message: string, item: JsonResource}
      */
     public function update(Request $request): array
     {
@@ -91,7 +97,7 @@ class ItemController extends Controller
         ]);
 
         /** @var Item $item */
-        $item = Item::findOrFail($request->route('id'));
+        $item = Item::where('id', $request->route('id'))->firstOrFail();
         $item->code = $request->input('code');
         $item->name = $request->input('name');
         $item->type = $request->input('type');
@@ -100,6 +106,7 @@ class ItemController extends Controller
 
         return [
             'message' => trans('messages.success.update', ['target' => 'Item'], App::getLocale()),
+            'item' => $item->toResource(),
         ];
     }
 
@@ -107,12 +114,12 @@ class ItemController extends Controller
      * Soft delete an item.
      *
      * @param  Request  $request  The HTTP request
-     * @return array{message: string}
+     * @return array{message: string, item: JsonResource}
      */
     public function delete(Request $request): array
     {
         /** @var Item $item */
-        $item = Item::findOrFail($request->route('id'));
+        $item = Item::where('id', $request->route('id'))->firstOrFail();
 
         if ($item->batches()->exists()) {
             throw ValidationException::withMessages([
@@ -124,6 +131,7 @@ class ItemController extends Controller
 
         return [
             'message' => trans('messages.success.delete', ['target' => 'Item'], App::getLocale()),
+            'item' => $item->toResource(),
         ];
     }
 
@@ -131,12 +139,12 @@ class ItemController extends Controller
      * Permanently delete an item.
      *
      * @param  Request  $request  The HTTP request
-     * @return array{message: string}
+     * @return array{message: string, item: JsonResource}
      */
     public function destroy(Request $request): array
     {
         /** @var Item $item */
-        $item = Item::withTrashed()->findOrFail($request->route('id'));
+        $item = Item::withTrashed()->where('id', $request->route('id'))->firstOrFail();
         if (! $item->trashed()) {
             throw ValidationException::withMessages([
                 'message' => trans('messages.fail.action.cost', ['attribute' => 'Item', 'target' => 'Trash Status', 'action' => 'destroy'], App::getLocale()),
@@ -146,6 +154,7 @@ class ItemController extends Controller
 
         return [
             'message' => trans('messages.success.destroy', ['target' => 'Item'], App::getLocale()),
+            'item' => $item->toResource(),
         ];
     }
 
@@ -153,16 +162,17 @@ class ItemController extends Controller
      * Restore a soft deleted item.
      *
      * @param  Request  $request  The HTTP request
-     * @return array{message: string}
+     * @return array{message: string, item: JsonResource}
      */
     public function restore(Request $request): array
     {
         /** @var Item $item */
-        $item = Item::onlyTrashed()->findOrFail($request->route('id'));
+        $item = Item::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $item->restore();
 
         return [
             'message' => trans('messages.success.restore', ['target' => 'Item'], App::getLocale()),
+            'item' => $item->toResource(),
         ];
     }
 }

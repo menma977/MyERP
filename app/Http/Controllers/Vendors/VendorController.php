@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Vendors;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Vendors\VendorResource;
 use App\Models\Vendors\Vendor;
 use App\Rules\ValidationWithoutTrashed;
 use App\Services\FakeIdTranslationService;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\ValidationException;
 
@@ -20,9 +22,9 @@ class VendorController extends Controller
      *
      * Display a listing of resources.
      *
-     * @return LengthAwarePaginator<int, Vendor>|Collection<int, Vendor>
+     * @return LengthAwarePaginator<int, Vendor>|Collection<int, Vendor>|JsonResource|int
      */
-    public function index(Request $request): LengthAwarePaginator|Collection
+    public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
         $vendors = Vendor::withCount([
             'components',
@@ -36,10 +38,14 @@ class VendorController extends Controller
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type', 'paginate') === 'collection') {
-            return $vendors->get();
+            return VendorResource::collection($vendors->get());
         }
 
-        return $vendors->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type', 'paginate') === 'count') {
+            return $vendors->count();
+        }
+
+        return VendorResource::collection($vendors->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
@@ -47,14 +53,14 @@ class VendorController extends Controller
      *
      * Show specified resource.
      */
-    public function show(Request $request): Vendor
+    public function show(Request $request): JsonResource
     {
         return Vendor::with([
             'components',
         ])->withUsers()->where(
             'id',
             FakeIdTranslationService::model(new Vendor)->key($request->route('id'))->translateUlid()
-        )->firstOrFail();
+        )->firstOrFail()->toResource();
     }
 
     /**
@@ -62,7 +68,7 @@ class VendorController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -84,6 +90,7 @@ class VendorController extends Controller
 
         return [
             'message' => trans('messages.success.store', ['target' => 'Vendor'], App::getLocale()),
+            'vendor' => $vendor->toResource(),
         ];
     }
 
@@ -92,7 +99,7 @@ class VendorController extends Controller
      *
      * Update specified resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor: JsonResource}
      */
     public function update(Request $request): array
     {
@@ -120,6 +127,7 @@ class VendorController extends Controller
 
         return [
             'message' => trans('messages.success.update', ['target' => 'Vendor'], App::getLocale()),
+            'vendor' => $vendor->toResource(),
         ];
     }
 
@@ -128,7 +136,7 @@ class VendorController extends Controller
      *
      * Remove specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor: JsonResource}
      */
     public function delete(Request $request): array
     {
@@ -145,6 +153,7 @@ class VendorController extends Controller
 
         return [
             'message' => trans('messages.success.delete', ['target' => 'Vendor'], App::getLocale()),
+            'vendor' => $vendor->toResource(),
         ];
     }
 }

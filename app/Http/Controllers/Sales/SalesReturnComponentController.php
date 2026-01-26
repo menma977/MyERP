@@ -3,17 +3,19 @@
 namespace App\Http\Controllers\Sales;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Sales\SalesReturnComponentResource;
 use App\Models\Sales\SalesReturnComponent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class SalesReturnComponentController extends Controller
 {
     /**
-     * @return LengthAwarePaginator<int, SalesReturnComponent>|Collection<int, SalesReturnComponent>
+     * @return LengthAwarePaginator<int, SalesReturnComponent>|Collection<int, SalesReturnComponent>|JsonResource|int
      */
-    public function index(Request $request): LengthAwarePaginator|Collection
+    public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
         $salesReturnComponents = SalesReturnComponent::with([
             'return',
@@ -25,14 +27,18 @@ class SalesReturnComponentController extends Controller
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {
-            return $salesReturnComponents->get();
+            return SalesReturnComponentResource::collection($salesReturnComponents->get());
         }
 
-        return $salesReturnComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type') === 'count') {
+            return $salesReturnComponents->count();
+        }
+
+        return SalesReturnComponentResource::collection($salesReturnComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
-     * @return array{message: string}
+     * @return array{message: string, sales_return_component: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -49,19 +55,22 @@ class SalesReturnComponentController extends Controller
         $salesReturnComponent = new SalesReturnComponent;
         $this->save($request, $salesReturnComponent);
 
-        return ['message' => trans('messages.success.store', ['target' => 'Sales Return Component'])];
+        return [
+            'message' => trans('messages.success.store', ['target' => 'Sales Return Component']),
+            'sales_return_component' => $salesReturnComponent->toResource(),
+        ];
     }
 
-    public function show(Request $request): SalesReturnComponent
+    public function show(Request $request): JsonResource
     {
         return SalesReturnComponent::with([
             'return',
             'item',
-        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 
     /**
-     * @return array{message: string}
+     * @return array{message: string, sales_return_component: JsonResource}
      */
     public function update(Request $request): array
     {
@@ -76,46 +85,58 @@ class SalesReturnComponentController extends Controller
         ]);
 
         /** @var SalesReturnComponent $salesReturnComponent */
-        $salesReturnComponent = SalesReturnComponent::findOrFail($request->route('id'));
+        $salesReturnComponent = SalesReturnComponent::where('id', $request->route('id'))->firstOrFail();
         $this->save($request, $salesReturnComponent);
 
-        return ['message' => trans('messages.success.update', ['target' => 'Sales Return Component'])];
+        return [
+            'message' => trans('messages.success.update', ['target' => 'Sales Return Component']),
+            'sales_return_component' => $salesReturnComponent->toResource(),
+        ];
     }
 
     /**
-     * @return array{message: string}
+     * @return array{message: string, sales_return_component: JsonResource}
      */
     public function delete(Request $request): array
     {
         /** @var SalesReturnComponent $salesReturnComponent */
-        $salesReturnComponent = SalesReturnComponent::findOrFail($request->route('id'));
+        $salesReturnComponent = SalesReturnComponent::where('id', $request->route('id'))->firstOrFail();
         $salesReturnComponent->delete();
 
-        return ['message' => trans('messages.success.delete', ['target' => 'Sales Return Component'])];
+        return [
+            'message' => trans('messages.success.delete', ['target' => 'Sales Return Component']),
+            'sales_return_component' => $salesReturnComponent->toResource(),
+        ];
     }
 
     /**
-     * @return array{message: string}
+     * @return array{message: string, sales_return_component: JsonResource}
      */
     public function restore(Request $request): array
     {
         /** @var SalesReturnComponent $salesReturnComponent */
-        $salesReturnComponent = SalesReturnComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $salesReturnComponent = SalesReturnComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $salesReturnComponent->restore();
 
-        return ['message' => trans('messages.success.restore', ['target' => 'Sales Return Component'])];
+        return [
+            'message' => trans('messages.success.restore', ['target' => 'Sales Return Component']),
+            'sales_return_component' => $salesReturnComponent->toResource(),
+        ];
     }
 
     /**
-     * @return array{message: string}
+     * @return array{message: string, sales_return_component: JsonResource}
      */
     public function destroy(Request $request): array
     {
         /** @var SalesReturnComponent $salesReturnComponent */
-        $salesReturnComponent = SalesReturnComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $salesReturnComponent = SalesReturnComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $salesReturnComponent->forceDelete();
 
-        return ['message' => trans('messages.success.destroy', ['target' => 'Sales Return Component'])];
+        return [
+            'message' => trans('messages.success.destroy', ['target' => 'Sales Return Component']),
+            'sales_return_component' => $salesReturnComponent->toResource(),
+        ];
     }
 
     protected function save(Request $request, SalesReturnComponent $salesReturnComponent): void

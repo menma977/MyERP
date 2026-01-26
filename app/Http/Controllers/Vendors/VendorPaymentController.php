@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Vendors;
 
 use App\Enums\PaymentMethodEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Vendors\VendorPaymentResource;
 use App\Models\Vendors\VendorPayment;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -20,9 +22,9 @@ class VendorPaymentController extends Controller
      *
      * Display a listing of resources.
      *
-     * @return LengthAwarePaginator<int, VendorPayment>|Collection<int, VendorPayment>
+     * @return LengthAwarePaginator<int, VendorPayment>|Collection<int, VendorPayment>|JsonResource|int
      */
-    public function index(Request $request): LengthAwarePaginator|Collection
+    public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
         $vendorPayments = VendorPayment::with([
             'vendor',
@@ -35,10 +37,14 @@ class VendorPaymentController extends Controller
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type', 'paginate') === 'collection') {
-            return $vendorPayments->get();
+            return VendorPaymentResource::collection($vendorPayments->get());
         }
 
-        return $vendorPayments->withContributors()->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type', 'paginate') === 'count') {
+            return $vendorPayments->count();
+        }
+
+        return VendorPaymentResource::collection($vendorPayments->withContributors()->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
@@ -46,13 +52,13 @@ class VendorPaymentController extends Controller
      *
      * Show specified resource.
      */
-    public function show(Request $request): VendorPayment
+    public function show(Request $request): JsonResource
     {
         return VendorPayment::with([
             'vendor',
             'accountPayable',
             'components',
-        ])->withContributors()->withUsers()->where('id', $request->route('id'))->firstOrFail();
+        ])->withContributors()->withUsers()->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 
     /**
@@ -60,7 +66,7 @@ class VendorPaymentController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_payment: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -78,6 +84,7 @@ class VendorPaymentController extends Controller
 
         return [
             'message' => trans('messages.success.store', ['target' => 'Vendor Payment'], App::getLocale()),
+            'vendor_payment' => $vendorPayment->toResource(),
         ];
     }
 
@@ -86,7 +93,7 @@ class VendorPaymentController extends Controller
      *
      * Update specified resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_payment: JsonResource}
      */
     public function update(Request $request): array
     {
@@ -100,11 +107,12 @@ class VendorPaymentController extends Controller
         ]);
 
         /** @var VendorPayment $vendorPayment */
-        $vendorPayment = VendorPayment::findOrFail($request->route('id'));
+        $vendorPayment = VendorPayment::where('id', $request->route('id'))->firstOrFail();
         $this->save($request, $vendorPayment);
 
         return [
             'message' => trans('messages.success.update', ['target' => 'Vendor Payment'], App::getLocale()),
+            'vendor_payment' => $vendorPayment->toResource(),
         ];
     }
 
@@ -113,16 +121,17 @@ class VendorPaymentController extends Controller
      *
      * Remove specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_payment: JsonResource}
      */
     public function delete(Request $request): array
     {
         /** @var VendorPayment $vendorPayment */
-        $vendorPayment = VendorPayment::findOrFail($request->route('id'));
+        $vendorPayment = VendorPayment::where('id', $request->route('id'))->firstOrFail();
         $vendorPayment->delete();
 
         return [
             'message' => trans('messages.success.delete', ['target' => 'Vendor Payment'], App::getLocale()),
+            'vendor_payment' => $vendorPayment->toResource(),
         ];
     }
 
@@ -131,16 +140,17 @@ class VendorPaymentController extends Controller
      *
      * Restore specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_payment: JsonResource}
      */
     public function restore(Request $request): array
     {
         /** @var VendorPayment $vendorPayment */
-        $vendorPayment = VendorPayment::onlyTrashed()->findOrFail($request->route('id'));
+        $vendorPayment = VendorPayment::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $vendorPayment->restore();
 
         return [
             'message' => trans('messages.success.restore', ['target' => 'Vendor Payment'], App::getLocale()),
+            'vendor_payment' => $vendorPayment->toResource(),
         ];
     }
 
@@ -149,16 +159,17 @@ class VendorPaymentController extends Controller
      *
      * Permanently remove specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_payment: JsonResource}
      */
     public function destroy(Request $request): array
     {
         /** @var VendorPayment $vendorPayment */
-        $vendorPayment = VendorPayment::onlyTrashed()->findOrFail($request->route('id'));
+        $vendorPayment = VendorPayment::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $vendorPayment->forceDelete();
 
         return [
             'message' => trans('messages.success.destroy', ['target' => 'Vendor Payment'], App::getLocale()),
+            'vendor_payment' => $vendorPayment->toResource(),
         ];
     }
 
@@ -167,12 +178,12 @@ class VendorPaymentController extends Controller
      *
      * Approve specified resource.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_payment: JsonResource}
      */
     public function approve(Request $request): array
     {
         /** @var VendorPayment $vendorPayment */
-        $vendorPayment = VendorPayment::findOrFail($request->route('id'));
+        $vendorPayment = VendorPayment::where('id', $request->route('id'))->firstOrFail();
 
         $user = Auth::user();
         if (! $user) {
@@ -185,6 +196,7 @@ class VendorPaymentController extends Controller
 
         return [
             'message' => trans('messages.success.approve', ['target' => 'Vendor Payment'], App::getLocale()),
+            'vendor_payment' => $vendorPayment->toResource(),
         ];
     }
 
@@ -193,12 +205,12 @@ class VendorPaymentController extends Controller
      *
      * Reject specified resource.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_payment: JsonResource}
      */
     public function reject(Request $request): array
     {
         /** @var VendorPayment $vendorPayment */
-        $vendorPayment = VendorPayment::findOrFail($request->route('id'));
+        $vendorPayment = VendorPayment::where('id', $request->route('id'))->firstOrFail();
 
         $user = Auth::user();
         if (! $user) {
@@ -211,6 +223,7 @@ class VendorPaymentController extends Controller
 
         return [
             'message' => trans('messages.success.reject', ['target' => 'Vendor Payment'], App::getLocale()),
+            'vendor_payment' => $vendorPayment->toResource(),
         ];
     }
 
@@ -219,12 +232,12 @@ class VendorPaymentController extends Controller
      *
      * Cancel specified resource.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_payment: JsonResource}
      */
     public function cancel(Request $request): array
     {
         /** @var VendorPayment $vendorPayment */
-        $vendorPayment = VendorPayment::findOrFail($request->route('id'));
+        $vendorPayment = VendorPayment::where('id', $request->route('id'))->firstOrFail();
 
         $user = Auth::user();
         if (! $user) {
@@ -237,6 +250,7 @@ class VendorPaymentController extends Controller
 
         return [
             'message' => trans('messages.success.cancel', ['target' => 'Vendor Payment'], App::getLocale()),
+            'vendor_payment' => $vendorPayment->toResource(),
         ];
     }
 
@@ -245,12 +259,12 @@ class VendorPaymentController extends Controller
      *
      * Roll back specified resource.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_payment: JsonResource}
      */
     public function rollback(Request $request): array
     {
         /** @var VendorPayment $vendorPayment */
-        $vendorPayment = VendorPayment::findOrFail($request->route('id'));
+        $vendorPayment = VendorPayment::where('id', $request->route('id'))->firstOrFail();
 
         $user = Auth::user();
         if (! $user) {
@@ -263,6 +277,7 @@ class VendorPaymentController extends Controller
 
         return [
             'message' => trans('messages.success.rollback', ['target' => 'Vendor Payment'], App::getLocale()),
+            'vendor_payment' => $vendorPayment->toResource(),
         ];
     }
 
@@ -271,7 +286,7 @@ class VendorPaymentController extends Controller
      *
      * Force to execute action on a specified resource.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_payment: JsonResource}
      */
     public function force(Request $request): array
     {
@@ -280,7 +295,7 @@ class VendorPaymentController extends Controller
         ]);
 
         /** @var VendorPayment $vendorPayment */
-        $vendorPayment = VendorPayment::findOrFail($request->route('id'));
+        $vendorPayment = VendorPayment::where('id', $request->route('id'))->firstOrFail();
 
         $user = Auth::user();
         if (! $user) {
@@ -293,6 +308,7 @@ class VendorPaymentController extends Controller
 
         return [
             'message' => trans('messages.success.force', ['target' => 'Vendor Payment'], App::getLocale()),
+            'vendor_payment' => $vendorPayment->toResource(),
         ];
     }
 
