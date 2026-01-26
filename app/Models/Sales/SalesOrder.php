@@ -122,7 +122,7 @@ class SalesOrder extends ApprovalAbstract
         if ($approvalEvent->is_approved) {
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
-                $salesOrder = SalesOrder::find($approvalEvent->requestable_id);
+                $salesOrder = SalesOrder::lockForUpdate()->with('components')->find($approvalEvent->requestable_id);
                 if (! $salesOrder) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();

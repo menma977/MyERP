@@ -150,7 +150,7 @@ class PurchaseOrder extends ApprovalAbstract
         if ($approvalEvent->is_approved) {
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
-                $purchaseOrder = PurchaseOrder::find($approvalEvent->requestable_id);
+                $purchaseOrder = PurchaseOrder::lockForUpdate()->with('components')->find($approvalEvent->requestable_id);
                 if (! $purchaseOrder) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();

@@ -120,7 +120,7 @@ class PurchaseInvoice extends ApprovalAbstract
         if ($approvalEvent->is_approved) {
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
-                $purchaseInvoice = PurchaseInvoice::find($approvalEvent->requestable_id);
+                $purchaseInvoice = PurchaseInvoice::lockForUpdate()->with('components')->find($approvalEvent->requestable_id);
                 if (! $purchaseInvoice) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();
