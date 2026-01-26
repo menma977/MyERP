@@ -3,12 +3,12 @@
 namespace Tests\Feature\Sales;
 
 use App\Enums\DiscountTypeEnum;
+use App\Models\Permission;
 use App\Models\Sales\SalesInvoice;
 use App\Models\Sales\SalesInvoiceComponent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class SalesInvoiceControllerTest extends TestCase
@@ -46,8 +46,10 @@ class SalesInvoiceControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $invoice->id,
-                'code' => $invoice->code,
+                'data' => [
+                    'id' => $invoice->id,
+                    'code' => $invoice->code,
+                ],
             ]);
     }
 

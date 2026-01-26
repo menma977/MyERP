@@ -3,10 +3,10 @@
 namespace Tests\Feature\Approvals;
 
 use App\Models\Approval\ApprovalDictionary;
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class DictionaryControllerTest extends TestCase
@@ -46,8 +46,10 @@ class DictionaryControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $dictionary->id,
-                'name' => $dictionary->name,
+                'data' => [
+                    'id' => $dictionary->id,
+                    'name' => $dictionary->name,
+                ],
             ]);
     }
 

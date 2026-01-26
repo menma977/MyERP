@@ -3,8 +3,10 @@
 namespace App\Models\Approval;
 
 use App\Abstracts\ModelAbstract;
+use App\Http\Resources\Approval\ApprovalFlowResource;
 use App\Models\User;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -48,6 +50,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
+#[UseResource(ApprovalFlowResource::class)]
 class ApprovalFlow extends ModelAbstract
 {
     /** @use HasFactory<\Database\Factories\Approval\ApprovalFlowFactory> */

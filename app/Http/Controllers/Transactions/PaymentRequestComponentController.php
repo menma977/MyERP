@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Transactions;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Transactions\PaymentRequestComponentResource;
 use App\Models\Transactions\PaymentRequest;
 use App\Models\Transactions\PaymentRequestComponent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 
@@ -23,9 +25,9 @@ class PaymentRequestComponentController extends Controller
      *
      * Display a listing of resources.
      *
-     * @return LengthAwarePaginator<int, PaymentRequestComponent>|Collection<int, PaymentRequestComponent>
+     * @return LengthAwarePaginator<int, PaymentRequestComponent>|Collection<int, PaymentRequestComponent>|JsonResource|int
      */
-    public function index(Request $request): LengthAwarePaginator|Collection
+    public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
         $paymentRequestComponents = PaymentRequestComponent::with([
             'paymentRequest',
@@ -45,10 +47,14 @@ class PaymentRequestComponentController extends Controller
             ->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type', 'paginate') === 'collection') {
-            return $paymentRequestComponents->get();
+            return PaymentRequestComponentResource::collection($paymentRequestComponents->get());
         }
 
-        return $paymentRequestComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type', 'paginate') === 'count') {
+            return $paymentRequestComponents->count();
+        }
+
+        return PaymentRequestComponentResource::collection($paymentRequestComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
@@ -56,13 +62,13 @@ class PaymentRequestComponentController extends Controller
      *
      * Show specified resource.
      */
-    public function show(Request $request): PaymentRequestComponent
+    public function show(Request $request): JsonResource
     {
         return PaymentRequestComponent::with([
             'paymentRequest',
             'purchaseOrderComponent',
             'purchaseInvoiceComponent',
-        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 
     /**
@@ -70,7 +76,7 @@ class PaymentRequestComponentController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, payment_request_component: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -88,6 +94,7 @@ class PaymentRequestComponentController extends Controller
 
         return [
             'message' => trans('messages.success.store', ['target' => 'Payment Request Component'], App::getLocale()),
+            'payment_request_component' => $paymentRequestComponent->toResource(),
         ];
     }
 
@@ -96,7 +103,7 @@ class PaymentRequestComponentController extends Controller
      *
      * Update specified resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, payment_request_component: JsonResource}
      */
     public function update(Request $request): array
     {
@@ -110,11 +117,12 @@ class PaymentRequestComponentController extends Controller
         ]);
 
         /** @var PaymentRequestComponent $paymentRequestComponent */
-        $paymentRequestComponent = PaymentRequestComponent::findOrFail($request->route('id'));
+        $paymentRequestComponent = PaymentRequestComponent::where('id', $request->route('id'))->firstOrFail();
         $this->save($request, $paymentRequestComponent);
 
         return [
             'message' => trans('messages.success.update', ['target' => 'Payment Request Component'], App::getLocale()),
+            'payment_request_component' => $paymentRequestComponent->toResource(),
         ];
     }
 
@@ -123,16 +131,17 @@ class PaymentRequestComponentController extends Controller
      *
      * Remove specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, payment_request_component: JsonResource}
      */
     public function delete(Request $request): array
     {
         /** @var PaymentRequestComponent $paymentRequestComponent */
-        $paymentRequestComponent = PaymentRequestComponent::findOrFail($request->route('id'));
+        $paymentRequestComponent = PaymentRequestComponent::where('id', $request->route('id'))->firstOrFail();
         $paymentRequestComponent->delete();
 
         return [
             'message' => trans('messages.success.delete', ['target' => 'Payment Request Component'], App::getLocale()),
+            'payment_request_component' => $paymentRequestComponent->toResource(),
         ];
     }
 
@@ -141,16 +150,17 @@ class PaymentRequestComponentController extends Controller
      *
      * Restore specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, payment_request_component: JsonResource}
      */
     public function restore(Request $request): array
     {
         /** @var PaymentRequestComponent $paymentRequestComponent */
-        $paymentRequestComponent = PaymentRequestComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $paymentRequestComponent = PaymentRequestComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $paymentRequestComponent->restore();
 
         return [
             'message' => trans('messages.success.restore', ['target' => 'Payment Request Component'], App::getLocale()),
+            'payment_request_component' => $paymentRequestComponent->toResource(),
         ];
     }
 
@@ -159,16 +169,17 @@ class PaymentRequestComponentController extends Controller
      *
      * Permanently remove specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, payment_request_component: JsonResource}
      */
     public function destroy(Request $request): array
     {
         /** @var PaymentRequestComponent $paymentRequestComponent */
-        $paymentRequestComponent = PaymentRequestComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $paymentRequestComponent = PaymentRequestComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $paymentRequestComponent->forceDelete();
 
         return [
             'message' => trans('messages.success.destroy', ['target' => 'Payment Request Component'], App::getLocale()),
+            'payment_request_component' => $paymentRequestComponent->toResource(),
         ];
     }
 

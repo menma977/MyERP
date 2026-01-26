@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Vendors;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Vendors\VendorInvoiceComponentResource;
 use App\Models\Vendors\VendorInvoiceComponent;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 
 class VendorInvoiceComponentController extends Controller
@@ -17,9 +19,9 @@ class VendorInvoiceComponentController extends Controller
      *
      * Display a listing of resources.
      *
-     * @return LengthAwarePaginator<int, VendorInvoiceComponent>|Collection<int, VendorInvoiceComponent>
+     * @return LengthAwarePaginator<int, VendorInvoiceComponent>|Collection<int, VendorInvoiceComponent>|JsonResource|int
      */
-    public function index(Request $request): LengthAwarePaginator|Collection
+    public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
         $vendorInvoiceComponents = VendorInvoiceComponent::with([
             'invoice',
@@ -35,10 +37,14 @@ class VendorInvoiceComponentController extends Controller
             ->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type', 'paginate') === 'collection') {
-            return $vendorInvoiceComponents->get();
+            return VendorInvoiceComponentResource::collection($vendorInvoiceComponents->get());
         }
 
-        return $vendorInvoiceComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type', 'paginate') === 'count') {
+            return $vendorInvoiceComponents->count();
+        }
+
+        return VendorInvoiceComponentResource::collection($vendorInvoiceComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
@@ -46,12 +52,12 @@ class VendorInvoiceComponentController extends Controller
      *
      * Show specified resource.
      */
-    public function show(Request $request): VendorInvoiceComponent
+    public function show(Request $request): JsonResource
     {
         return VendorInvoiceComponent::with([
             'invoice',
             'vendorComponent',
-        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 
     /**
@@ -59,7 +65,7 @@ class VendorInvoiceComponentController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_invoice_component: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -76,6 +82,7 @@ class VendorInvoiceComponentController extends Controller
 
         return [
             'message' => trans('messages.success.store', ['target' => 'Vendor Invoice Component'], App::getLocale()),
+            'vendor_invoice_component' => $vendorInvoiceComponent->toResource(),
         ];
     }
 
@@ -84,7 +91,7 @@ class VendorInvoiceComponentController extends Controller
      *
      * Update specified resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_invoice_component: JsonResource}
      */
     public function update(Request $request): array
     {
@@ -97,11 +104,12 @@ class VendorInvoiceComponentController extends Controller
         ]);
 
         /** @var VendorInvoiceComponent $vendorInvoiceComponent */
-        $vendorInvoiceComponent = VendorInvoiceComponent::findOrFail($request->route('id'));
+        $vendorInvoiceComponent = VendorInvoiceComponent::where('id', $request->route('id'))->firstOrFail();
         $this->save($request, $vendorInvoiceComponent);
 
         return [
             'message' => trans('messages.success.update', ['target' => 'Vendor Invoice Component'], App::getLocale()),
+            'vendor_invoice_component' => $vendorInvoiceComponent->toResource(),
         ];
     }
 
@@ -110,16 +118,17 @@ class VendorInvoiceComponentController extends Controller
      *
      * Remove specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_invoice_component: JsonResource}
      */
     public function delete(Request $request): array
     {
         /** @var VendorInvoiceComponent $vendorInvoiceComponent */
-        $vendorInvoiceComponent = VendorInvoiceComponent::findOrFail($request->route('id'));
+        $vendorInvoiceComponent = VendorInvoiceComponent::where('id', $request->route('id'))->firstOrFail();
         $vendorInvoiceComponent->delete();
 
         return [
             'message' => trans('messages.success.delete', ['target' => 'Vendor Invoice Component'], App::getLocale()),
+            'vendor_invoice_component' => $vendorInvoiceComponent->toResource(),
         ];
     }
 
@@ -128,16 +137,17 @@ class VendorInvoiceComponentController extends Controller
      *
      * Restore specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_invoice_component: JsonResource}
      */
     public function restore(Request $request): array
     {
         /** @var VendorInvoiceComponent $vendorInvoiceComponent */
-        $vendorInvoiceComponent = VendorInvoiceComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $vendorInvoiceComponent = VendorInvoiceComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $vendorInvoiceComponent->restore();
 
         return [
             'message' => trans('messages.success.restore', ['target' => 'Vendor Invoice Component'], App::getLocale()),
+            'vendor_invoice_component' => $vendorInvoiceComponent->toResource(),
         ];
     }
 
@@ -146,16 +156,17 @@ class VendorInvoiceComponentController extends Controller
      *
      * Permanently remove specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_invoice_component: JsonResource}
      */
     public function destroy(Request $request): array
     {
         /** @var VendorInvoiceComponent $vendorInvoiceComponent */
-        $vendorInvoiceComponent = VendorInvoiceComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $vendorInvoiceComponent = VendorInvoiceComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $vendorInvoiceComponent->forceDelete();
 
         return [
             'message' => trans('messages.success.destroy', ['target' => 'Vendor Invoice Component'], App::getLocale()),
+            'vendor_invoice_component' => $vendorInvoiceComponent->toResource(),
         ];
     }
 

@@ -40,7 +40,7 @@ class UserController extends Controller
             return $users->count();
         }
 
-        return $users->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        return UserResource::collection($users->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**

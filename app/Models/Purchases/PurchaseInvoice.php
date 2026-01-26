@@ -4,12 +4,14 @@ namespace App\Models\Purchases;
 
 use App\Abstracts\ApprovalAbstract;
 use App\Enums\PaymentMethodEnum;
+use App\Http\Resources\Purchases\PurchaseInvoiceResource;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\Transactions\PaymentRequest;
 use App\Models\Transactions\PaymentRequestComponent;
 use App\Models\User;
 use App\Services\CodeGeneratorService;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -65,6 +67,7 @@ use Illuminate\Validation\ValidationException;
  *
  * @mixin Eloquent
  */
+#[UseResource(PurchaseInvoiceResource::class)]
 class PurchaseInvoice extends ApprovalAbstract
 {
     /** @use HasFactory<\Database\Factories\Purchases\PurchaseInvoiceFactory> */

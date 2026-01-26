@@ -3,10 +3,12 @@
 namespace App\Models\Purchases;
 
 use App\Abstracts\ApprovalAbstract;
+use App\Http\Resources\Purchases\PurchaseRequestResource;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\User;
 use App\Services\CodeGeneratorService;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -59,6 +61,7 @@ use Illuminate\Validation\ValidationException;
  *
  * @mixin Eloquent
  */
+#[UseResource(PurchaseRequestResource::class)]
 class PurchaseRequest extends ApprovalAbstract
 {
     /** @use HasFactory<\Database\Factories\Purchases\PurchaseRequestFactory> */

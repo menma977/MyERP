@@ -5,10 +5,10 @@ namespace Tests\Feature\Items;
 use App\Models\Items\Item;
 use App\Models\Items\ItemBatch;
 use App\Models\Items\ItemStock;
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class StockControllerTest extends TestCase
@@ -50,7 +50,9 @@ class StockControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $stock->id,
+                'data' => [
+                    'id' => $stock->id,
+                ],
             ]);
     }
 

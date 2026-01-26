@@ -5,12 +5,12 @@ namespace Tests\Feature\Sales;
 use App\Models\Items\Item;
 use App\Models\Items\ItemBatch;
 use App\Models\Items\ItemStock;
+use App\Models\Permission;
 use App\Models\Sales\SalesInvoice;
 use App\Models\Sales\SalesInvoiceComponent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class SalesInvoiceComponentControllerTest extends TestCase
@@ -51,7 +51,9 @@ class SalesInvoiceComponentControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $component->id,
+                'data' => [
+                    'id' => $component->id,
+                ],
             ]);
     }
 

@@ -3,12 +3,12 @@
 namespace Tests\Feature\Sales;
 
 use App\Models\Items\Item;
+use App\Models\Permission;
 use App\Models\Sales\SalesOrder;
 use App\Models\Sales\SalesOrderComponent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class SalesOrderComponentControllerTest extends TestCase
@@ -49,7 +49,9 @@ class SalesOrderComponentControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $component->id,
+                'data' => [
+                    'id' => $component->id,
+                ],
             ]);
     }
 

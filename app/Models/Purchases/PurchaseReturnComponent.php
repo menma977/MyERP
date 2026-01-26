@@ -3,10 +3,12 @@
 namespace App\Models\Purchases;
 
 use App\Abstracts\ModelAbstract;
+use App\Http\Resources\Purchases\PurchaseReturnComponentResource;
 use App\Models\Items\GoodReceiptComponent;
 use App\Models\Items\Item;
 use App\Models\User;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -63,6 +65,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
+#[UseResource(PurchaseReturnComponentResource::class)]
 class PurchaseReturnComponent extends ModelAbstract
 {
     /** @use HasFactory<\Database\Factories\Purchases\PurchaseReturnComponentFactory> */

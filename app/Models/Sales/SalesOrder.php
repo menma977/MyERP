@@ -4,11 +4,13 @@ namespace App\Models\Sales;
 
 use App\Abstracts\ApprovalAbstract;
 use App\Enums\DiscountTypeEnum;
+use App\Http\Resources\Sales\SalesOrderResource;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\Items\ItemBatch;
 use App\Models\User;
 use App\Services\CodeGeneratorService;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -62,6 +64,7 @@ use Illuminate\Validation\ValidationException;
  *
  * @mixin Eloquent
  */
+#[UseResource(SalesOrderResource::class)]
 class SalesOrder extends ApprovalAbstract
 {
     /** @use HasFactory<\Database\Factories\Sales\SalesOrderFactory> */

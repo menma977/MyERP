@@ -4,10 +4,10 @@ namespace Tests\Feature\Items;
 
 use App\Models\Items\Item;
 use App\Models\Items\ItemBatch;
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class BatchControllerTest extends TestCase
@@ -47,8 +47,10 @@ class BatchControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $batch->id,
-                'code' => $batch->code,
+                'data' => [
+                    'id' => $batch->id,
+                    'code' => $batch->code,
+                ],
             ]);
     }
 

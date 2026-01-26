@@ -5,11 +5,11 @@ namespace Tests\Feature\Items;
 use App\Models\Items\GoodReceipt;
 use App\Models\Items\GoodReceiptComponent;
 use App\Models\Items\Item;
+use App\Models\Permission;
 use App\Models\Purchases\PurchaseOrderComponent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class GoodReceiptComponentControllerTest extends TestCase
@@ -52,7 +52,9 @@ class GoodReceiptComponentControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $component->id,
+                'data' => [
+                    'id' => $component->id,
+                ],
             ]);
     }
 

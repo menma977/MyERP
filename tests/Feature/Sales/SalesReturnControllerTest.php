@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\Sales;
 
+use App\Models\Permission;
 use App\Models\Sales\SalesInvoice;
 use App\Models\Sales\SalesOrder;
 use App\Models\Sales\SalesReturn;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class SalesReturnControllerTest extends TestCase
@@ -60,8 +60,10 @@ class SalesReturnControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $salesReturn->id,
-                'code' => $salesReturn->code,
+                'data' => [
+                    'id' => $salesReturn->id,
+                    'code' => $salesReturn->code,
+                ],
             ]);
     }
 

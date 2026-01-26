@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Approvals;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Approval\ApprovalFlowResource;
 use App\Models\Approval\ApprovalFlow;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\ValidationException;
@@ -17,19 +19,23 @@ class FlowController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return Collection<int, ApprovalFlow>|LengthAwarePaginator<int, ApprovalFlow>
+     * @return Collection<int, ApprovalFlow>|LengthAwarePaginator<int, ApprovalFlow>|JsonResource|int
      */
-    public function index(Request $request): Collection|LengthAwarePaginator
+    public function index(Request $request): Collection|LengthAwarePaginator|JsonResource|int
     {
         $flow = ApprovalFlow::when($request->input('search'), function ($build) use ($request) {
             return $build->where('name', 'like', '%'.$request->input('search').'%');
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {
-            return $flow->get();
+            return ApprovalFlowResource::collection($flow->get());
         }
 
-        return $flow->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type') === 'count') {
+            return $flow->count();
+        }
+
+        return ApprovalFlowResource::collection($flow->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
@@ -37,7 +43,7 @@ class FlowController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @return array<string, string>
+     * @return array{message: string, flow: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -51,6 +57,7 @@ class FlowController extends Controller
 
         return [
             'message' => trans('messages.success.store', ['target' => $flow->name], App::getLocale()),
+            'flow' => $flow->toResource(),
         ];
     }
 
@@ -58,14 +65,12 @@ class FlowController extends Controller
      * ApprovalFlow Show
      *
      * Show the specified resource.
-     *
-     * @return ApprovalFlow|Collection<int, ApprovalFlow>
      */
-    public function show(Request $request)
+    public function show(Request $request): JsonResource
     {
         return ApprovalFlow::with([
             'components',
-        ])->withUsers()->findOrFail($request->route('id'));
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 
     /**
@@ -73,7 +78,7 @@ class FlowController extends Controller
      *
      * Update the specified resource in storage.
      *
-     * @return array<string, string>
+     * @return array{message: string, flow: JsonResource}
      */
     public function update(Request $request): array
     {
@@ -81,16 +86,13 @@ class FlowController extends Controller
             'name' => ['required', 'string', 'max:255'],
         ]);
 
-        $flow = ApprovalFlow::findOrFail($request->route('id'));
-        if ($flow instanceof ApprovalFlow) {
-            $flow->name = $request->input('name');
-            $flow->save();
-        }
-
-        $flowName = ($flow instanceof ApprovalFlow) ? $flow->name : 'Flow';
+        $flow = ApprovalFlow::where('id', $request->route('id'))->firstOrFail();
+        $flow->name = $request->input('name');
+        $flow->save();
 
         return [
-            'message' => trans('messages.success.update', ['target' => $flowName], App::getLocale()),
+            'message' => trans('messages.success.update', ['target' => $flow->name], App::getLocale()),
+            'flow' => $flow->toResource(),
         ];
     }
 
@@ -99,26 +101,22 @@ class FlowController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @return array<string, string>
+     * @return array{message: string, flow: JsonResource}
      */
     public function delete(Request $request): array
     {
-        $flow = ApprovalFlow::findOrFail($request->route('id'));
+        $flow = ApprovalFlow::where('id', $request->route('id'))->firstOrFail();
 
-        if ($flow instanceof ApprovalFlow && $flow->components()->exists()) {
+        if ($flow->components()->exists()) {
             throw ValidationException::withMessages([
                 'message' => trans('messages.fail.delete.cost', ['attribute' => $flow->name, 'target' => 'Component'], App::getLocale()),
             ]);
         }
-
-        if ($flow instanceof ApprovalFlow) {
-            $flow->delete();
-        }
-
-        $flowName = ($flow instanceof ApprovalFlow) ? $flow->name : 'Flow';
+        $flow->delete();
 
         return [
-            'message' => trans('messages.success.delete', ['target' => $flowName], App::getLocale()),
+            'message' => trans('messages.success.delete', ['target' => $flow->name], App::getLocale()),
+            'flow' => $flow->toResource(),
         ];
     }
 
@@ -127,16 +125,17 @@ class FlowController extends Controller
      *
      * Restore the specified resource from storage.
      *
-     * @return array<string, string>
+     * @return array{message: string, flow: JsonResource}
      */
     public function restore(Request $request): array
     {
         /** @var ApprovalFlow $flow */
-        $flow = ApprovalFlow::onlyTrashed()->findOrFail($request->route('id'));
+        $flow = ApprovalFlow::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $flow->restore();
 
         return [
             'message' => trans('messages.success.restore', ['target' => $flow->name], App::getLocale()),
+            'flow' => $flow->toResource(),
         ];
     }
 
@@ -145,16 +144,17 @@ class FlowController extends Controller
      *
      * Permanently remove the specified resource from storage.
      *
-     * @return array<string, string>
+     * @return array{message: string, flow: JsonResource}
      */
     public function destroy(Request $request): array
     {
         /** @var ApprovalFlow $flow */
-        $flow = ApprovalFlow::onlyTrashed()->findOrFail($request->route('id'));
+        $flow = ApprovalFlow::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $flow->forceDelete();
 
         return [
             'message' => trans('messages.success.destroy', ['target' => $flow->name], App::getLocale()),
+            'flow' => $flow->toResource(),
         ];
     }
 }

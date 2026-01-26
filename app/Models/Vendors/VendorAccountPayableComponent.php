@@ -3,9 +3,11 @@
 namespace App\Models\Vendors;
 
 use App\Abstracts\ModelAbstract;
+use App\Http\Resources\Vendors\VendorAccountPayableComponentResource;
 use App\Models\Purchases\PurchaseInvoiceComponent;
 use App\Models\User;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -53,6 +55,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
+#[UseResource(VendorAccountPayableComponentResource::class)]
 class VendorAccountPayableComponent extends ModelAbstract
 {
     use HasUlids, SoftDeletes;

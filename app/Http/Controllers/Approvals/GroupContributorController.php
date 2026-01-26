@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Approvals;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Approval\ApprovalGroupContributorResource;
 use App\Models\Approval\ApprovalGroupContributor;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\ValidationException;
@@ -18,9 +20,9 @@ class GroupContributorController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return Collection<int, ApprovalGroupContributor>|LengthAwarePaginator<int, ApprovalGroupContributor>
+     * @return Collection<int, ApprovalGroupContributor>|LengthAwarePaginator<int, ApprovalGroupContributor>|JsonResource|int
      */
-    public function index(Request $request): Collection|LengthAwarePaginator
+    public function index(Request $request): Collection|LengthAwarePaginator|JsonResource|int
     {
         $groupContributors = ApprovalGroupContributor::with([
             'group',
@@ -34,10 +36,14 @@ class GroupContributorController extends Controller
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {
-            return $groupContributors->get();
+            return ApprovalGroupContributorResource::collection($groupContributors->get());
         }
 
-        return $groupContributors->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type') === 'count') {
+            return $groupContributors->count();
+        }
+
+        return ApprovalGroupContributorResource::collection($groupContributors->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
@@ -45,7 +51,7 @@ class GroupContributorController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @return array<string, string>
+     * @return array{message: string, group_contributor: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -72,6 +78,7 @@ class GroupContributorController extends Controller
 
         return [
             'message' => trans('messages.success.store', ['target' => $userName], App::getLocale()),
+            'group_contributor' => $groupContributors->toResource(),
         ];
     }
 
@@ -79,15 +86,13 @@ class GroupContributorController extends Controller
      * Group Contributor Show
      *
      * Show the specified resource.
-     *
-     * @return ApprovalGroupContributor|Collection<int, ApprovalGroupContributor>
      */
-    public function show(Request $request)
+    public function show(Request $request): JsonResource
     {
         return ApprovalGroupContributor::with([
             'group',
             'user',
-        ])->withUsers()->findOrFail($request->route('id'));
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 
     /**
@@ -95,7 +100,7 @@ class GroupContributorController extends Controller
      *
      * Update the specified resource in storage.
      *
-     * @return array<string, string>
+     * @return array{message: string, group_contributor: JsonResource}
      */
     public function update(Request $request): array
     {
@@ -103,18 +108,16 @@ class GroupContributorController extends Controller
             'user_id' => ['required', 'exists:users,id'],
         ]);
 
-        $groupContributors = ApprovalGroupContributor::findOrFail($request->route('id'));
-        if ($groupContributors instanceof ApprovalGroupContributor) {
-            $groupContributors->approval_group_id = $request->route('group_id');
-            $groupContributors->user_id = $request->input('user_id');
-            $groupContributors->save();
-        }
+        $groupContributors = ApprovalGroupContributor::where('id', $request->route('id'))->firstOrFail();
+        $groupContributors->approval_group_id = $request->route('group_id');
+        $groupContributors->user_id = $request->input('user_id');
+        $groupContributors->save();
 
-        $user = User::find($request->input('user_id'));
-        $userName = ($user instanceof User) ? $user->name : 'User';
+        $user = $groupContributors->user;
 
         return [
-            'message' => trans('messages.success.update', ['target' => $userName], App::getLocale()),
+            'message' => trans('messages.success.update', ['target' => $user->name], App::getLocale()),
+            'group_contributor' => $groupContributors->toResource(),
         ];
     }
 
@@ -123,22 +126,20 @@ class GroupContributorController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @return array<string, string>
+     * @return array{message: string, group_contributor: JsonResource}
      */
     public function delete(Request $request): array
     {
-        $groupContributors = ApprovalGroupContributor::findOrFail($request->route('id'));
+        $groupContributors = ApprovalGroupContributor::where('id', $request->route('id'))->firstOrFail();
 
-        $userName = 'User';
-        if ($groupContributors instanceof ApprovalGroupContributor) {
-            $user = $groupContributors->user;
-            $userName = $user->name;
+        $user = $groupContributors->user;
+        $userName = $user->name;
 
-            $groupContributors->delete();
-        }
+        $groupContributors->delete();
 
         return [
             'message' => trans('messages.success.delete', ['target' => $userName], App::getLocale()),
+            'group_contributor' => $groupContributors->toResource(),
         ];
     }
 
@@ -147,16 +148,17 @@ class GroupContributorController extends Controller
      *
      * Restore the specified resource from storage.
      *
-     * @return array<string, string>
+     * @return array{message: string, group_contributor: JsonResource}
      */
     public function restore(Request $request): array
     {
         /** @var ApprovalGroupContributor $contributor */
-        $contributor = ApprovalGroupContributor::onlyTrashed()->findOrFail($request->route('id'));
+        $contributor = ApprovalGroupContributor::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $contributor->restore();
 
         return [
             'message' => trans('messages.success.restore', ['target' => $contributor->user->name], App::getLocale()),
+            'group_contributor' => $contributor->toResource(),
         ];
     }
 
@@ -165,17 +167,18 @@ class GroupContributorController extends Controller
      *
      * Permanently remove the specified resource from storage.
      *
-     * @return array<string, string>
+     * @return array{message: string, group_contributor: JsonResource}
      */
     public function destroy(Request $request): array
     {
         /** @var ApprovalGroupContributor $contributor */
-        $contributor = ApprovalGroupContributor::onlyTrashed()->findOrFail($request->route('id'));
+        $contributor = ApprovalGroupContributor::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $userName = $contributor->user->name;
         $contributor->forceDelete();
 
         return [
             'message' => trans('messages.success.destroy', ['target' => $userName], App::getLocale()),
+            'group_contributor' => $contributor->toResource(),
         ];
     }
 }

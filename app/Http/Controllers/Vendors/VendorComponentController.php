@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Vendors;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Vendors\VendorComponentResource;
 use App\Models\Vendors\VendorComponent;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 
 class VendorComponentController extends Controller
@@ -17,9 +19,9 @@ class VendorComponentController extends Controller
      *
      * Display a listing of resources.
      *
-     * @return LengthAwarePaginator<int, VendorComponent>|Collection<int, VendorComponent>
+     * @return LengthAwarePaginator<int, VendorComponent>|Collection<int, VendorComponent>|JsonResource|int
      */
-    public function index(Request $request): LengthAwarePaginator|Collection
+    public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
         $vendorComponents = VendorComponent::with([
             'vendor',
@@ -37,10 +39,14 @@ class VendorComponentController extends Controller
             ->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type', 'paginate') === 'collection') {
-            return $vendorComponents->get();
+            return VendorComponentResource::collection($vendorComponents->get());
         }
 
-        return $vendorComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type', 'paginate') === 'count') {
+            return $vendorComponents->count();
+        }
+
+        return VendorComponentResource::collection($vendorComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
@@ -48,12 +54,12 @@ class VendorComponentController extends Controller
      *
      * Show specified resource.
      */
-    public function show(Request $request): VendorComponent
+    public function show(Request $request): JsonResource
     {
         return VendorComponent::with([
             'vendor',
             'item',
-        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 
     /**
@@ -61,7 +67,7 @@ class VendorComponentController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_component: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -79,6 +85,7 @@ class VendorComponentController extends Controller
 
         return [
             'message' => trans('messages.success.store', ['target' => 'Vendor Component'], App::getLocale()),
+            'vendor_component' => $vendorComponent->toResource(),
         ];
     }
 
@@ -87,7 +94,7 @@ class VendorComponentController extends Controller
      *
      * Update specified resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_component: JsonResource}
      */
     public function update(Request $request): array
     {
@@ -98,7 +105,7 @@ class VendorComponentController extends Controller
         ]);
 
         /** @var VendorComponent $vendorComponent */
-        $vendorComponent = VendorComponent::findOrFail($request->route('id'));
+        $vendorComponent = VendorComponent::where('id', $request->route('id'))->firstOrFail();
         $vendorComponent->vendor_id = $request->input('vendor_id');
         $vendorComponent->item_id = $request->input('item_id');
         $vendorComponent->price = $request->input('price');
@@ -106,6 +113,7 @@ class VendorComponentController extends Controller
 
         return [
             'message' => trans('messages.success.update', ['target' => 'Vendor Component'], App::getLocale()),
+            'vendor_component' => $vendorComponent->toResource(),
         ];
     }
 
@@ -114,16 +122,17 @@ class VendorComponentController extends Controller
      *
      * Remove specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_component: JsonResource}
      */
     public function delete(Request $request): array
     {
         /** @var VendorComponent $vendorComponent */
-        $vendorComponent = VendorComponent::findOrFail($request->route('id'));
+        $vendorComponent = VendorComponent::where('id', $request->route('id'))->firstOrFail();
         $vendorComponent->delete();
 
         return [
             'message' => trans('messages.success.delete', ['target' => 'Vendor Component'], App::getLocale()),
+            'vendor_component' => $vendorComponent->toResource(),
         ];
     }
 
@@ -132,16 +141,17 @@ class VendorComponentController extends Controller
      *
      * Restore specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_component: JsonResource}
      */
     public function restore(Request $request): array
     {
         /** @var VendorComponent $vendorComponent */
-        $vendorComponent = VendorComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $vendorComponent = VendorComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $vendorComponent->restore();
 
         return [
             'message' => trans('messages.success.restore', ['target' => 'Vendor Component'], App::getLocale()),
+            'vendor_component' => $vendorComponent->toResource(),
         ];
     }
 
@@ -150,16 +160,17 @@ class VendorComponentController extends Controller
      *
      * Permanently remove specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, vendor_component: JsonResource}
      */
     public function destroy(Request $request): array
     {
         /** @var VendorComponent $vendorComponent */
-        $vendorComponent = VendorComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $vendorComponent = VendorComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $vendorComponent->forceDelete();
 
         return [
             'message' => trans('messages.success.destroy', ['target' => 'Vendor Component'], App::getLocale()),
+            'vendor_component' => $vendorComponent->toResource(),
         ];
     }
 }

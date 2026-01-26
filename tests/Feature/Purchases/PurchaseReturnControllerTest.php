@@ -3,12 +3,12 @@
 namespace Tests\Feature\Purchases;
 
 use App\Models\Items\GoodReceipt;
+use App\Models\Permission;
 use App\Models\Purchases\PurchaseOrder;
 use App\Models\Purchases\PurchaseReturn;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class PurchaseReturnControllerTest extends TestCase
@@ -46,8 +46,10 @@ class PurchaseReturnControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $purchaseReturn->id,
-                'code' => $purchaseReturn->code,
+                'data' => [
+                    'id' => $purchaseReturn->id,
+                    'code' => $purchaseReturn->code,
+                ],
             ]);
     }
 

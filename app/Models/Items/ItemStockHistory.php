@@ -3,8 +3,10 @@
 namespace App\Models\Items;
 
 use App\Abstracts\ModelAbstract;
+use App\Http\Resources\Items\ItemStockHistoryResource;
 use App\Models\User;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -52,6 +54,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
+#[UseResource(ItemStockHistoryResource::class)]
 class ItemStockHistory extends ModelAbstract
 {
     /** @use HasFactory<\Database\Factories\Items\ItemStockHistoryFactory> */

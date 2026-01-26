@@ -33,7 +33,14 @@ class FakeIdTranslationService
             return 0;
         }
 
-        $model = $this->model->newQuery()->where('ulid', $this->key)->first();
+        $query = $this->model->newQuery();
+
+        if (method_exists($query, 'withTrashed') || method_exists($this->model, 'runSoftDelete')) {
+            // @phpstan-ignore method.notFound
+            $query = $query->withTrashed();
+        }
+
+        $model = $query->select('id')->where('ulid', $this->key)->first();
 
         return (int) $model?->getKey();
     }

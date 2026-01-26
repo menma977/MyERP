@@ -3,9 +3,11 @@
 namespace App\Models\Sales;
 
 use App\Abstracts\ModelAbstract;
+use App\Http\Resources\Sales\SalesOrderComponentResource;
 use App\Models\Items\Item;
 use App\Models\User;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -54,6 +56,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
+#[UseResource(SalesOrderComponentResource::class)]
 class SalesOrderComponent extends ModelAbstract
 {
     /** @use HasFactory<\Database\Factories\Sales\SalesOrderComponentFactory> */

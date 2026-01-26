@@ -3,10 +3,12 @@
 namespace App\Models\Purchases;
 
 use App\Abstracts\ModelAbstract;
+use App\Http\Resources\Purchases\PurchaseProcurementComponentResource;
 use App\Models\Items\Item;
 use App\Models\User;
 use App\Models\Vendors\Vendor;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -60,6 +62,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
+#[UseResource(PurchaseProcurementComponentResource::class)]
 class PurchaseProcurementComponent extends ModelAbstract
 {
     /** @use HasFactory<\Database\Factories\Purchases\PurchaseProcurementComponentFactory> */

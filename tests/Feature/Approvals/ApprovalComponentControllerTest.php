@@ -4,10 +4,10 @@ namespace Tests\Feature\Approvals;
 
 use App\Models\Approval\Approval;
 use App\Models\Approval\ApprovalComponent;
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class ApprovalComponentControllerTest extends TestCase
@@ -44,12 +44,14 @@ class ApprovalComponentControllerTest extends TestCase
         $component = ApprovalComponent::factory()->create();
 
         Sanctum::actingAs($user, ['*']);
-        $response = $this->getJson(route('api.v1.approval.component.show', ['approval_id' => $component->approval_id, 'id' => $component->id]));
+        $response = $this->getJson(route('api.v1.approval.component.show', ['approval_id' => $component->approval->ulid, 'id' => $component->ulid]));
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $component->id,
-                'name' => $component->name,
+                'data' => [
+                    'id' => $component->ulid,
+                    'name' => $component->name,
+                ],
             ]);
     }
 
@@ -68,7 +70,7 @@ class ApprovalComponentControllerTest extends TestCase
         ];
 
         Sanctum::actingAs($user, ['*']);
-        $response = $this->postJson(route('api.v1.approval.component.store', ['approval_id' => $approval->id]), $array);
+        $response = $this->postJson(route('api.v1.approval.component.store', ['approval_id' => $approval->ulid]), $array);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('approval_components', ['name' => 'New Component', 'approval_id' => $approval->id]);
@@ -90,7 +92,7 @@ class ApprovalComponentControllerTest extends TestCase
         ];
 
         Sanctum::actingAs($user, ['*']);
-        $response = $this->putJson(route('api.v1.approval.component.update', ['approval_id' => $component->approval_id, 'id' => $component->id]), $array);
+        $response = $this->putJson(route('api.v1.approval.component.update', ['approval_id' => $component->approval->ulid, 'id' => $component->ulid]), $array);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('approval_components', ['id' => $component->id, 'name' => 'Updated Component Name', 'step' => 0]); // Synchronize steps might reset it if it's the only one
@@ -106,7 +108,7 @@ class ApprovalComponentControllerTest extends TestCase
         $component = ApprovalComponent::factory()->create();
 
         Sanctum::actingAs($user, ['*']);
-        $response = $this->deleteJson(route('api.v1.approval.component.delete', ['approval_id' => $component->approval_id, 'id' => $component->id]));
+        $response = $this->deleteJson(route('api.v1.approval.component.delete', ['approval_id' => $component->approval->ulid, 'id' => $component->ulid]));
 
         $response->assertStatus(200);
         $this->assertSoftDeleted('approval_components', ['id' => $component->id]);
@@ -123,7 +125,7 @@ class ApprovalComponentControllerTest extends TestCase
         $component->delete();
 
         Sanctum::actingAs($user, ['*']);
-        $response = $this->postJson(route('api.v1.approval.component.restore', ['approval_id' => $component->approval_id, 'id' => $component->id]));
+        $response = $this->postJson(route('api.v1.approval.component.restore', ['approval_id' => $component->approval->ulid, 'id' => $component->ulid]));
 
         $response->assertStatus(200);
         $this->assertNotSoftDeleted('approval_components', ['id' => $component->id]);
@@ -140,7 +142,7 @@ class ApprovalComponentControllerTest extends TestCase
         $component->delete();
 
         Sanctum::actingAs($user, ['*']);
-        $response = $this->deleteJson(route('api.v1.approval.component.destroy', ['approval_id' => $component->approval_id, 'id' => $component->id]));
+        $response = $this->deleteJson(route('api.v1.approval.component.destroy', ['approval_id' => $component->approval->ulid, 'id' => $component->ulid]));
 
         $response->assertStatus(200);
         $this->assertDatabaseMissing('approval_components', ['id' => $component->id]);

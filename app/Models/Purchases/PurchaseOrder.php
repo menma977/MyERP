@@ -3,12 +3,14 @@
 namespace App\Models\Purchases;
 
 use App\Abstracts\ApprovalAbstract;
+use App\Http\Resources\Purchases\PurchaseOrderResource;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\Items\GoodReceipt;
 use App\Models\Items\GoodReceiptComponent;
 use App\Models\User;
 use App\Services\CodeGeneratorService;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -71,6 +73,7 @@ use Illuminate\Validation\ValidationException;
  *
  * @mixin Eloquent
  */
+#[UseResource(PurchaseOrderResource::class)]
 class PurchaseOrder extends ApprovalAbstract
 {
     /** @use HasFactory<\Database\Factories\Purchases\PurchaseOrderFactory> */
@@ -108,6 +111,14 @@ class PurchaseOrder extends ApprovalAbstract
     public function procurement(): BelongsTo
     {
         return $this->belongsTo(PurchaseProcurement::class, 'purchase_procurement_id');
+    }
+
+    /**
+     * @return HasMany<GoodReceipt, $this>
+     */
+    public function goodReceipts(): HasMany
+    {
+        return $this->hasMany(GoodReceipt::class);
     }
 
     /**
