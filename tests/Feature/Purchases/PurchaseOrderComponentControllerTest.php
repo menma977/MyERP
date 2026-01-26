@@ -3,6 +3,7 @@
 namespace Tests\Feature\Purchases;
 
 use App\Models\Items\Item;
+use App\Models\Permission;
 use App\Models\Purchases\PurchaseOrder;
 use App\Models\Purchases\PurchaseOrderComponent;
 use App\Models\Purchases\PurchaseProcurementComponent;
@@ -10,7 +11,6 @@ use App\Models\Purchases\PurchaseRequestComponent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class PurchaseOrderComponentControllerTest extends TestCase
@@ -51,7 +51,9 @@ class PurchaseOrderComponentControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $component->id,
+                'data' => [
+                    'id' => $component->id,
+                ],
             ]);
     }
 

@@ -4,10 +4,10 @@ namespace Tests\Feature\Approvals;
 
 use App\Models\Approval\Approval;
 use App\Models\Approval\ApprovalFlow;
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class ApprovalControllerTest extends TestCase
@@ -41,12 +41,14 @@ class ApprovalControllerTest extends TestCase
         $approval = Approval::factory()->create();
 
         Sanctum::actingAs($user, ['*']);
-        $response = $this->getJson(route('api.v1.approval.show', $approval->id));
+        $response = $this->getJson(route('api.v1.approval.show', $approval->ulid));
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $approval->id,
-                'name' => $approval->name,
+                'data' => [
+                    'id' => $approval->ulid,
+                    'name' => $approval->name,
+                ],
             ]);
     }
 
@@ -84,7 +86,7 @@ class ApprovalControllerTest extends TestCase
         ];
 
         Sanctum::actingAs($user, ['*']);
-        $response = $this->putJson(route('api.v1.approval.update', $approval->id), $array);
+        $response = $this->putJson(route('api.v1.approval.update', $approval->ulid), $array);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('approvals', ['id' => $approval->id, 'name' => 'Updated Approval Name']);
@@ -99,7 +101,7 @@ class ApprovalControllerTest extends TestCase
         $approval = Approval::factory()->create();
 
         Sanctum::actingAs($user, ['*']);
-        $response = $this->deleteJson(route('api.v1.approval.delete', $approval->id));
+        $response = $this->deleteJson(route('api.v1.approval.delete', $approval->ulid));
 
         $response->assertStatus(200);
         $this->assertSoftDeleted('approvals', ['id' => $approval->id]);
@@ -115,7 +117,7 @@ class ApprovalControllerTest extends TestCase
         $approval->delete();
 
         Sanctum::actingAs($user, ['*']);
-        $response = $this->postJson(route('api.v1.approval.restore', $approval->id));
+        $response = $this->postJson(route('api.v1.approval.restore', $approval->ulid));
 
         $response->assertStatus(200);
         $this->assertNotSoftDeleted('approvals', ['id' => $approval->id]);
@@ -131,7 +133,7 @@ class ApprovalControllerTest extends TestCase
         $approval->delete();
 
         Sanctum::actingAs($user, ['*']);
-        $response = $this->deleteJson(route('api.v1.approval.destroy', $approval->id));
+        $response = $this->deleteJson(route('api.v1.approval.destroy', $approval->ulid));
 
         $response->assertStatus(200);
         $this->assertDatabaseMissing('approvals', ['id' => $approval->id]);

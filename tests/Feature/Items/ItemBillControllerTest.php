@@ -4,10 +4,10 @@ namespace Tests\Feature\Items;
 
 use App\Models\Items\Item;
 use App\Models\Items\ItemBill;
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class ItemBillControllerTest extends TestCase
@@ -47,8 +47,10 @@ class ItemBillControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $itemBill->id,
-                'code' => $itemBill->code,
+                'data' => [
+                    'id' => $itemBill->id,
+                    'code' => $itemBill->code,
+                ],
             ]);
     }
 

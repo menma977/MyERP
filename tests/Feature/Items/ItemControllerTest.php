@@ -3,10 +3,10 @@
 namespace Tests\Feature\Items;
 
 use App\Models\Items\Item;
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 use UnitEnum;
 
@@ -46,8 +46,10 @@ class ItemControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $item->id,
-                'name' => $item->name,
+                'data' => [
+                    'id' => $item->id,
+                    'name' => $item->name,
+                ],
             ]);
     }
 

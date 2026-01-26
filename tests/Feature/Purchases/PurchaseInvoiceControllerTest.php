@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Purchases;
 
+use App\Models\Permission;
 use App\Models\Purchases\PurchaseInvoice;
 use App\Models\Purchases\PurchaseInvoiceComponent;
 use App\Models\Purchases\PurchaseOrder;
@@ -9,7 +10,6 @@ use App\Models\Purchases\PurchaseOrderComponent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class PurchaseInvoiceControllerTest extends TestCase
@@ -47,8 +47,10 @@ class PurchaseInvoiceControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $invoice->id,
-                'code' => $invoice->code,
+                'data' => [
+                    'id' => $invoice->id,
+                    'code' => $invoice->code,
+                ],
             ]);
     }
 

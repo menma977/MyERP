@@ -6,10 +6,10 @@ use App\Models\Items\Item;
 use App\Models\Items\ItemBatch;
 use App\Models\Items\ItemStock;
 use App\Models\Items\ItemStockHistory;
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class StockHistoryControllerTest extends TestCase
@@ -53,7 +53,9 @@ class StockHistoryControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $history->id,
+                'data' => [
+                    'id' => $history->id,
+                ],
             ]);
     }
 

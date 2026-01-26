@@ -2,12 +2,12 @@
 
 namespace Tests\Feature\Purchases;
 
+use App\Models\Permission;
 use App\Models\Purchases\PurchaseRequest;
 use App\Models\Purchases\PurchaseRequestComponent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class PurchaseRequestControllerTest extends TestCase
@@ -45,8 +45,10 @@ class PurchaseRequestControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $purchaseRequest->id,
-                'code' => $purchaseRequest->code,
+                'data' => [
+                    'id' => $purchaseRequest->id,
+                    'code' => $purchaseRequest->code,
+                ],
             ]);
     }
 

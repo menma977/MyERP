@@ -2,12 +2,12 @@
 
 namespace Tests\Feature\Transactions;
 
+use App\Models\Permission;
 use App\Models\Transactions\Ledger;
 use App\Models\Transactions\LedgerComponent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class LedgerComponentControllerTest extends TestCase
@@ -48,7 +48,9 @@ class LedgerComponentControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $component->id,
+                'data' => [
+                    'id' => $component->id,
+                ],
             ]);
     }
 

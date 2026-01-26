@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Transactions;
 
+use App\Models\Permission;
 use App\Models\Purchases\PurchaseInvoiceComponent;
 use App\Models\Purchases\PurchaseOrderComponent;
 use App\Models\Transactions\PaymentRequest;
@@ -9,7 +10,6 @@ use App\Models\Transactions\PaymentRequestComponent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class PaymentRequestComponentControllerTest extends TestCase
@@ -50,7 +50,9 @@ class PaymentRequestComponentControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $component->id,
+                'data' => [
+                    'id' => $component->id,
+                ],
             ]);
     }
 

@@ -4,10 +4,10 @@ namespace Tests\Feature\Approvals;
 
 use App\Models\Approval\ApprovalComponent;
 use App\Models\Approval\ApprovalContributor;
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class ApprovalComponentContributorControllerTest extends TestCase
@@ -33,7 +33,12 @@ class ApprovalComponentContributorControllerTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    '*' => ['id', 'approval_component_id', 'approvable_type', 'approvable_id'],
+                    '*' => [
+                        'id',
+                        'component' => [
+                            'id',
+                        ],
+                    ],
                 ],
             ]);
     }
@@ -58,7 +63,9 @@ class ApprovalComponentContributorControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'id' => $contributor->id,
+                'data' => [
+                    'id' => $contributor->id,
+                ],
             ]);
     }
 
@@ -79,7 +86,7 @@ class ApprovalComponentContributorControllerTest extends TestCase
 
         Sanctum::actingAs($user, ['*']);
         $response = $this->postJson(route('api.v1.approval.component.contributor.store', [
-            'approval_id' => $component->approval_id,
+            'approval_id' => $component->approval->id,
             'approval_component_id' => $component->id,
         ]), $array);
 
