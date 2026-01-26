@@ -162,7 +162,7 @@ class SalesInvoice extends ApprovalAbstract
         if ($approvalEvent->is_approved) {
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
-                $salesInvoice = SalesInvoice::find($approvalEvent->requestable_id);
+                $salesInvoice = SalesInvoice::lockForUpdate()->with('components')->find($approvalEvent->requestable_id);
                 if (! $salesInvoice) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();

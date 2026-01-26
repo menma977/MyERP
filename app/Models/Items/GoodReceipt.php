@@ -137,7 +137,7 @@ class GoodReceipt extends ApprovalAbstract
         if ($approvalEvent->is_approved) {
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
-                $goodReceipt = GoodReceipt::find($approvalEvent->requestable_id);
+                $goodReceipt = GoodReceipt::lockForUpdate()->with('components')->find($approvalEvent->requestable_id);
                 if (! $goodReceipt) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();

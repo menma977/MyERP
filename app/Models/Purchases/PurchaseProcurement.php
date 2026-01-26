@@ -104,7 +104,7 @@ class PurchaseProcurement extends ApprovalAbstract
         if ($approvalEvent->is_approved) {
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
-                $purchaseProcurement = PurchaseProcurement::find($approvalEvent->requestable_id);
+                $purchaseProcurement = PurchaseProcurement::lockForUpdate()->with('components')->find($approvalEvent->requestable_id);
                 if (! $purchaseProcurement) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();
