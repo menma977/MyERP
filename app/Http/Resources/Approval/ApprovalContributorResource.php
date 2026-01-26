@@ -24,7 +24,7 @@ class ApprovalContributorResource extends JsonResource
         return [
             'id' => $this->id,
             'component' => ApprovalComponentResource::make($this->whenLoaded('component')),
-            'approvable' => $this->whenLoaded('approvable'),
+            'approvable' => $this->whenLoaded('approvable', fn () => $this->approvable->makeHidden('id')),
             'created_by' => UserResource::make($this->whenLoaded('createdBy')),
             'updated_by' => UserResource::make($this->whenLoaded('updatedBy')),
             'deleted_by' => UserResource::make($this->whenLoaded('deletedBy')),
