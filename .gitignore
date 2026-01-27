@@ -19,6 +19,7 @@
 /public/build
 /public/hot
 /public/storage
+/public/api.json
 /storage/*.key
 /storage/pail
 /vendor
