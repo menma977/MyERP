@@ -6,6 +6,7 @@ use App\Abstracts\ModelAbstract;
 use App\Enums\ItemTypeEnum;
 use App\Enums\ItemUnitEnum;
 use App\Http\Resources\Items\ItemResource;
+use App\Models\FileBucket;
 use App\Models\User;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -96,6 +98,14 @@ class Item extends ModelAbstract
     public function stocks(): HasManyThrough
     {
         return $this->hasManyThrough(ItemStock::class, ItemBatch::class);
+    }
+
+    /**
+     * @return MorphMany<FileBucket, $this>
+     */
+    public function files(): MorphMany
+    {
+        return $this->morphMany(FileBucket::class, 'model', 'model_type', 'model_id');
     }
 
     /**
