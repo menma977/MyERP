@@ -13,9 +13,9 @@ class ValidationWithoutTrashed implements ValidationRule
 
     protected ?string $column;
 
-    protected ?string $ignoreId;
+    protected string|int|null $ignoreId;
 
-    public function __construct(string $model, ?string $column = null, ?string $ignoreId = null)
+    public function __construct(string $model, ?string $column = null, string|int|null $ignoreId = null)
     {
         $this->model = $model;
         $this->column = $column;

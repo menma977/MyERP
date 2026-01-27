@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Approvals;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Approval\ApprovalContributorResource;
 use App\Models\Approval\ApprovalContributor;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\Rule;
@@ -17,9 +19,9 @@ class ApprovalComponentContributorController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return Collection<int, ApprovalContributor>|LengthAwarePaginator<int, ApprovalContributor>
+     * @return Collection<int, ApprovalContributor>|LengthAwarePaginator<int, ApprovalContributor>|JsonResource|int
      */
-    public function index(Request $request): Collection|LengthAwarePaginator
+    public function index(Request $request): Collection|LengthAwarePaginator|JsonResource|int
     {
         $approvalComponentContributor = ApprovalContributor::with([
             'component',
@@ -29,10 +31,14 @@ class ApprovalComponentContributorController extends Controller
             ->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {
-            return $approvalComponentContributor->get();
+            return ApprovalContributorResource::collection($approvalComponentContributor->get());
         }
 
-        return $approvalComponentContributor->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type') === 'count') {
+            return $approvalComponentContributor->count();
+        }
+
+        return ApprovalContributorResource::collection($approvalComponentContributor->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
@@ -42,7 +48,7 @@ class ApprovalComponentContributorController extends Controller
      *
      * @noinspection DuplicatedCode
      *
-     * @return array<string, string>
+     * @return array{message: string, approval_contributor: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -59,6 +65,7 @@ class ApprovalComponentContributorController extends Controller
 
         return [
             'message' => trans('messages.success.store', ['target' => 'contributor'], App::getLocale()),
+            'approval_contributor' => $approvalComponentContributor->toResource(),
         ];
     }
 
@@ -66,15 +73,13 @@ class ApprovalComponentContributorController extends Controller
      * Approval Component Contributor Show
      *
      * Show the specified resource.
-     *
-     * @return ApprovalContributor|Collection<int, ApprovalContributor>
      */
-    public function show(Request $request)
+    public function show(Request $request): JsonResource
     {
         return ApprovalContributor::with([
             'component',
             'approvable',
-        ])->withUsers()->findOrFail($request->route('id'));
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 
     /**
@@ -84,7 +89,7 @@ class ApprovalComponentContributorController extends Controller
      *
      * @noinspection DuplicatedCode
      *
-     * @return array<string, string>
+     * @return array{message: string, approval_contributor: JsonResource}
      */
     public function update(Request $request): array
     {
@@ -93,16 +98,15 @@ class ApprovalComponentContributorController extends Controller
             'key' => ['required', Rule::in(array_keys(config('approval.group')))],
         ]);
 
-        $approvalComponentContributor = ApprovalContributor::findOrFail($request->route('id'));
-        if ($approvalComponentContributor instanceof ApprovalContributor) {
-            $approvalComponentContributor->approval_component_id = (int) $request->route('approval_component_id');
-            $approvalComponentContributor->approvable_id = $request->input('approvable_id');
-            $approvalComponentContributor->approvable_type = config('approval.group')[$request->input('key')];
-            $approvalComponentContributor->save();
-        }
+        $approvalComponentContributor = ApprovalContributor::where('id', $request->route('id'))->firstOrFail();
+        $approvalComponentContributor->approval_component_id = (int) $request->route('approval_component_id');
+        $approvalComponentContributor->approvable_id = $request->input('approvable_id');
+        $approvalComponentContributor->approvable_type = config('approval.group')[$request->input('key')];
+        $approvalComponentContributor->save();
 
         return [
             'message' => trans('messages.success.update', ['target' => 'contributor'], App::getLocale()),
+            'approval_contributor' => $approvalComponentContributor->toResource(),
         ];
     }
 
@@ -111,17 +115,54 @@ class ApprovalComponentContributorController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @return array<string, string>
+     * @return array{message: string, approval_contributor: JsonResource}
      */
     public function delete(Request $request): array
     {
-        $approvalComponentContributor = ApprovalContributor::findOrFail($request->route('id'));
-        if ($approvalComponentContributor instanceof ApprovalContributor) {
-            $approvalComponentContributor->delete();
-        }
+        $approvalComponentContributor = ApprovalContributor::where('id', $request->route('id'))->firstOrFail();
+        $approvalComponentContributor->delete();
 
         return [
             'message' => trans('messages.success.delete', ['target' => 'contributor'], App::getLocale()),
+            'approval_contributor' => $approvalComponentContributor->toResource(),
+        ];
+    }
+
+    /**
+     * Approval Component Contributor Restore
+     *
+     * Restore the specified resource from storage.
+     *
+     * @return array{message: string, approval_contributor: JsonResource}
+     */
+    public function restore(Request $request): array
+    {
+        /** @var ApprovalContributor $approvalComponentContributor */
+        $approvalComponentContributor = ApprovalContributor::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
+        $approvalComponentContributor->restore();
+
+        return [
+            'message' => trans('messages.success.restore', ['target' => 'contributor'], App::getLocale()),
+            'approval_contributor' => $approvalComponentContributor->toResource(),
+        ];
+    }
+
+    /**
+     * Approval Component Contributor Destroy
+     *
+     * Permanently remove the specified resource from storage.
+     *
+     * @return array{message: string, approval_contributor: JsonResource}
+     */
+    public function destroy(Request $request): array
+    {
+        /** @var ApprovalContributor $approvalComponentContributor */
+        $approvalComponentContributor = ApprovalContributor::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
+        $approvalComponentContributor->forceDelete();
+
+        return [
+            'message' => trans('messages.success.destroy', ['target' => 'contributor'], App::getLocale()),
+            'approval_contributor' => $approvalComponentContributor->toResource(),
         ];
     }
 }

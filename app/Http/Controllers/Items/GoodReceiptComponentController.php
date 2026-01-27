@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Items;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Items\GoodReceiptComponentResource;
 use App\Models\Items\GoodReceiptComponent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 
@@ -17,9 +19,9 @@ class GoodReceiptComponentController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return LengthAwarePaginator<int, GoodReceiptComponent>|Collection<int, GoodReceiptComponent>
+     * @return LengthAwarePaginator<int, GoodReceiptComponent>|Collection<int, GoodReceiptComponent>|JsonResource|int
      */
-    public function index(Request $request): LengthAwarePaginator|Collection
+    public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
         $goodReceiptComponents = GoodReceiptComponent::with([
             'goodReceipt',
@@ -39,10 +41,14 @@ class GoodReceiptComponentController extends Controller
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type', 'paginate') === 'collection') {
-            return $goodReceiptComponents->get();
+            return GoodReceiptComponentResource::collection($goodReceiptComponents->get());
         }
 
-        return $goodReceiptComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type', 'paginate') === 'count') {
+            return $goodReceiptComponents->count();
+        }
+
+        return GoodReceiptComponentResource::collection($goodReceiptComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
@@ -50,7 +56,7 @@ class GoodReceiptComponentController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, good_receipt_component: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -70,6 +76,7 @@ class GoodReceiptComponentController extends Controller
 
         return [
             'message' => trans('messages.success.store', ['target' => 'Good Receipt Component'], App::getLocale()),
+            'good_receipt_component' => $goodReceiptComponent->toResource(),
         ];
     }
 
@@ -78,7 +85,7 @@ class GoodReceiptComponentController extends Controller
      *
      * Show the specified resource.
      */
-    public function show(Request $request): GoodReceiptComponent
+    public function show(Request $request): JsonResource
     {
         return GoodReceiptComponent::with([
             'goodReceipt',
@@ -87,7 +94,7 @@ class GoodReceiptComponentController extends Controller
             'createdBy',
             'updatedBy',
             'deletedBy',
-        ])->where('id', $request->route('id'))->firstOrFail();
+        ])->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 
     /**
@@ -95,7 +102,7 @@ class GoodReceiptComponentController extends Controller
      *
      * Update the specified resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, good_receipt_component: JsonResource}
      */
     public function update(Request $request): array
     {
@@ -107,7 +114,7 @@ class GoodReceiptComponentController extends Controller
         ]);
 
         /** @var GoodReceiptComponent $goodReceiptComponent */
-        $goodReceiptComponent = GoodReceiptComponent::findOrFail($request->route('id'));
+        $goodReceiptComponent = GoodReceiptComponent::where('id', $request->route('id'))->firstOrFail();
         $goodReceiptComponent->good_receipt_id = $request->input('good_receipt_id');
         $goodReceiptComponent->purchase_order_component_id = $request->input('purchase_order_component_id');
         $goodReceiptComponent->item_id = $request->input('item_id');
@@ -116,6 +123,7 @@ class GoodReceiptComponentController extends Controller
 
         return [
             'message' => trans('messages.success.update', ['target' => 'Good Receipt Component'], App::getLocale()),
+            'good_receipt_component' => $goodReceiptComponent->toResource(),
         ];
     }
 
@@ -124,16 +132,17 @@ class GoodReceiptComponentController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, good_receipt_component: JsonResource}
      */
     public function delete(Request $request): array
     {
         /** @var GoodReceiptComponent $goodReceiptComponent */
-        $goodReceiptComponent = GoodReceiptComponent::findOrFail($request->route('id'));
+        $goodReceiptComponent = GoodReceiptComponent::where('id', $request->route('id'))->firstOrFail();
         $goodReceiptComponent->delete();
 
         return [
             'message' => trans('messages.success.delete', ['target' => 'Good Receipt Component'], App::getLocale()),
+            'good_receipt_component' => $goodReceiptComponent->toResource(),
         ];
     }
 
@@ -142,16 +151,17 @@ class GoodReceiptComponentController extends Controller
      *
      * Restore the specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, good_receipt_component: JsonResource}
      */
     public function restore(Request $request): array
     {
         /** @var GoodReceiptComponent $goodReceiptComponent */
-        $goodReceiptComponent = GoodReceiptComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $goodReceiptComponent = GoodReceiptComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $goodReceiptComponent->restore();
 
         return [
             'message' => trans('messages.success.restore', ['target' => 'Good Receipt Component'], App::getLocale()),
+            'good_receipt_component' => $goodReceiptComponent->toResource(),
         ];
     }
 
@@ -160,16 +170,17 @@ class GoodReceiptComponentController extends Controller
      *
      * Permanently remove the specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, good_receipt_component: JsonResource}
      */
     public function destroy(Request $request): array
     {
         /** @var GoodReceiptComponent $goodReceiptComponent */
-        $goodReceiptComponent = GoodReceiptComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $goodReceiptComponent = GoodReceiptComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $goodReceiptComponent->forceDelete();
 
         return [
             'message' => trans('messages.success.destroy', ['target' => 'Good Receipt Component'], App::getLocale()),
+            'good_receipt_component' => $goodReceiptComponent->toResource(),
         ];
     }
 }

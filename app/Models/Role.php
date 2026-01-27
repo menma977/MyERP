@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Resources\RoleResource;
 use App\Observers\CreatedByObserver;
 use App\Observers\DeletedByObserver;
 use App\Observers\UpdatedByObserver;
@@ -10,8 +11,10 @@ use App\Traits\DeletedByTrait;
 use App\Traits\UpdatedByTrait;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Spatie\Permission\Models\Role as SpatieRole;
@@ -22,6 +25,7 @@ use Spatie\Permission\Models\Role as SpatieRole;
  * The class contains properties that determine which attributes should be mass-assignable.
  *
  * @property int $id
+ * @property string $ulid
  * @property string $name
  * @property string $guard_name
  * @property int|null $created_by
@@ -59,10 +63,11 @@ use Spatie\Permission\Models\Role as SpatieRole;
  * @mixin Eloquent
  */
 #[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
+#[UseResource(RoleResource::class)]
 class Role extends SpatieRole
 {
     use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
-    use SoftDeletes;
+    use HasUlids, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -72,4 +77,12 @@ class Role extends SpatieRole
         'updated_by',
         'deleted_by',
     ];
+
+    /**
+     * @return array<int, string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['ulid'];
+    }
 }

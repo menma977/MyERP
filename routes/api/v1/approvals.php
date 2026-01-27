@@ -17,6 +17,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('store', [ApprovalController::class, 'store'])->name('store')->middleware('can:approval.store');
         Route::put('update/{id}', [ApprovalController::class, 'update'])->name('update')->middleware('can:approval.update');
         Route::delete('delete/{id}', [ApprovalController::class, 'delete'])->name('delete')->middleware('can:approval.delete');
+        Route::post('restore/{id}', [ApprovalController::class, 'restore'])->name('restore')->middleware('can:approval.restore');
+        Route::delete('destroy/{id}', [ApprovalController::class, 'destroy'])->name('destroy')->middleware('can:approval.destroy');
 
         Route::prefix('dictionary')->name('dictionary.')->middleware('can:approval.dictionary.index')->group(function () {
             Route::get('index', [DictionaryController::class, 'index'])->name('index');
@@ -32,6 +34,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('store', [ApprovalComponentController::class, 'store'])->name('store')->middleware('can:approval.component.store');
             Route::put('update/{id}', [ApprovalComponentController::class, 'update'])->name('update')->middleware('can:approval.component.update');
             Route::delete('delete/{id}', [ApprovalComponentController::class, 'delete'])->name('delete')->middleware('can:approval.component.delete');
+            Route::post('restore/{id}', [ApprovalComponentController::class, 'restore'])->name('restore')->middleware('can:approval.component.restore');
+            Route::delete('destroy/{id}', [ApprovalComponentController::class, 'destroy'])->name('destroy')->middleware('can:approval.component.destroy');
 
             Route::prefix('contributor/{approval_component_id}')->name('contributor.')->middleware('can:approval.component.contributor.index')->group(function () {
                 Route::get('index', [ApprovalComponentContributorController::class, 'index'])->name('index');
@@ -39,6 +43,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
                 Route::post('store', [ApprovalComponentContributorController::class, 'store'])->name('store')->middleware('can:approval.component.contributor.store');
                 Route::put('update/{id}', [ApprovalComponentContributorController::class, 'update'])->name('update')->middleware('can:approval.component.contributor.update');
                 Route::delete('delete/{id}', [ApprovalComponentContributorController::class, 'delete'])->name('delete')->middleware('can:approval.component.contributor.delete');
+                Route::post('restore/{id}', [ApprovalComponentContributorController::class, 'restore'])->name('restore')->middleware('can:approval.component.contributor.restore');
+                Route::delete('destroy/{id}', [ApprovalComponentContributorController::class, 'destroy'])->name('destroy')->middleware('can:approval.component.contributor.destroy');
             });
         });
 
@@ -48,6 +54,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('store', [FlowController::class, 'store'])->name('store')->middleware('can:approval.flow.store');
             Route::put('update/{id}', [FlowController::class, 'update'])->name('update')->middleware('can:approval.flow.update');
             Route::delete('delete/{id}', [FlowController::class, 'delete'])->name('delete')->middleware('can:approval.flow.delete');
+            Route::post('restore/{id}', [FlowController::class, 'restore'])->name('restore')->middleware('can:approval.flow.restore');
+            Route::delete('destroy/{id}', [FlowController::class, 'destroy'])->name('destroy')->middleware('can:approval.flow.destroy');
 
             Route::prefix('component/{flow_id}')->name('component.')->middleware('can:approval.flow.component.index')->group(function () {
                 Route::get('index', [FlowComponentController::class, 'index'])->name('index');
@@ -55,6 +63,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
                 Route::post('store', [FlowComponentController::class, 'store'])->name('store')->middleware('can:approval.flow.component.store');
                 Route::put('update/{id}', [FlowComponentController::class, 'update'])->name('update')->middleware('can:approval.flow.component.update');
                 Route::delete('delete/{id}', [FlowComponentController::class, 'delete'])->name('delete')->middleware('can:approval.flow.component.delete');
+                Route::post('restore/{id}', [FlowComponentController::class, 'restore'])->name('restore')->middleware('can:approval.flow.component.restore');
+                Route::delete('destroy/{id}', [FlowComponentController::class, 'destroy'])->name('destroy')->middleware('can:approval.flow.component.destroy');
             });
         });
 
@@ -64,6 +74,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('store', [GroupController::class, 'store'])->name('store')->middleware('can:approval.group.store');
             Route::put('update/{id}', [GroupController::class, 'update'])->name('update')->middleware('can:approval.group.update');
             Route::delete('delete/{id}', [GroupController::class, 'delete'])->name('delete')->middleware('can:approval.group.delete');
+            Route::post('restore/{id}', [GroupController::class, 'restore'])->name('restore')->middleware('can:approval.group.restore');
+            Route::delete('destroy/{id}', [GroupController::class, 'destroy'])->name('destroy')->middleware('can:approval.group.destroy');
 
             Route::prefix('contributor/{group_id}')->name('contributor.')->middleware('can:approval.group.contributor.index')->group(function () {
                 Route::get('index', [GroupContributorController::class, 'index'])->name('index');
@@ -71,6 +83,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
                 Route::post('store', [GroupContributorController::class, 'store'])->name('store')->middleware('can:approval.group.contributor.store');
                 Route::put('update/{id}', [GroupContributorController::class, 'update'])->name('update')->middleware('can:approval.group.contributor.update');
                 Route::delete('delete/{id}', [GroupContributorController::class, 'delete'])->name('delete')->middleware('can:approval.group.contributor.delete');
+                Route::post('restore/{id}', [GroupContributorController::class, 'restore'])->name('restore')->middleware('can:approval.group.contributor.restore');
+                Route::delete('destroy/{id}', [GroupContributorController::class, 'destroy'])->name('destroy')->middleware('can:approval.group.contributor.destroy');
             });
         });
     });

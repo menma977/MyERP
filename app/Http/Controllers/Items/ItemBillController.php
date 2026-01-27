@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Items;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Items\ItemBillResource;
 use App\Models\Items\ItemBill;
 use App\Models\Items\ItemBillComponent;
 use App\Rules\ValidationWithoutTrashed;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
@@ -20,9 +22,9 @@ class ItemBillController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return LengthAwarePaginator<int, ItemBill>|Collection<int, ItemBill>
+     * @return LengthAwarePaginator<int, ItemBill>|Collection<int, ItemBill>|JsonResource|int
      */
-    public function index(Request $request): LengthAwarePaginator|Collection
+    public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
         $itemBills = ItemBill::with([
             'item',
@@ -34,10 +36,14 @@ class ItemBillController extends Controller
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type', 'paginate') === 'collection') {
-            return $itemBills->get();
+            return ItemBillResource::collection($itemBills->get());
         }
 
-        return $itemBills->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type', 'paginate') === 'count') {
+            return $itemBills->count();
+        }
+
+        return ItemBillResource::collection($itemBills->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
@@ -45,13 +51,12 @@ class ItemBillController extends Controller
      *
      * Show the specified resource.
      */
-    public function show(Request $request): ItemBill
+    public function show(Request $request): JsonResource
     {
-        /** @var ItemBill */
         return ItemBill::with([
             'item',
             'component.item',
-        ])->withUsers()->findOrFail($request->route('id'));
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 
     /**
@@ -59,7 +64,7 @@ class ItemBillController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, item_bill: JsonResource}
      *
      * @throws \Throwable
      */
@@ -74,7 +79,7 @@ class ItemBillController extends Controller
             'components.*.quantity' => ['required', 'numeric', 'min:0'],
         ]);
 
-        DB::transaction(function () use ($request) {
+        $itemBill = DB::transaction(function () use ($request) {
             $itemBill = new ItemBill;
             $itemBill->item_id = $request->input('item_id');
             $itemBill->code = $request->input('code');
@@ -88,10 +93,13 @@ class ItemBillController extends Controller
                 $component->quantity = $componentData['quantity'];
                 $component->save();
             }
+
+            return $itemBill;
         });
 
         return [
             'message' => trans('messages.success.store', ['target' => 'Item Bill'], App::getLocale()),
+            'item_bill' => $itemBill->toResource(),
         ];
     }
 
@@ -100,7 +108,7 @@ class ItemBillController extends Controller
      *
      * Update the specified resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, item_bill: JsonResource}
      *
      * @throws \Throwable
      */
@@ -154,6 +162,7 @@ class ItemBillController extends Controller
 
         return [
             'message' => trans('messages.success.update', ['target' => 'Item Bill'], App::getLocale()),
+            'item_bill' => $itemBill->toResource(),
         ];
     }
 
@@ -162,14 +171,14 @@ class ItemBillController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, item_bill: JsonResource}
      *
      * @throws \Throwable
      */
     public function delete(Request $request): array
     {
         /** @var ItemBill $itemBill */
-        $itemBill = ItemBill::findOrFail($request->route('id'));
+        $itemBill = ItemBill::where('id', $request->route('id'))->firstOrFail();
 
         DB::transaction(function () use ($itemBill) {
             $itemBill->component()->delete();
@@ -178,6 +187,7 @@ class ItemBillController extends Controller
 
         return [
             'message' => trans('messages.success.delete', ['target' => 'Item Bill'], App::getLocale()),
+            'item_bill' => $itemBill->toResource(),
         ];
     }
 
@@ -186,16 +196,17 @@ class ItemBillController extends Controller
      *
      * Restore the specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, item_bill: JsonResource}
      */
     public function restore(Request $request): array
     {
         /** @var ItemBill $itemBill */
-        $itemBill = ItemBill::onlyTrashed()->findOrFail($request->route('id'));
+        $itemBill = ItemBill::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $itemBill->restore();
 
         return [
             'message' => trans('messages.success.restore', ['target' => 'Item Bill'], App::getLocale()),
+            'item_bill' => $itemBill->toResource(),
         ];
     }
 
@@ -204,14 +215,14 @@ class ItemBillController extends Controller
      *
      * Permanently remove the specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, item_bill: JsonResource}
      *
      * @throws \Throwable
      */
     public function destroy(Request $request): array
     {
         /** @var ItemBill $itemBill */
-        $itemBill = ItemBill::onlyTrashed()->findOrFail($request->route('id'));
+        $itemBill = ItemBill::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
 
         DB::transaction(function () use ($itemBill) {
             $itemBill->component()->forceDelete();
@@ -220,6 +231,7 @@ class ItemBillController extends Controller
 
         return [
             'message' => trans('messages.success.destroy', ['target' => 'Item Bill'], App::getLocale()),
+            'item_bill' => $itemBill->toResource(),
         ];
     }
 }

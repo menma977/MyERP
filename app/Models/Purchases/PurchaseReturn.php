@@ -3,13 +3,16 @@
 namespace App\Models\Purchases;
 
 use App\Abstracts\ApprovalAbstract;
+use App\Http\Resources\Purchases\PurchaseReturnResource;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\Items\GoodReceipt;
 use App\Models\User;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -35,7 +38,7 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
- * @property-read GoodReceipt $goodReceipt
+ * @property-read GoodReceipt|null $goodReceipt
  * @property-read \App\Models\Purchases\PurchaseOrder|null $order
  * @property-read User|null $updatedBy
  *
@@ -62,9 +65,11 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
+#[UseResource(PurchaseReturnResource::class)]
 class PurchaseReturn extends ApprovalAbstract
 {
-    use HasUlids, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Purchases\PurchaseReturnFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -88,7 +93,7 @@ class PurchaseReturn extends ApprovalAbstract
      */
     public function order(): BelongsTo
     {
-        return $this->belongsTo(PurchaseOrder::class);
+        return $this->belongsTo(PurchaseOrder::class, 'purchase_order_id');
     }
 
     /**
@@ -96,7 +101,7 @@ class PurchaseReturn extends ApprovalAbstract
      */
     public function goodReceipt(): BelongsTo
     {
-        return $this->belongsTo(GoodReceipt::class);
+        return $this->belongsTo(GoodReceipt::class, 'good_receipt_id');
     }
 
     /**
@@ -104,7 +109,7 @@ class PurchaseReturn extends ApprovalAbstract
      */
     public function components(): HasMany
     {
-        return $this->hasMany(PurchaseReturnComponent::class);
+        return $this->hasMany(PurchaseReturnComponent::class, 'purchase_return_id');
     }
 
     protected function casts(): array

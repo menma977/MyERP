@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Approvals;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Approval\ApprovalResource;
 use App\Models\Approval\Approval;
+use App\Services\FakeIdTranslationService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\ValidationException;
@@ -17,9 +20,9 @@ class ApprovalController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return Collection<int, Approval>|LengthAwarePaginator<int, Approval>
+     * @return Collection<int, Approval>|LengthAwarePaginator<int, Approval>|JsonResource|int
      */
-    public function index(Request $request): Collection|LengthAwarePaginator
+    public function index(Request $request): Collection|LengthAwarePaginator|JsonResource|int
     {
         $approvals = Approval::with([
             'flow',
@@ -30,10 +33,14 @@ class ApprovalController extends Controller
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {
-            return $approvals->get();
+            return ApprovalResource::collection($approvals->get());
         }
 
-        return $approvals->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type') === 'count') {
+            return $approvals->count();
+        }
+
+        return ApprovalResource::collection($approvals->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
@@ -41,7 +48,7 @@ class ApprovalController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @return array<string, string>
+     * @return array{message: string, approval: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -59,6 +66,7 @@ class ApprovalController extends Controller
 
         return [
             'message' => trans('messages.success.store', ['target' => $approval->name], App::getLocale()),
+            'approval' => $approval->toResource(),
         ];
     }
 
@@ -67,25 +75,21 @@ class ApprovalController extends Controller
      *
      * Show the specified resource.
      */
-    /**
-     * @return Approval|Collection<int, Approval>
-     */
-    public function show(Request $request)
+    public function show(Request $request): JsonResource
     {
         return Approval::with([
             'flow',
             'flow.components',
             'components',
-        ])->withUsers()->findOrFail($request->route('id'));
+        ])->withUsers()->findOrFail(FakeIdTranslationService::model(new Approval)->key($request->route('id'))->translateUlid())->toResource();
     }
 
     /**
      * Approval Update
      *
      * Update the specified resource in storage.
-     */
-    /**
-     * @return array<string, string>
+     *
+     * @return array{message: string, approval: JsonResource}
      */
     public function update(Request $request): array
     {
@@ -95,18 +99,15 @@ class ApprovalController extends Controller
             'type' => ['required', 'integer', 'in:0,1'],
         ]);
 
-        $approval = Approval::findOrFail($request->route('id'));
-        if ($approval instanceof Approval) {
-            $approval->approval_flow_id = $request->input('flow_id');
-            $approval->name = $request->input('name');
-            $approval->type = $request->input('type');
-            $approval->save();
-        }
-
-        $approvalName = ($approval instanceof Approval) ? $approval->name : 'Approval';
+        $approval = Approval::findOrFail(FakeIdTranslationService::model(new Approval)->key($request->route('id'))->translateUlid());
+        $approval->approval_flow_id = $request->input('flow_id');
+        $approval->name = $request->input('name');
+        $approval->type = $request->input('type');
+        $approval->save();
 
         return [
-            'message' => trans('messages.success.update', ['target' => $approvalName], App::getLocale()),
+            'message' => trans('messages.success.update', ['target' => $approval->name], App::getLocale()),
+            'approval' => $approval->toResource(),
         ];
     }
 
@@ -114,26 +115,60 @@ class ApprovalController extends Controller
      * Approval Delete
      *
      * Remove the specified resource from storage.
-     */
-    /**
-     * @return array<string, string>
+     *
+     * @return array{message: string, approval: JsonResource}
      */
     public function delete(Request $request): array
     {
-        $approval = Approval::findOrFail($request->route('id'));
-        if ($approval instanceof Approval && $approval->components()->exists()) {
+        $approval = Approval::findOrFail(FakeIdTranslationService::model(new Approval)->key($request->route('id'))->translateUlid());
+        if ($approval->components()->exists()) {
             throw ValidationException::withMessages([
                 'message' => trans('messages.fail.delete.cost', ['attribute' => $approval->name, 'target' => 'Component'], App::getLocale()),
             ]);
         }
-        if ($approval instanceof Approval) {
-            $approval->delete();
-        }
-
-        $approvalName = ($approval instanceof Approval) ? $approval->name : 'Approval';
+        $approval->delete();
 
         return [
-            'message' => trans('messages.success.delete', ['target' => $approvalName], App::getLocale()),
+            'message' => trans('messages.success.delete', ['target' => $approval->name], App::getLocale()),
+            'approval' => $approval->toResource(),
+        ];
+    }
+
+    /**
+     * Approval Restore
+     *
+     * Restore the specified resource from storage.
+     *
+     * @return array{message: string, approval: JsonResource}
+     */
+    public function restore(Request $request): array
+    {
+        /** @var Approval $approval */
+        $approval = Approval::onlyTrashed()->findOrFail(FakeIdTranslationService::model(new Approval)->key($request->route('id'))->translateUlid());
+        $approval->restore();
+
+        return [
+            'message' => trans('messages.success.restore', ['target' => $approval->name], App::getLocale()),
+            'approval' => $approval->toResource(),
+        ];
+    }
+
+    /**
+     * Approval Destroy
+     *
+     * Permanently remove the specified resource from storage.
+     *
+     * @return array{message: string, approval: JsonResource}
+     */
+    public function destroy(Request $request): array
+    {
+        /** @var Approval $approval */
+        $approval = Approval::onlyTrashed()->findOrFail(FakeIdTranslationService::model(new Approval)->key($request->route('id'))->translateUlid());
+        $approval->forceDelete();
+
+        return [
+            'message' => trans('messages.success.destroy', ['target' => $approval->name], App::getLocale()),
+            'approval' => $approval->toResource(),
         ];
     }
 }

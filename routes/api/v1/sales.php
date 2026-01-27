@@ -42,7 +42,7 @@ Route::prefix('sales')->name('sales.')->middleware(['auth:sanctum'])->group(func
         Route::post('approve/{id}', [SalesInvoiceController::class, 'approve'])->name('approve')->middleware('can:sales.invoice.store');
         Route::post('reject/{id}', [SalesInvoiceController::class, 'reject'])->name('reject')->middleware('can:sales.invoice.store');
 
-        Route::prefix('component/{sales_order_id}')->name('component.')->middleware('can:sales.invoice.component.index')->group(function () {
+        Route::prefix('component/{sales_invoice_id}')->name('component.')->middleware('can:sales.invoice.component.index')->group(function () {
             Route::get('index', [SalesInvoiceComponentController::class, 'index'])->name('index');
             Route::get('show/{id}', [SalesInvoiceComponentController::class, 'show'])->name('show')->middleware('can:sales.invoice.component.show');
             Route::post('store', [SalesInvoiceComponentController::class, 'store'])->name('store')->middleware('can:sales.invoice.component.store');
@@ -64,7 +64,7 @@ Route::prefix('sales')->name('sales.')->middleware(['auth:sanctum'])->group(func
         Route::post('approve/{id}', [SalesReturnController::class, 'approve'])->name('approve')->middleware('can:sales.return.store');
         Route::post('reject/{id}', [SalesReturnController::class, 'reject'])->name('reject')->middleware('can:sales.return.store');
 
-        Route::prefix('component/{sales_order_id}')->name('component.')->middleware('can:sales.return.component.index')->group(function () {
+        Route::prefix('component/{sales_return_id}')->name('component.')->middleware('can:sales.return.component.index')->group(function () {
             Route::get('index', [SalesReturnComponentController::class, 'index'])->name('index');
             Route::get('show/{id}', [SalesReturnComponentController::class, 'show'])->name('show')->middleware('can:sales.return.component.show');
             Route::post('store', [SalesReturnComponentController::class, 'store'])->name('store')->middleware('can:sales.return.component.store');

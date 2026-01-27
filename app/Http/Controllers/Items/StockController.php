@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Items;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Items\ItemStockResource;
 use App\Models\Items\ItemStock;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class StockController extends Controller
 {
@@ -15,9 +17,9 @@ class StockController extends Controller
      * List item stocks with optional filtering and pagination.
      *
      * @param  Request  $request  The HTTP request containing search, sort, and pagination parameters
-     * @return Collection<int, ItemStock>|LengthAwarePaginator<int, ItemStock>
+     * @return LengthAwarePaginator<int, ItemStock>|Collection<int, ItemStock>|JsonResource|int
      */
-    public function index(Request $request): Collection|LengthAwarePaginator
+    public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
         $stocks = ItemStock::with([
             'batch',
@@ -41,23 +43,26 @@ class StockController extends Controller
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {
-            return $stocks->get();
+            return ItemStockResource::collection($stocks->get());
         }
 
-        return $stocks->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type') === 'count') {
+            return $stocks->count();
+        }
+
+        return ItemStockResource::collection($stocks->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
      * Show a specific item stock with its related information.
      *
      * @param  Request  $request  The HTTP request
-     * @return ItemStock The item stock with loaded relationships
      */
-    public function show(Request $request): ItemStock
+    public function show(Request $request): JsonResource
     {
         return ItemStock::with([
             'batch',
             'batch.item',
-        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 }

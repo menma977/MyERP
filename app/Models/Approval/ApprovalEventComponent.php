@@ -4,8 +4,10 @@ namespace App\Models\Approval;
 
 use App\Abstracts\ModelAbstract;
 use App\Enums\ContributorTypeEnum;
+use App\Http\Resources\Approval\ApprovalEventComponentResource;
 use App\Models\User;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -69,6 +71,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
+#[UseResource(ApprovalEventComponentResource::class)]
 class ApprovalEventComponent extends ModelAbstract
 {
     use HasUlids, SoftDeletes;

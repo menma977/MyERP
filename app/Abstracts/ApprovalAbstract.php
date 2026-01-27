@@ -35,7 +35,7 @@ abstract class ApprovalAbstract extends Model
 
     public function initEvent(User $user): void
     {
-        $this->approvalService()->model($this::class, (int) $this->getKey())->user($user->id)->store();
+        $this->approvalService()->model($this::class, $this->getKey())->user($user->id)->store();
     }
 
     public function approve(User $user): void

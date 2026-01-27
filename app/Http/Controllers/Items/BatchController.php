@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Items;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Items\ItemBatchResource;
 use App\Models\Items\ItemBatch;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class BatchController extends Controller
 {
@@ -15,9 +17,9 @@ class BatchController extends Controller
      * List item batches with optional filtering and pagination.
      *
      * @param  Request  $request  The HTTP request containing search, sort, and pagination parameters
-     * @return Collection<int, ItemBatch>|LengthAwarePaginator<int, ItemBatch>
+     * @return LengthAwarePaginator<int, ItemBatch>|Collection<int, ItemBatch>|JsonResource|int
      */
-    public function index(Request $request): Collection|LengthAwarePaginator
+    public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
         $batches = ItemBatch::with([
             'item',
@@ -37,23 +39,26 @@ class BatchController extends Controller
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {
-            return $batches->get();
+            return ItemBatchResource::collection($batches->get());
         }
 
-        return $batches->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type') === 'count') {
+            return $batches->count();
+        }
+
+        return ItemBatchResource::collection($batches->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
      * Show a specific item batch with its related information.
      *
      * @param  Request  $request  The HTTP request
-     * @return ItemBatch The item batch with loaded relationships
      */
-    public function show(Request $request): ItemBatch
+    public function show(Request $request): JsonResource
     {
         return ItemBatch::with([
             'item',
             'stock',
-        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 }

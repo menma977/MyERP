@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('approvals', function (Blueprint $table) {
             $table->id();
+            $table->ulid()->unique();
             $table->foreignUlid('approval_flow_id')->constrained('approval_flows')->cascadeOnDelete();
             $table->string('name');
             $table->integer('type')->default(ApprovalTypeEnum::PARALLEL->value)->comment('The type of workflow (0: parallel or 1: sequential)');

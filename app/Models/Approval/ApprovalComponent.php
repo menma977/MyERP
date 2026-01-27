@@ -4,10 +4,14 @@ namespace App\Models\Approval;
 
 use App\Abstracts\ModelAbstract;
 use App\Enums\ContributorTypeEnum;
+use App\Http\Resources\Approval\ApprovalComponentResource;
 use App\Models\User;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -15,6 +19,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property string $ulid
  * @property int $approval_id
  * @property string $name
  * @property int $step The step using binary system: 1, 2, 3, 4, etc.
@@ -61,9 +66,11 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
+#[UseResource(ApprovalComponentResource::class)]
 class ApprovalComponent extends ModelAbstract
 {
-    use SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Approval\ApprovalComponentFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -89,6 +96,14 @@ class ApprovalComponent extends ModelAbstract
         'can_edit' => 'boolean',
         'can_delete' => 'boolean',
     ];
+
+    /**
+     * @return array<int, string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['ulid'];
+    }
 
     /**
      * Get the approval associated with this component.

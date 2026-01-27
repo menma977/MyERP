@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Approvals;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Approval\ApprovalComponentResource;
+use App\Models\Approval\Approval;
 use App\Models\Approval\ApprovalComponent;
+use App\Services\FakeIdTranslationService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\ValidationException;
@@ -17,22 +21,29 @@ class ApprovalComponentController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return LengthAwarePaginator<int, ApprovalComponent>|Collection<int, ApprovalComponent>
+     * @return LengthAwarePaginator<int, ApprovalComponent>|Collection<int, ApprovalComponent>|JsonResource|int
      */
-    public function index(Request $request): LengthAwarePaginator|Collection
+    public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
         $approvalComponent = ApprovalComponent::with([
             'approval',
             'contributors.approvable',
-        ])->where('approval_id', $request->route('approval_id'))->when($request->input('search'), function ($build) use ($request) {
+        ])->where(
+            'approval_id',
+            FakeIdTranslationService::model(new Approval)->key($request->route('approval_id'))->translateUlid()
+        )->when($request->input('search'), function ($build) use ($request) {
             return $build->where('name', 'like', '%'.$request->input('search').'%');
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {
-            return $approvalComponent->get();
+            return ApprovalComponentResource::collection($approvalComponent->get());
         }
 
-        return $approvalComponent->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type', 'paginate') === 'count') {
+            return $approvalComponent->count();
+        }
+
+        return ApprovalComponentResource::collection($approvalComponent->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
@@ -40,7 +51,7 @@ class ApprovalComponentController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @return array<string, mixed>
+     * @return array{message: string, approval_component: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -50,8 +61,9 @@ class ApprovalComponentController extends Controller
             'color' => ['required', 'string', 'max:255'],
         ]);
 
+        $approvalId = FakeIdTranslationService::model(new Approval)->key($request->route('approval_id'))->translateUlid();
         $approvalComponent = new ApprovalComponent;
-        $approvalComponent->approval_id = (int) $request->route('approval_id');
+        $approvalComponent->approval_id = $approvalId;
         $approvalComponent->name = $request->input('name');
         $approvalComponent->type = $request->input('type');
         $approvalComponent->color = $request->input('color');
@@ -61,10 +73,11 @@ class ApprovalComponentController extends Controller
         $approvalComponent->can_delete = true;
         $approvalComponent->save();
 
-        $this->synchronizeSteps((int) $request->route('approval_id'));
+        $this->synchronizeSteps($approvalId);
 
         return [
             'message' => trans('messages.success.store', ['target' => $approvalComponent->name], App::getLocale()),
+            'approval_component' => $approvalComponent->toResource(),
         ];
     }
 
@@ -72,15 +85,13 @@ class ApprovalComponentController extends Controller
      * Approval Component Show
      *
      * Show the specified resource.
-     *
-     * @return ApprovalComponent|Collection<int, ApprovalComponent>
      */
-    public function show(Request $request): ApprovalComponent|Collection
+    public function show(Request $request): JsonResource
     {
         return ApprovalComponent::with([
             'approval',
             'contributors.approvable',
-        ])->withUsers()->findOrFail($request->route('id'));
+        ])->withUsers()->findOrFail(FakeIdTranslationService::model(new ApprovalComponent)->key($request->route('id'))->translateUlid())->toResource();
     }
 
     /**
@@ -88,7 +99,7 @@ class ApprovalComponentController extends Controller
      *
      * Update the specified resource in storage.
      *
-     * @return array<string, mixed>
+     * @return array{message: string, approval_component: JsonResource}
      */
     public function update(Request $request): array
     {
@@ -99,22 +110,19 @@ class ApprovalComponentController extends Controller
             'step' => ['required', 'integer', 'min:0'],
         ]);
 
-        $approvalComponent = ApprovalComponent::findOrFail($request->route('id'));
-        if ($approvalComponent instanceof ApprovalComponent) {
-            $approvalComponent->approval_id = (int) $request->route('approval_id');
-            $approvalComponent->name = $request->input('name');
-            $approvalComponent->type = $request->input('type');
-            $approvalComponent->color = $request->input('color');
-            $approvalComponent->step = (int) $request->input('step');
-            $approvalComponent->save();
-        }
+        $approvalComponent = ApprovalComponent::findOrFail(FakeIdTranslationService::model(new ApprovalComponent)->key($request->route('id'))->translateUlid());
+        $approvalComponent->approval_id = FakeIdTranslationService::model(new Approval)->key($request->route('approval_id'))->translateUlid();
+        $approvalComponent->name = $request->input('name');
+        $approvalComponent->type = $request->input('type');
+        $approvalComponent->color = $request->input('color');
+        $approvalComponent->step = (int) $request->input('step');
+        $approvalComponent->save();
 
-        $this->synchronizeSteps((int) $request->route('approval_id'));
-
-        $componentName = ($approvalComponent instanceof ApprovalComponent) ? $approvalComponent->name : 'Component';
+        $this->synchronizeSteps(FakeIdTranslationService::model(new Approval)->key($request->route('approval_id'))->translateUlid());
 
         return [
-            'message' => trans('messages.success.update', ['target' => $componentName], App::getLocale()),
+            'message' => trans('messages.success.update', ['target' => $approvalComponent->name], App::getLocale()),
+            'approval_component' => $approvalComponent->toResource(),
         ];
     }
 
@@ -123,27 +131,67 @@ class ApprovalComponentController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @return array<string, mixed>
+     * @return array{message: string, approval_component: JsonResource}
      */
     public function delete(Request $request): array
     {
-        $approvalComponent = ApprovalComponent::findOrFail($request->route('id'));
-        if ($approvalComponent instanceof ApprovalComponent && $approvalComponent->contributors()->exists()) {
+        $approvalComponent = ApprovalComponent::findOrFail(FakeIdTranslationService::model(new ApprovalComponent)->key($request->route('id'))->translateUlid());
+        if ($approvalComponent->contributors()->exists()) {
             throw ValidationException::withMessages([
                 'message' => trans('messages.fail.delete.cost', ['attribute' => $approvalComponent->name, 'target' => 'Contributor'], App::getLocale()),
             ]);
         }
-        $approvalId = ($approvalComponent instanceof ApprovalComponent) ? $approvalComponent->approval_id : 0;
-        if ($approvalComponent instanceof ApprovalComponent) {
-            $approvalComponent->delete();
-        }
+        $approvalId = $approvalComponent->approval_id;
+        $approvalComponent->delete();
 
         $this->synchronizeSteps($approvalId);
 
-        $componentName = ($approvalComponent instanceof ApprovalComponent) ? $approvalComponent->name : 'Component';
+        return [
+            'message' => trans('messages.success.delete', ['target' => $approvalComponent->name], App::getLocale()),
+            'approval_component' => $approvalComponent->toResource(),
+        ];
+    }
+
+    /**
+     * Approval Component Restore
+     *
+     * Restore the specified resource from storage.
+     *
+     * @return array{message: string, approval_component: JsonResource}
+     */
+    public function restore(Request $request): array
+    {
+        /** @var ApprovalComponent $approvalComponent */
+        $approvalComponent = ApprovalComponent::onlyTrashed()->findOrFail(FakeIdTranslationService::model(new ApprovalComponent)->key($request->route('id'))->translateUlid());
+        $approvalComponent->restore();
+
+        $this->synchronizeSteps($approvalComponent->approval_id);
 
         return [
-            'message' => trans('messages.success.delete', ['target' => $componentName], App::getLocale()),
+            'message' => trans('messages.success.restore', ['target' => $approvalComponent->name], App::getLocale()),
+            'approval_component' => $approvalComponent->toResource(),
+        ];
+    }
+
+    /**
+     * Approval Component Destroy
+     *
+     * Permanently remove the specified resource from storage.
+     *
+     * @return array{message: string, approval_component: JsonResource}
+     */
+    public function destroy(Request $request): array
+    {
+        /** @var ApprovalComponent $approvalComponent */
+        $approvalComponent = ApprovalComponent::onlyTrashed()->findOrFail(FakeIdTranslationService::model(new ApprovalComponent)->key($request->route('id'))->translateUlid());
+        $approvalId = $approvalComponent->approval_id;
+        $approvalComponent->forceDelete();
+
+        $this->synchronizeSteps($approvalId);
+
+        return [
+            'message' => trans('messages.success.destroy', ['target' => $approvalComponent->name], App::getLocale()),
+            'approval_component' => $approvalComponent->toResource(),
         ];
     }
 

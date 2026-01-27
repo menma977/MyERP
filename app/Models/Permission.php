@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Resources\PermissionResource;
 use App\Observers\CreatedByObserver;
 use App\Observers\DeletedByObserver;
 use App\Observers\UpdatedByObserver;
@@ -10,8 +11,10 @@ use App\Traits\DeletedByTrait;
 use App\Traits\UpdatedByTrait;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Spatie\Permission\Models\Permission as SpatiePermission;
@@ -20,6 +23,7 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
  * This class represents a Permission and extends the SpatiePermission class.
  *
  * @property int $id
+ * @property string $ulid
  * @property string $name
  * @property string $label
  * @property string $guard_name
@@ -65,10 +69,11 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
  * @mixin Eloquent
  */
 #[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
+#[UseResource(PermissionResource::class)]
 class Permission extends SpatiePermission
 {
     use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
-    use SoftDeletes;
+    use HasUlids, SoftDeletes;
 
     protected $fillable = [
         'group',
@@ -80,4 +85,12 @@ class Permission extends SpatiePermission
         'updated_by',
         'deleted_by',
     ];
+
+    /**
+     * @return array<int, string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['ulid'];
+    }
 }

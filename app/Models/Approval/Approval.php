@@ -4,10 +4,14 @@ namespace App\Models\Approval;
 
 use App\Abstracts\ModelAbstract;
 use App\Enums\ApprovalTypeEnum;
+use App\Http\Resources\Approval\ApprovalResource;
 use App\Models\User;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -15,6 +19,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property string $ulid
  * @property string $approval_flow_id
  * @property string $name
  * @property ApprovalTypeEnum $type The type of workflow (0: parallel or 1: sequential)
@@ -55,9 +60,11 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
+#[UseResource(ApprovalResource::class)]
 class Approval extends ModelAbstract
 {
-    use SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Approval\ApprovalFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -76,6 +83,14 @@ class Approval extends ModelAbstract
         'type' => ApprovalTypeEnum::class,
         'can_change' => 'boolean',
     ];
+
+    /**
+     * @return array<int, string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['ulid'];
+    }
 
     /**
      * Get the approval flow associated with the approval.

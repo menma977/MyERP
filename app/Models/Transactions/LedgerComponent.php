@@ -3,10 +3,13 @@
 namespace App\Models\Transactions;
 
 use App\Abstracts\ModelAbstract;
+use App\Http\Resources\Transactions\LedgerComponentResource;
 use App\Models\User;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -51,9 +54,11 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
+#[UseResource(LedgerComponentResource::class)]
 class LedgerComponent extends ModelAbstract
 {
-    use HasUlids, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Transactions\LedgerComponentFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -76,7 +81,7 @@ class LedgerComponent extends ModelAbstract
      */
     public function ledger(): BelongsTo
     {
-        return $this->belongsTo(Ledger::class);
+        return $this->belongsTo(Ledger::class, 'ledger_id');
     }
 
     protected function casts(): array

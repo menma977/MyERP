@@ -3,12 +3,15 @@
 namespace App\Models\Transactions;
 
 use App\Abstracts\ModelAbstract;
+use App\Http\Resources\Transactions\PaymentRequestComponentResource;
 use App\Models\Purchases\PurchaseInvoiceComponent;
 use App\Models\Purchases\PurchaseOrderComponent;
 use App\Models\User;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -59,9 +62,11 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
+#[UseResource(PaymentRequestComponentResource::class)]
 class PaymentRequestComponent extends ModelAbstract
 {
-    use HasUlids, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Transactions\PaymentRequestComponentFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -87,7 +92,7 @@ class PaymentRequestComponent extends ModelAbstract
      */
     public function paymentRequest(): BelongsTo
     {
-        return $this->belongsTo(PaymentRequest::class);
+        return $this->belongsTo(PaymentRequest::class, 'payment_request_id');
     }
 
     /**
@@ -95,7 +100,7 @@ class PaymentRequestComponent extends ModelAbstract
      */
     public function purchaseOrderComponent(): BelongsTo
     {
-        return $this->belongsTo(PurchaseOrderComponent::class);
+        return $this->belongsTo(PurchaseOrderComponent::class, 'purchase_order_component_id');
     }
 
     /**
@@ -103,7 +108,7 @@ class PaymentRequestComponent extends ModelAbstract
      */
     public function purchaseInvoiceComponent(): BelongsTo
     {
-        return $this->belongsTo(PurchaseInvoiceComponent::class);
+        return $this->belongsTo(PurchaseInvoiceComponent::class, 'purchase_invoice_component_id');
     }
 
     protected function casts(): array

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\PermissionService;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      *
-     * @return array{user:array{id:int,name:string,username:string,email:string,email_verified_at:Carbon|null,created_at:Carbon|null,updated_at:Carbon|null},access_token:string,token_type:string,expires_in:int}
+     * @return array<string, array<string, Carbon|string|null>|int|string>
      */
     public function login(Request $request): array
     {
@@ -42,7 +43,7 @@ class LoginController extends Controller
 
         return [
             'user' => [
-                'id' => $user->id,
+                'id' => $user->ulid,
                 'name' => $user->name,
                 'username' => $user->username,
                 'email' => $user->email,
@@ -87,7 +88,7 @@ class LoginController extends Controller
         $user = User::find(Auth::id());
         if (! $user) {
             throw ValidationException::withMessages([
-                'user' => 'User not authenticated',
+                'user' => "User isn't authenticated",
             ])->status(401);
         }
 
@@ -101,7 +102,7 @@ class LoginController extends Controller
     /**
      * Get the authenticated user.
      *
-     * @return array{user:array{id:int|null,name:string|null,username:string|null,email:string|null,email_verified_at:Carbon|null,created_at:Carbon|null,updated_at:Carbon|null}}
+     * @return array<string, array<string, Carbon|string|null>>
      */
     public function me(): array
     {
@@ -123,7 +124,7 @@ class LoginController extends Controller
 
         return [
             'user' => [
-                'id' => $user->id,
+                'id' => $user->ulid,
                 'name' => $user->name,
                 'username' => $user->username,
                 'email' => $user->email,
@@ -139,7 +140,7 @@ class LoginController extends Controller
      *
      * Retrieve the authenticated user's permissions and information.
      *
-     * @return array{user: User|null, permissions: Collection<int, array{name: string, can: Collection<string, bool>}>}
+     * @return array{user: \Illuminate\Http\Resources\Json\JsonResource, permissions: Collection<int, array{name: string, can: Collection<string, bool>}>}
      *
      * @throws ValidationException If the token is expired
      */
@@ -159,7 +160,7 @@ class LoginController extends Controller
         }
 
         return [
-            'user' => $user,
+            'user' => UserResource::make($user),
             'permissions' => PermissionService::grab($user, null),
         ];
     }

@@ -4,14 +4,17 @@ namespace App\Models\Sales;
 
 use App\Abstracts\ApprovalAbstract;
 use App\Enums\DiscountTypeEnum;
+use App\Http\Resources\Sales\SalesOrderResource;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\Items\ItemBatch;
 use App\Models\User;
 use App\Services\CodeGeneratorService;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -61,9 +64,11 @@ use Illuminate\Validation\ValidationException;
  *
  * @mixin Eloquent
  */
+#[UseResource(SalesOrderResource::class)]
 class SalesOrder extends ApprovalAbstract
 {
-    use HasUlids, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Sales\SalesOrderFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -117,7 +122,7 @@ class SalesOrder extends ApprovalAbstract
         if ($approvalEvent->is_approved) {
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
-                $salesOrder = SalesOrder::find($approvalEvent->id);
+                $salesOrder = SalesOrder::lockForUpdate()->with('components')->find($approvalEvent->requestable_id);
                 if (! $salesOrder) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();

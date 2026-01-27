@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Approvals;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Approval\ApprovalFlowComponentResource;
 use App\Models\Approval\ApprovalDictionary;
 use App\Models\Approval\ApprovalFlowComponent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 
@@ -17,19 +19,23 @@ class FlowComponentController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return Collection<int, ApprovalFlowComponent>|LengthAwarePaginator<int, ApprovalFlowComponent>
+     * @return Collection<int, ApprovalFlowComponent>|LengthAwarePaginator<int, ApprovalFlowComponent>|JsonResource|int
      */
-    public function index(Request $request): Collection|LengthAwarePaginator
+    public function index(Request $request): Collection|LengthAwarePaginator|JsonResource|int
     {
         $flowComponent = ApprovalFlowComponent::where('approval_flow_id', $request->route('flow_id'))->when($request->input('search'), function ($build) use ($request) {
             return $build->where('key', 'like', '%'.$request->input('search').'%');
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {
-            return $flowComponent->get();
+            return ApprovalFlowComponentResource::collection($flowComponent->get());
         }
 
-        return $flowComponent->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type') === 'count') {
+            return $flowComponent->count();
+        }
+
+        return ApprovalFlowComponentResource::collection($flowComponent->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
@@ -37,7 +43,7 @@ class FlowComponentController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @return array<string, string>
+     * @return array{message: string, flow_component: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -48,7 +54,7 @@ class FlowComponentController extends Controller
         $flowComponent = new ApprovalFlowComponent;
         $flowComponent->approval_flow_id = $request->route('flow_id');
         $flowComponent->approval_dictionary_id = $request->input('approval_dictionary_id');
-        $dictionary = ApprovalDictionary::findOrFail($request->input('approval_dictionary_id'));
+        $dictionary = ApprovalDictionary::where('id', $request->input('approval_dictionary_id'))->first();
         if ($dictionary instanceof ApprovalDictionary) {
             $flowComponent->key = $dictionary->key;
         }
@@ -56,6 +62,7 @@ class FlowComponentController extends Controller
 
         return [
             'message' => trans('messages.success.store', ['target' => $flowComponent->key], App::getLocale()),
+            'flow_component' => $flowComponent->toResource(),
         ];
     }
 
@@ -63,15 +70,13 @@ class FlowComponentController extends Controller
      * Flow Component Show
      *
      * Show the specified resource.
-     *
-     * @return ApprovalFlowComponent|Collection<int, ApprovalFlowComponent>
      */
-    public function show(Request $request)
+    public function show(Request $request): JsonResource
     {
         return ApprovalFlowComponent::with([
             'flow',
             'dictionary',
-        ])->withUsers()->findOrFail($request->route('id'));
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 
     /**
@@ -79,7 +84,7 @@ class FlowComponentController extends Controller
      *
      * Update the specified resource in storage.
      *
-     * @return array<string, string>
+     * @return array{message: string, flow_component: JsonResource}
      */
     public function update(Request $request): array
     {
@@ -87,21 +92,18 @@ class FlowComponentController extends Controller
             'approval_dictionary_id' => ['required', 'exists:approval_dictionaries,id'],
         ]);
 
-        $flowComponent = ApprovalFlowComponent::findOrFail($request->route('id'));
-        if ($flowComponent instanceof ApprovalFlowComponent) {
-            $flowComponent->approval_flow_id = $request->route('flow_id');
-            $flowComponent->approval_dictionary_id = $request->input('approval_dictionary_id');
-            $dictionary = ApprovalDictionary::findOrFail($request->input('approval_dictionary_id'));
-            if ($dictionary instanceof ApprovalDictionary) {
-                $flowComponent->key = $dictionary->key;
-            }
-            $flowComponent->save();
+        $flowComponent = ApprovalFlowComponent::where('id', $request->route('id'))->firstOrFail();
+        $flowComponent->approval_flow_id = $request->route('flow_id');
+        $flowComponent->approval_dictionary_id = $request->input('approval_dictionary_id');
+        $dictionary = ApprovalDictionary::where('id', $request->input('approval_dictionary_id'))->first();
+        if ($dictionary instanceof ApprovalDictionary) {
+            $flowComponent->key = $dictionary->key;
         }
-
-        $flowComponentKey = ($flowComponent instanceof ApprovalFlowComponent) ? $flowComponent->key : 'Component';
+        $flowComponent->save();
 
         return [
-            'message' => trans('messages.success.update', ['target' => $flowComponentKey], App::getLocale()),
+            'message' => trans('messages.success.update', ['target' => $flowComponent->key], App::getLocale()),
+            'flow_component' => $flowComponent->toResource(),
         ];
     }
 
@@ -110,19 +112,54 @@ class FlowComponentController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @return array<string, string>
+     * @return array{message: string, flow_component: JsonResource}
      */
     public function delete(Request $request): array
     {
-        $flowComponent = ApprovalFlowComponent::findOrFail($request->route('id'));
-        if ($flowComponent instanceof ApprovalFlowComponent) {
-            $flowComponent->delete();
-        }
-
-        $flowComponentKey = ($flowComponent instanceof ApprovalFlowComponent) ? $flowComponent->key : 'Component';
+        $flowComponent = ApprovalFlowComponent::where('id', $request->route('id'))->firstOrFail();
+        $flowComponent->delete();
 
         return [
-            'message' => trans('messages.success.delete', ['target' => $flowComponentKey], App::getLocale()),
+            'message' => trans('messages.success.delete', ['target' => $flowComponent->key], App::getLocale()),
+            'flow_component' => $flowComponent->toResource(),
+        ];
+    }
+
+    /**
+     * Flow Component Restore
+     *
+     * Restore the specified resource from storage.
+     *
+     * @return array{message: string, flow_component: JsonResource}
+     */
+    public function restore(Request $request): array
+    {
+        /** @var ApprovalFlowComponent $flowComponent */
+        $flowComponent = ApprovalFlowComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
+        $flowComponent->restore();
+
+        return [
+            'message' => trans('messages.success.restore', ['target' => $flowComponent->key], App::getLocale()),
+            'flow_component' => $flowComponent->toResource(),
+        ];
+    }
+
+    /**
+     * Flow Component Destroy
+     *
+     * Permanently remove the specified resource from storage.
+     *
+     * @return array{message: string, flow_component: JsonResource}
+     */
+    public function destroy(Request $request): array
+    {
+        /** @var ApprovalFlowComponent $flowComponent */
+        $flowComponent = ApprovalFlowComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
+        $flowComponent->forceDelete();
+
+        return [
+            'message' => trans('messages.success.destroy', ['target' => $flowComponent->key], App::getLocale()),
+            'flow_component' => $flowComponent->toResource(),
         ];
     }
 }

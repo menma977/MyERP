@@ -4,9 +4,11 @@ namespace App\Models\Vendors;
 
 use App\Abstracts\ApprovalAbstract;
 use App\Enums\PaymentMethodEnum;
+use App\Http\Resources\Vendors\VendorPaymentResource;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\User;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -59,6 +61,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
+#[UseResource(VendorPaymentResource::class)]
 class VendorPayment extends ApprovalAbstract
 {
     use HasUlids, SoftDeletes;

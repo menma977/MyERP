@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Purchases;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Purchases\PurchaseReturnComponentResource;
 use App\Models\Purchases\PurchaseReturn;
 use App\Models\Purchases\PurchaseReturnComponent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -20,13 +22,13 @@ class PurchaseReturnComponentController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return LengthAwarePaginator<int, PurchaseReturnComponent>|Collection<int, PurchaseReturnComponent>
+     * @return LengthAwarePaginator<int, PurchaseReturnComponent>|Collection<int, PurchaseReturnComponent>|JsonResource|int
      */
-    public function index(Request $request): LengthAwarePaginator|Collection
+    public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
         $purchaseReturnComponents = PurchaseReturnComponent::with([
             'return',
-            'purchaseOrderComponent',
+            'orderComponent',
             'goodReceiptComponent',
             'createdBy',
             'updatedBy',
@@ -40,10 +42,14 @@ class PurchaseReturnComponentController extends Controller
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type', 'paginate') === 'collection') {
-            return $purchaseReturnComponents->get();
+            return PurchaseReturnComponentResource::collection($purchaseReturnComponents->get());
         }
 
-        return $purchaseReturnComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type', 'paginate') === 'count') {
+            return $purchaseReturnComponents->count();
+        }
+
+        return PurchaseReturnComponentResource::collection($purchaseReturnComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
@@ -51,7 +57,7 @@ class PurchaseReturnComponentController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, purchase_return_component: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -69,6 +75,7 @@ class PurchaseReturnComponentController extends Controller
 
         return [
             'message' => trans('messages.success.store', ['target' => 'Purchase Return Component'], App::getLocale()),
+            'purchase_return_component' => $purchaseReturnComponent->toResource(),
         ];
     }
 
@@ -77,16 +84,16 @@ class PurchaseReturnComponentController extends Controller
      *
      * Show the specified resource.
      */
-    public function show(Request $request): PurchaseReturnComponent
+    public function show(Request $request): JsonResource
     {
         return PurchaseReturnComponent::with([
             'return',
-            'purchaseOrderComponent',
+            'orderComponent',
             'goodReceiptComponent',
             'createdBy',
             'updatedBy',
             'deletedBy',
-        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 
     /**
@@ -94,18 +101,19 @@ class PurchaseReturnComponentController extends Controller
      *
      * Update the specified resource in storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, purchase_return_component: JsonResource}
      */
     public function update(Request $request): array
     {
         $this->validate($request);
 
         /** @var PurchaseReturnComponent $purchaseReturnComponent */
-        $purchaseReturnComponent = PurchaseReturnComponent::findOrFail($request->route('id'));
+        $purchaseReturnComponent = PurchaseReturnComponent::where('id', $request->route('id'))->firstOrFail();
         $this->save($request, $purchaseReturnComponent);
 
         return [
             'message' => trans('messages.success.update', ['target' => 'Purchase Return Component'], App::getLocale()),
+            'purchase_return_component' => $purchaseReturnComponent->toResource(),
         ];
     }
 
@@ -114,16 +122,17 @@ class PurchaseReturnComponentController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, purchase_return_component: JsonResource}
      */
     public function delete(Request $request): array
     {
         /** @var PurchaseReturnComponent $purchaseReturnComponent */
-        $purchaseReturnComponent = PurchaseReturnComponent::findOrFail($request->route('id'));
+        $purchaseReturnComponent = PurchaseReturnComponent::where('id', $request->route('id'))->firstOrFail();
         $purchaseReturnComponent->delete();
 
         return [
             'message' => trans('messages.success.delete', ['target' => 'Purchase Return Component'], App::getLocale()),
+            'purchase_return_component' => $purchaseReturnComponent->toResource(),
         ];
     }
 
@@ -132,16 +141,17 @@ class PurchaseReturnComponentController extends Controller
      *
      * Restore the specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, purchase_return_component: JsonResource}
      */
     public function restore(Request $request): array
     {
         /** @var PurchaseReturnComponent $purchaseReturnComponent */
-        $purchaseReturnComponent = PurchaseReturnComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $purchaseReturnComponent = PurchaseReturnComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $purchaseReturnComponent->restore();
 
         return [
             'message' => trans('messages.success.restore', ['target' => 'Purchase Return Component'], App::getLocale()),
+            'purchase_return_component' => $purchaseReturnComponent->toResource(),
         ];
     }
 
@@ -150,16 +160,17 @@ class PurchaseReturnComponentController extends Controller
      *
      * Permanently remove the specified resource from storage.
      *
-     * @return array{message: string}
+     * @return array{message: string, purchase_return_component: JsonResource}
      */
     public function destroy(Request $request): array
     {
         /** @var PurchaseReturnComponent $purchaseReturnComponent */
-        $purchaseReturnComponent = PurchaseReturnComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $purchaseReturnComponent = PurchaseReturnComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $purchaseReturnComponent->forceDelete();
 
         return [
             'message' => trans('messages.success.destroy', ['target' => 'Purchase Return Component'], App::getLocale()),
+            'purchase_return_component' => $purchaseReturnComponent->toResource(),
         ];
     }
 

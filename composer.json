@@ -19,7 +19,8 @@
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.6",
         "fakerphp/faker": "^1.23",
-        "laradumps/laradumps": "^4.6",
+        "laradumps/laradumps": "^5.0",
+        "laradumps/laradumps-core": "^4.0",
         "larastan/larastan": "^3.8",
         "laravel/boost": "^1.8",
         "laravel/pail": "^1.2.2",

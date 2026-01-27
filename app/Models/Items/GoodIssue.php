@@ -3,10 +3,12 @@
 namespace App\Models\Items;
 
 use App\Abstracts\ApprovalAbstract;
+use App\Http\Resources\Items\GoodIssueResource;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\Sales\SalesInvoice;
 use App\Models\User;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -64,6 +66,7 @@ use Illuminate\Validation\ValidationException;
  *
  * @mixin Eloquent
  */
+#[UseResource(GoodIssueResource::class)]
 class GoodIssue extends ApprovalAbstract
 {
     use HasUlids, SoftDeletes;
@@ -118,7 +121,7 @@ class GoodIssue extends ApprovalAbstract
         if ($approvalEvent->is_approved) {
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
-                $goodIssue = GoodIssue::find($approvalEvent->id);
+                $goodIssue = GoodIssue::lockForUpdate()->with('components')->find($approvalEvent->requestable_id);
                 if (! $goodIssue) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();

@@ -3,13 +3,16 @@
 namespace App\Models\Purchases;
 
 use App\Abstracts\ApprovalAbstract;
+use App\Http\Resources\Purchases\PurchaseProcurementResource;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\User;
 use App\Services\CodeGeneratorService;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -59,9 +62,11 @@ use Illuminate\Validation\ValidationException;
  *
  * @mixin Eloquent
  */
+#[UseResource(PurchaseProcurementResource::class)]
 class PurchaseProcurement extends ApprovalAbstract
 {
-    use HasUlids, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Purchases\PurchaseProcurementFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -83,7 +88,7 @@ class PurchaseProcurement extends ApprovalAbstract
      */
     public function request(): BelongsTo
     {
-        return $this->belongsTo(PurchaseRequest::class);
+        return $this->belongsTo(PurchaseRequest::class, 'purchase_request_id');
     }
 
     /**
@@ -99,7 +104,7 @@ class PurchaseProcurement extends ApprovalAbstract
         if ($approvalEvent->is_approved) {
             /** @noinspection PhpUnhandledExceptionInspection */
             DB::transaction(function () use ($approvalEvent) {
-                $purchaseProcurement = PurchaseProcurement::find($approvalEvent->id);
+                $purchaseProcurement = PurchaseProcurement::lockForUpdate()->with('components')->find($approvalEvent->requestable_id);
                 if (! $purchaseProcurement) {
                     $approvalEvent->approved_at = null;
                     $approvalEvent->save();

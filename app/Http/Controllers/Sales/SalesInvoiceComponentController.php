@@ -3,17 +3,19 @@
 namespace App\Http\Controllers\Sales;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Sales\SalesInvoiceComponentResource;
 use App\Models\Sales\SalesInvoiceComponent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class SalesInvoiceComponentController extends Controller
 {
     /**
-     * @return LengthAwarePaginator<int, SalesInvoiceComponent>|Collection<int, SalesInvoiceComponent>
+     * @return LengthAwarePaginator<int, SalesInvoiceComponent>|Collection<int, SalesInvoiceComponent>|JsonResource|int
      */
-    public function index(Request $request): LengthAwarePaginator|Collection
+    public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
         $salesInvoiceComponents = SalesInvoiceComponent::with([
             'invoice',
@@ -25,14 +27,18 @@ class SalesInvoiceComponentController extends Controller
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type') === 'collection') {
-            return $salesInvoiceComponents->get();
+            return SalesInvoiceComponentResource::collection($salesInvoiceComponents->get());
         }
 
-        return $salesInvoiceComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*'));
+        if ($request->input('type') === 'count') {
+            return $salesInvoiceComponents->count();
+        }
+
+        return SalesInvoiceComponentResource::collection($salesInvoiceComponents->withUsers()->paginate($request->input('per_page', 10), $request->input('columns', '*')));
     }
 
     /**
-     * @return array{message: string}
+     * @return array{message: string, sales_invoice_component: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -49,19 +55,22 @@ class SalesInvoiceComponentController extends Controller
         $salesInvoiceComponent = new SalesInvoiceComponent;
         $this->save($request, $salesInvoiceComponent);
 
-        return ['message' => trans('messages.success.store', ['target' => 'Sales Invoice Component'])];
+        return [
+            'message' => trans('messages.success.store', ['target' => 'Sales Invoice Component']),
+            'sales_invoice_component' => $salesInvoiceComponent->toResource(),
+        ];
     }
 
-    public function show(Request $request): SalesInvoiceComponent
+    public function show(Request $request): JsonResource
     {
         return SalesInvoiceComponent::with([
             'invoice',
             'item',
-        ])->withUsers()->where('id', $request->route('id'))->firstOrFail();
+        ])->withUsers()->where('id', $request->route('id'))->firstOrFail()->toResource();
     }
 
     /**
-     * @return array{message: string}
+     * @return array{message: string, sales_invoice_component: JsonResource}
      */
     public function update(Request $request): array
     {
@@ -76,46 +85,58 @@ class SalesInvoiceComponentController extends Controller
         ]);
 
         /** @var SalesInvoiceComponent $salesInvoiceComponent */
-        $salesInvoiceComponent = SalesInvoiceComponent::findOrFail($request->route('id'));
+        $salesInvoiceComponent = SalesInvoiceComponent::where('id', $request->route('id'))->firstOrFail();
         $this->save($request, $salesInvoiceComponent);
 
-        return ['message' => trans('messages.success.update', ['target' => 'Sales Invoice Component'])];
+        return [
+            'message' => trans('messages.success.update', ['target' => 'Sales Invoice Component']),
+            'sales_invoice_component' => $salesInvoiceComponent->toResource(),
+        ];
     }
 
     /**
-     * @return array{message: string}
+     * @return array{message: string, sales_invoice_component: JsonResource}
      */
     public function delete(Request $request): array
     {
         /** @var SalesInvoiceComponent $salesInvoiceComponent */
-        $salesInvoiceComponent = SalesInvoiceComponent::findOrFail($request->route('id'));
+        $salesInvoiceComponent = SalesInvoiceComponent::where('id', $request->route('id'))->firstOrFail();
         $salesInvoiceComponent->delete();
 
-        return ['message' => trans('messages.success.delete', ['target' => 'Sales Invoice Component'])];
+        return [
+            'message' => trans('messages.success.delete', ['target' => 'Sales Invoice Component']),
+            'sales_invoice_component' => $salesInvoiceComponent->toResource(),
+        ];
     }
 
     /**
-     * @return array{message: string}
+     * @return array{message: string, sales_invoice_component: JsonResource}
      */
     public function restore(Request $request): array
     {
         /** @var SalesInvoiceComponent $salesInvoiceComponent */
-        $salesInvoiceComponent = SalesInvoiceComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $salesInvoiceComponent = SalesInvoiceComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $salesInvoiceComponent->restore();
 
-        return ['message' => trans('messages.success.restore', ['target' => 'Sales Invoice Component'])];
+        return [
+            'message' => trans('messages.success.restore', ['target' => 'Sales Invoice Component']),
+            'sales_invoice_component' => $salesInvoiceComponent->toResource(),
+        ];
     }
 
     /**
-     * @return array{message: string}
+     * @return array{message: string, sales_invoice_component: JsonResource}
      */
     public function destroy(Request $request): array
     {
         /** @var SalesInvoiceComponent $salesInvoiceComponent */
-        $salesInvoiceComponent = SalesInvoiceComponent::onlyTrashed()->findOrFail($request->route('id'));
+        $salesInvoiceComponent = SalesInvoiceComponent::onlyTrashed()->where('id', $request->route('id'))->firstOrFail();
         $salesInvoiceComponent->forceDelete();
 
-        return ['message' => trans('messages.success.destroy', ['target' => 'Sales Invoice Component'])];
+        return [
+            'message' => trans('messages.success.destroy', ['target' => 'Sales Invoice Component']),
+            'sales_invoice_component' => $salesInvoiceComponent->toResource(),
+        ];
     }
 
     protected function save(Request $request, SalesInvoiceComponent $salesInvoiceComponent): void

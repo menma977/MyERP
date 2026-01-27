@@ -3,11 +3,15 @@
 namespace App\Models\Purchases;
 
 use App\Abstracts\ModelAbstract;
+use App\Http\Resources\Purchases\PurchaseRequestComponentResource;
+use App\Models\Items\Item;
 use App\Models\User;
 use App\Models\Vendors\Vendor;
 use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -16,6 +20,7 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $purchase_request_id
  * @property int $vendor_id
+ * @property string $item_id
  * @property numeric $price
  * @property numeric $quantity
  * @property numeric $total
@@ -55,9 +60,11 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Eloquent
  */
+#[UseResource(PurchaseRequestComponentResource::class)]
 class PurchaseRequestComponent extends ModelAbstract
 {
-    use HasUlids, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Purchases\PurchaseRequestComponentFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -67,6 +74,7 @@ class PurchaseRequestComponent extends ModelAbstract
     protected $fillable = [
         'purchase_request_id',
         'vendor_id',
+        'item_id',
         'price',
         'quantity',
         'total',
@@ -90,6 +98,14 @@ class PurchaseRequestComponent extends ModelAbstract
     public function vendor(): BelongsTo
     {
         return $this->belongsTo(Vendor::class);
+    }
+
+    /**
+     * @return BelongsTo<Item, $this>
+     */
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class);
     }
 
     protected function casts(): array
