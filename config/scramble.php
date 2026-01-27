@@ -29,7 +29,7 @@ return [
         /*
          * Description rendered on the home page of the API documentation (`/docs/api`).
          */
-        'description' => '',
+        'description' => 'MyERP API documentation. A comprehensive Enterprise Resource Planning system built with Laravel, focusing on modular architecture and strict development standards.',
     ],
 
     /*
