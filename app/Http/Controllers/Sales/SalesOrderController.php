@@ -20,7 +20,7 @@ class SalesOrderController extends Controller
      */
     public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
-        $salesOrders = SalesOrder::query()->with([
+        $salesOrders = SalesOrder::with([
             'components',
         ])->when($request->input('search'), function ($query) use ($request) {
             return $query->where('code', 'like', '%'.$request->input('search').'%');
@@ -59,12 +59,14 @@ class SalesOrderController extends Controller
 
     public function show(Request $request): JsonResource
     {
-        return SalesOrder::query()
-            ->withContributors()
+        /** @var SalesOrder $salesOrder */
+        $salesOrder = SalesOrder::withContributors()
             ->withUsers()
             ->with('components')
             ->where('id', $request->route('id'))
-            ->firstOrFail()->toResource();
+            ->firstOrFail();
+
+        return $salesOrder->toResource();
     }
 
     /**
