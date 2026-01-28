@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Transactions\ExpanseController;
 use App\Http\Controllers\Transactions\LedgerComponentController;
 use App\Http\Controllers\Transactions\LedgerController;
 use App\Http\Controllers\Transactions\PaymentRequestComponentController;
@@ -39,4 +40,19 @@ Route::prefix('ledger')->name('ledger.')->middleware(['auth:sanctum'])->group(fu
         Route::get('index', [LedgerComponentController::class, 'index'])->name('index');
         Route::get('show/{id}', [LedgerComponentController::class, 'show'])->name('show')->middleware('can:ledger.component.show');
     });
+});
+
+Route::prefix('expanse')->name('expanse.')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('index', [ExpanseController::class, 'index'])->name('index')->middleware('can:transaction.expanse.index');
+    Route::post('store', [ExpanseController::class, 'store'])->name('store')->middleware('can:transaction.expanse.store');
+    Route::get('show/{id}', [ExpanseController::class, 'show'])->name('show')->middleware('can:transaction.expanse.show');
+    Route::put('update/{id}', [ExpanseController::class, 'update'])->name('update')->middleware('can:transaction.expanse.update');
+    Route::delete('delete/{id}', [ExpanseController::class, 'delete'])->name('delete')->middleware('can:transaction.expanse.delete');
+    Route::post('restore/{id}', [ExpanseController::class, 'restore'])->name('restore')->middleware('can:transaction.expanse.restore');
+    Route::delete('destroy/{id}', [ExpanseController::class, 'destroy'])->name('destroy')->middleware('can:transaction.expanse.destroy');
+    Route::post('approve/{id}', [ExpanseController::class, 'approve'])->name('approve')->middleware('can:transaction.expanse.approve');
+    Route::post('reject/{id}', [ExpanseController::class, 'reject'])->name('reject')->middleware('can:transaction.expanse.reject');
+    Route::post('cancel/{id}', [ExpanseController::class, 'cancel'])->name('cancel')->middleware('can:transaction.expanse.cancel');
+    Route::post('rollback/{id}', [ExpanseController::class, 'rollback'])->name('rollback')->middleware('can:transaction.expanse.rollback');
+    Route::post('force/{id}', [ExpanseController::class, 'force'])->name('force')->middleware('can:transaction.expanse.force');
 });

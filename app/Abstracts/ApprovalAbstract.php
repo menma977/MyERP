@@ -4,6 +4,7 @@ namespace App\Abstracts;
 
 use App\Interfaces\ApprovalServiceInterface;
 use App\Models\Approval\ApprovalEvent;
+use App\Models\Companies\Company;
 use App\Models\Scopes\ApprovalAbstractScope;
 use App\Models\Scopes\WithCompanyScope;
 use App\Models\User;
@@ -19,12 +20,21 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 #[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class]), ScopedBy([ApprovalAbstractScope::class, WithCompanyScope::class])]
 abstract class ApprovalAbstract extends Model
 {
     use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
+
+    /**
+     * @return BelongsTo<Company, $this>
+     */
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
 
     /**
      * @return MorphOne<ApprovalEvent, $this>

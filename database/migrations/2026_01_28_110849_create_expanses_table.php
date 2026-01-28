@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\ExpanseCategoryEnum;
+use App\Enums\PaymentMethodEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,15 +13,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sales_payments', function (Blueprint $table) {
+        Schema::create('expanses', function (Blueprint $table) {
             $table->ulid('id')->primary()->index();
             $table->foreignId('company_id')->constrained('companies')->cascadeOnDelete();
-            $table->foreignUlid('sales_invoice_id')->constrained('sales_invoices')->cascadeOnDelete();
-            $table->foreignUlid('customer_id')->constrained('customers')->cascadeOnDelete();
             $table->string('code')->unique();
-            $table->decimal('total', 18, 4)->default(0);
-            $table->string('method');
-            $table->dateTime('paid_at')->nullable();
+            $table->string('category')->default(ExpanseCategoryEnum::SALARY->value)->index();
+            $table->string('method')->default(PaymentMethodEnum::CASH->value)->index();
+            /** @noinspection DuplicatedCode */
+            $table->decimal('amount', 18, 4)->default(0);
             $table->text('note')->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
@@ -34,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sales_payments');
+        Schema::dropIfExists('expanses');
     }
 };

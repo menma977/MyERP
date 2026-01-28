@@ -388,6 +388,20 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'purchase.invoice.component.restore', 'label' => 'Purchase Invoice Component Restore', 'group' => 'purchase.invoice.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'purchase.invoice.component.destroy', 'label' => 'Purchase Invoice Component Destroy', 'group' => 'purchase.invoice.component', 'guard_name' => 'sanctum']);
 
+        /**Transaction Expanse permissions*/
+        $collector->push(['name' => 'transaction.expanse.index', 'label' => 'Transaction Expanse Index', 'group' => 'transaction.expanse', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'transaction.expanse.show', 'label' => 'Transaction Expanse Show', 'group' => 'transaction.expanse', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'transaction.expanse.store', 'label' => 'Transaction Expanse Store', 'group' => 'transaction.expanse', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'transaction.expanse.update', 'label' => 'Transaction Expanse Update', 'group' => 'transaction.expanse', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'transaction.expanse.delete', 'label' => 'Transaction Expanse Delete', 'group' => 'transaction.expanse', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'transaction.expanse.destroy', 'label' => 'Transaction Expanse Destroy', 'group' => 'transaction.expanse', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'transaction.expanse.restore', 'label' => 'Transaction Expanse Restore', 'group' => 'transaction.expanse', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'transaction.expanse.approve', 'label' => 'Transaction Expanse Approve', 'group' => 'transaction.expanse', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'transaction.expanse.reject', 'label' => 'Transaction Expanse Reject', 'group' => 'transaction.expanse', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'transaction.expanse.cancel', 'label' => 'Transaction Expanse Cancel', 'group' => 'transaction.expanse', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'transaction.expanse.rollback', 'label' => 'Transaction Expanse Rollback', 'group' => 'transaction.expanse', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'transaction.expanse.force', 'label' => 'Transaction Expanse Force', 'group' => 'transaction.expanse', 'guard_name' => 'sanctum']);
+
         /**Sales Order permissions*/
         $collector->push(['name' => 'sales.order.index', 'label' => 'Sales Order Index', 'group' => 'sales.order', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'sales.order.show', 'label' => 'Sales Order Show', 'group' => 'sales.order', 'guard_name' => 'sanctum']);
