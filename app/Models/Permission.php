@@ -36,9 +36,9 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
  * @property Carbon|null $deleted_at
  * @property-read \App\Models\User|null $createdBy
  * @property-read \App\Models\User|null $deletedBy
- * @property-read Collection<int, SpatiePermission> $permissions
+ * @property-read Collection<int, Permission> $permissions
  * @property-read int|null $permissions_count
- * @property-read Collection<int, \Spatie\Permission\Models\Role> $roles
+ * @property-read Collection<int, \App\Models\Role> $roles
  * @property-read int|null $roles_count
  * @property-read \App\Models\User|null $updatedBy
  * @property-read Collection<int, \App\Models\User> $users
@@ -59,6 +59,7 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
  * @method static Builder<static>|Permission whereId($value)
  * @method static Builder<static>|Permission whereLabel($value)
  * @method static Builder<static>|Permission whereName($value)
+ * @method static Builder<static>|Permission whereUlid($value)
  * @method static Builder<static>|Permission whereUpdatedAt($value)
  * @method static Builder<static>|Permission whereUpdatedBy($value)
  * @method static Builder<static>|Permission withTrashed(bool $withTrashed = true)

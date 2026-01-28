@@ -24,6 +24,7 @@ use Illuminate\Validation\ValidationException;
  * Represents a Good Issue in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $sales_invoice_id
  * @property string $code
  * @property numeric $cogs
@@ -48,11 +49,12 @@ use Illuminate\Validation\ValidationException;
  * @method static Builder<static>|GoodIssue onlyTrashed()
  * @method static Builder<static>|GoodIssue query()
  * @method static Builder<static>|GoodIssue whereCode($value)
+ * @method static Builder<static>|GoodIssue whereCogs($value)
+ * @method static Builder<static>|GoodIssue whereCompanyId($value)
  * @method static Builder<static>|GoodIssue whereCreatedAt($value)
  * @method static Builder<static>|GoodIssue whereCreatedBy($value)
  * @method static Builder<static>|GoodIssue whereDeletedAt($value)
  * @method static Builder<static>|GoodIssue whereDeletedBy($value)
- * @method static Builder<static>|GoodIssue whereHpp($value)
  * @method static Builder<static>|GoodIssue whereId($value)
  * @method static Builder<static>|GoodIssue whereNote($value)
  * @method static Builder<static>|GoodIssue whereSalesInvoiceId($value)
@@ -148,7 +150,7 @@ class GoodIssue extends ApprovalAbstract
                     $stock->quantity -= $component->quantity;
                     $stock->save();
 
-                    $stock->batch?->item?->updateWeightedAverageCost();
+                    $stock->batch->item->updateWeightedAverageCost();
 
                     $stockHistory = new ItemStockHistory;
                     $stockHistory->code = $goodIssue->code;

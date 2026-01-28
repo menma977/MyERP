@@ -22,12 +22,14 @@ use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
  * @property \Illuminate\Support\Carbon|null $expires_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Company|null $company
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $tokenable
  *
  * @method static Builder<static>|PersonalAccessToken newModelQuery()
  * @method static Builder<static>|PersonalAccessToken newQuery()
  * @method static Builder<static>|PersonalAccessToken query()
  * @method static Builder<static>|PersonalAccessToken whereAbilities($value)
+ * @method static Builder<static>|PersonalAccessToken whereCompanyId($value)
  * @method static Builder<static>|PersonalAccessToken whereCreatedAt($value)
  * @method static Builder<static>|PersonalAccessToken whereExpiresAt($value)
  * @method static Builder<static>|PersonalAccessToken whereId($value)

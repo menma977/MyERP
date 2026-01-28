@@ -11,6 +11,7 @@ use App\Models\Purchases\PurchaseOrder;
 use App\Models\Purchases\PurchaseReturn;
 use App\Models\User;
 use App\Services\CodeGeneratorService;
+use Database\Factories\Items\GoodReceiptFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,6 +30,7 @@ use Illuminate\Validation\ValidationException;
  * Represents a Good Receipt in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $purchase_order_id
  * @property string $code
  * @property numeric $total
@@ -44,16 +46,18 @@ use Illuminate\Validation\ValidationException;
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
- * @property-read PurchaseOrder|null $order
+ * @property-read PurchaseOrder $order
  * @property-read Collection<int, PurchaseReturn> $purchaseReturns
  * @property-read int|null $purchase_returns_count
  * @property-read User|null $updatedBy
  *
+ * @method static GoodReceiptFactory factory($count = null, $state = [])
  * @method static Builder<static>|GoodReceipt newModelQuery()
  * @method static Builder<static>|GoodReceipt newQuery()
  * @method static Builder<static>|GoodReceipt onlyTrashed()
  * @method static Builder<static>|GoodReceipt query()
  * @method static Builder<static>|GoodReceipt whereCode($value)
+ * @method static Builder<static>|GoodReceipt whereCompanyId($value)
  * @method static Builder<static>|GoodReceipt whereCreatedAt($value)
  * @method static Builder<static>|GoodReceipt whereCreatedBy($value)
  * @method static Builder<static>|GoodReceipt whereDeletedAt($value)

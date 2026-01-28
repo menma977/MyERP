@@ -8,6 +8,7 @@ use App\Enums\ItemUnitEnum;
 use App\Http\Resources\Items\ItemResource;
 use App\Models\FileBucket;
 use App\Models\User;
+use Database\Factories\Items\ItemFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,6 +25,7 @@ use Illuminate\Support\Carbon;
  * Represents an Item in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $code
  * @property string $name
  * @property ItemTypeEnum $type
@@ -39,13 +41,20 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $batches_count
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
+ * @property-read Collection<int, FileBucket> $files
+ * @property-read int|null $files_count
+ * @property-read Collection<int, \App\Models\Items\ItemStock> $stocks
+ * @property-read int|null $stocks_count
  * @property-read User|null $updatedBy
  *
+ * @method static ItemFactory factory($count = null, $state = [])
  * @method static Builder<static>|Item newModelQuery()
  * @method static Builder<static>|Item newQuery()
  * @method static Builder<static>|Item onlyTrashed()
  * @method static Builder<static>|Item query()
  * @method static Builder<static>|Item whereCode($value)
+ * @method static Builder<static>|Item whereCompanyId($value)
+ * @method static Builder<static>|Item whereCost($value)
  * @method static Builder<static>|Item whereCreatedAt($value)
  * @method static Builder<static>|Item whereCreatedBy($value)
  * @method static Builder<static>|Item whereDeletedAt($value)

@@ -5,6 +5,7 @@ namespace App\Models\Approval;
 use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Approval\ApprovalFlowComponentResource;
 use App\Models\User;
+use Database\Factories\Approval\ApprovalFlowComponentFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,6 +17,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $approval_flow_id
  * @property string $approval_dictionary_id
  * @property string $key
@@ -27,16 +29,18 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read \App\Models\Approval\ApprovalDictionary|null $dictionary
+ * @property-read \App\Models\Approval\ApprovalDictionary $dictionary
  * @property-read \App\Models\Approval\ApprovalFlow|null $flow
  * @property-read User|null $updatedBy
  *
+ * @method static ApprovalFlowComponentFactory factory($count = null, $state = [])
  * @method static Builder<static>|ApprovalFlowComponent newModelQuery()
  * @method static Builder<static>|ApprovalFlowComponent newQuery()
  * @method static Builder<static>|ApprovalFlowComponent onlyTrashed()
  * @method static Builder<static>|ApprovalFlowComponent query()
  * @method static Builder<static>|ApprovalFlowComponent whereApprovalDictionaryId($value)
  * @method static Builder<static>|ApprovalFlowComponent whereApprovalFlowId($value)
+ * @method static Builder<static>|ApprovalFlowComponent whereCompanyId($value)
  * @method static Builder<static>|ApprovalFlowComponent whereCreatedAt($value)
  * @method static Builder<static>|ApprovalFlowComponent whereCreatedBy($value)
  * @method static Builder<static>|ApprovalFlowComponent whereDeletedAt($value)

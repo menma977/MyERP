@@ -8,6 +8,7 @@ use App\Models\Items\Item;
 use App\Models\Items\ItemBatch;
 use App\Models\Items\ItemStock;
 use App\Models\User;
+use Database\Factories\Sales\SalesReturnComponentFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,6 +20,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $sales_return_id
  * @property string $item_id
  * @property string $item_batch_id
@@ -40,10 +42,12 @@ use Illuminate\Support\Carbon;
  * @property-read ItemStock|null $stock
  * @property-read User|null $updatedBy
  *
+ * @method static SalesReturnComponentFactory factory($count = null, $state = [])
  * @method static Builder<static>|SalesReturnComponent newModelQuery()
  * @method static Builder<static>|SalesReturnComponent newQuery()
  * @method static Builder<static>|SalesReturnComponent onlyTrashed()
  * @method static Builder<static>|SalesReturnComponent query()
+ * @method static Builder<static>|SalesReturnComponent whereCompanyId($value)
  * @method static Builder<static>|SalesReturnComponent whereCreatedAt($value)
  * @method static Builder<static>|SalesReturnComponent whereCreatedBy($value)
  * @method static Builder<static>|SalesReturnComponent whereDeletedAt($value)

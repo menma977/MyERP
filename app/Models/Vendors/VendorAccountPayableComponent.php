@@ -6,6 +6,7 @@ use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Vendors\VendorAccountPayableComponentResource;
 use App\Models\Purchases\PurchaseInvoiceComponent;
 use App\Models\User;
+use Database\Factories\Vendors\VendorAccountPayableComponentFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,6 +18,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $vendor_account_payable_id
  * @property string $purchase_invoice_component_id
  * @property numeric $quantity
@@ -34,10 +36,12 @@ use Illuminate\Support\Carbon;
  * @property-read PurchaseInvoiceComponent $purchaseInvoiceComponent
  * @property-read User|null $updatedBy
  *
+ * @method static VendorAccountPayableComponentFactory factory($count = null, $state = [])
  * @method static Builder<static>|VendorAccountPayableComponent newModelQuery()
  * @method static Builder<static>|VendorAccountPayableComponent newQuery()
  * @method static Builder<static>|VendorAccountPayableComponent onlyTrashed()
  * @method static Builder<static>|VendorAccountPayableComponent query()
+ * @method static Builder<static>|VendorAccountPayableComponent whereCompanyId($value)
  * @method static Builder<static>|VendorAccountPayableComponent whereCreatedAt($value)
  * @method static Builder<static>|VendorAccountPayableComponent whereCreatedBy($value)
  * @method static Builder<static>|VendorAccountPayableComponent whereDeletedAt($value)

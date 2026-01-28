@@ -16,12 +16,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 /**
  * Represents a file stored in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $model_type
  * @property string $model_id
  * @property string $name
@@ -30,10 +32,10 @@ use Illuminate\Support\Facades\Storage;
  * @property string|null $mime
  * @property string|null $extension
  * @property numeric $size
- * @property \Illuminate\Support\Collection<string, mixed>|null $data
- * @property \Illuminate\Support\Collection<int, string>|null $tags
+ * @property Collection<string, mixed>|null $data
+ * @property Collection<int, string>|null $tags
  * @property Carbon|null $publicised_at
- * @property Carbon|null $finished_at
+ * @property string|null $finished_at
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -42,14 +44,16 @@ use Illuminate\Support\Facades\Storage;
  * @property Carbon|null $deleted_at
  * @property-read \App\Models\User|null $createdBy
  * @property-read \App\Models\User|null $deletedBy
- * @property-read \Illuminate\Database\Eloquent\Model|null $model
+ * @property-read \Illuminate\Database\Eloquent\Model $model
  * @property-read \App\Models\User|null $updatedBy
- * @property-read string|null $url
+ * @property-read mixed $url
  *
+ * @method static FileBucketFactory factory($count = null, $state = [])
  * @method static Builder<static>|FileBucket newModelQuery()
  * @method static Builder<static>|FileBucket newQuery()
  * @method static Builder<static>|FileBucket onlyTrashed()
  * @method static Builder<static>|FileBucket query()
+ * @method static Builder<static>|FileBucket whereCompanyId($value)
  * @method static Builder<static>|FileBucket whereCreatedAt($value)
  * @method static Builder<static>|FileBucket whereCreatedBy($value)
  * @method static Builder<static>|FileBucket whereData($value)
@@ -64,9 +68,7 @@ use Illuminate\Support\Facades\Storage;
  * @method static Builder<static>|FileBucket whereModelType($value)
  * @method static Builder<static>|FileBucket whereName($value)
  * @method static Builder<static>|FileBucket wherePath($value)
- * @method static Builder<static>|FileBucket wherePublicisedAt($value)
  * @method static Builder<static>|FileBucket whereSize($value)
- * @method static Builder<static>|FileBucket whereSlug($value)
  * @method static Builder<static>|FileBucket whereTags($value)
  * @method static Builder<static>|FileBucket whereUpdatedAt($value)
  * @method static Builder<static>|FileBucket whereUpdatedBy($value)

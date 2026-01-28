@@ -5,6 +5,7 @@ namespace App\Models\Approval;
 use App\Abstracts\ModelAbstract;
 use App\Http\Resources\Approval\ApprovalDictionaryResource;
 use App\Models\User;
+use Database\Factories\Approval\ApprovalDictionaryFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,6 +18,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $key
  * @property string $name
  * @property int|null $created_by
@@ -31,10 +33,12 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
  *
+ * @method static ApprovalDictionaryFactory factory($count = null, $state = [])
  * @method static Builder<static>|ApprovalDictionary newModelQuery()
  * @method static Builder<static>|ApprovalDictionary newQuery()
  * @method static Builder<static>|ApprovalDictionary onlyTrashed()
  * @method static Builder<static>|ApprovalDictionary query()
+ * @method static Builder<static>|ApprovalDictionary whereCompanyId($value)
  * @method static Builder<static>|ApprovalDictionary whereCreatedAt($value)
  * @method static Builder<static>|ApprovalDictionary whereCreatedBy($value)
  * @method static Builder<static>|ApprovalDictionary whereDeletedAt($value)

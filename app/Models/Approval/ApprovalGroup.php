@@ -5,6 +5,7 @@ namespace App\Models\Approval;
 use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Approval\ApprovalGroupResource;
 use App\Models\User;
+use Database\Factories\Approval\ApprovalGroupFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,6 +18,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $name
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -30,10 +32,12 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
  *
+ * @method static ApprovalGroupFactory factory($count = null, $state = [])
  * @method static Builder<static>|ApprovalGroup newModelQuery()
  * @method static Builder<static>|ApprovalGroup newQuery()
  * @method static Builder<static>|ApprovalGroup onlyTrashed()
  * @method static Builder<static>|ApprovalGroup query()
+ * @method static Builder<static>|ApprovalGroup whereCompanyId($value)
  * @method static Builder<static>|ApprovalGroup whereCreatedAt($value)
  * @method static Builder<static>|ApprovalGroup whereCreatedBy($value)
  * @method static Builder<static>|ApprovalGroup whereDeletedAt($value)

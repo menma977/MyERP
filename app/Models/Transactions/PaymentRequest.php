@@ -10,6 +10,7 @@ use App\Models\Purchases\PurchaseInvoice;
 use App\Models\Purchases\PurchaseOrder;
 use App\Models\User;
 use App\Services\CodeGeneratorService;
+use Database\Factories\Transactions\PaymentRequestFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,6 +28,7 @@ use Illuminate\Validation\ValidationException;
  * Represents a Payment Request in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $purchase_order_id
  * @property string $purchase_invoice_id
  * @property string $code
@@ -45,15 +47,17 @@ use Illuminate\Validation\ValidationException;
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
- * @property-read PurchaseInvoice|null $invoice
- * @property-read PurchaseOrder|null $order
+ * @property-read PurchaseInvoice $invoice
+ * @property-read PurchaseOrder $order
  * @property-read User|null $updatedBy
  *
+ * @method static PaymentRequestFactory factory($count = null, $state = [])
  * @method static Builder<static>|PaymentRequest newModelQuery()
  * @method static Builder<static>|PaymentRequest newQuery()
  * @method static Builder<static>|PaymentRequest onlyTrashed()
  * @method static Builder<static>|PaymentRequest query()
  * @method static Builder<static>|PaymentRequest whereCode($value)
+ * @method static Builder<static>|PaymentRequest whereCompanyId($value)
  * @method static Builder<static>|PaymentRequest whereCreatedAt($value)
  * @method static Builder<static>|PaymentRequest whereCreatedBy($value)
  * @method static Builder<static>|PaymentRequest whereDeletedAt($value)

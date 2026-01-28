@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $vendor_component_id
  * @property numeric $price
  * @property int|null $created_by
@@ -32,6 +33,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|VendorComponentHistory newQuery()
  * @method static Builder<static>|VendorComponentHistory onlyTrashed()
  * @method static Builder<static>|VendorComponentHistory query()
+ * @method static Builder<static>|VendorComponentHistory whereCompanyId($value)
  * @method static Builder<static>|VendorComponentHistory whereCreatedAt($value)
  * @method static Builder<static>|VendorComponentHistory whereCreatedBy($value)
  * @method static Builder<static>|VendorComponentHistory whereDeletedAt($value)

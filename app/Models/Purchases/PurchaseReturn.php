@@ -7,6 +7,7 @@ use App\Http\Resources\Purchases\PurchaseReturnResource;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\Items\GoodReceipt;
 use App\Models\User;
+use Database\Factories\Purchases\PurchaseReturnFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -22,6 +23,7 @@ use Illuminate\Support\Carbon;
  * Represents a Purchase Return in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $purchase_order_id
  * @property string $good_receipt_id
  * @property string $code
@@ -38,15 +40,17 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
- * @property-read GoodReceipt|null $goodReceipt
- * @property-read \App\Models\Purchases\PurchaseOrder|null $order
+ * @property-read GoodReceipt $goodReceipt
+ * @property-read \App\Models\Purchases\PurchaseOrder $order
  * @property-read User|null $updatedBy
  *
+ * @method static PurchaseReturnFactory factory($count = null, $state = [])
  * @method static Builder<static>|PurchaseReturn newModelQuery()
  * @method static Builder<static>|PurchaseReturn newQuery()
  * @method static Builder<static>|PurchaseReturn onlyTrashed()
  * @method static Builder<static>|PurchaseReturn query()
  * @method static Builder<static>|PurchaseReturn whereCode($value)
+ * @method static Builder<static>|PurchaseReturn whereCompanyId($value)
  * @method static Builder<static>|PurchaseReturn whereCreatedAt($value)
  * @method static Builder<static>|PurchaseReturn whereCreatedBy($value)
  * @method static Builder<static>|PurchaseReturn whereDeletedAt($value)

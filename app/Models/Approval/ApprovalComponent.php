@@ -6,6 +6,7 @@ use App\Abstracts\ModelWithCompanyAbstract;
 use App\Enums\ContributorTypeEnum;
 use App\Http\Resources\Approval\ApprovalComponentResource;
 use App\Models\User;
+use Database\Factories\Approval\ApprovalComponentFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,6 +20,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property int|null $company_id
  * @property string $ulid
  * @property int $approval_id
  * @property string $name
@@ -41,6 +43,7 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
  *
+ * @method static ApprovalComponentFactory factory($count = null, $state = [])
  * @method static Builder<static>|ApprovalComponent newModelQuery()
  * @method static Builder<static>|ApprovalComponent newQuery()
  * @method static Builder<static>|ApprovalComponent onlyTrashed()
@@ -50,6 +53,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalComponent whereCanDrag($value)
  * @method static Builder<static>|ApprovalComponent whereCanEdit($value)
  * @method static Builder<static>|ApprovalComponent whereColor($value)
+ * @method static Builder<static>|ApprovalComponent whereCompanyId($value)
  * @method static Builder<static>|ApprovalComponent whereCreatedAt($value)
  * @method static Builder<static>|ApprovalComponent whereCreatedBy($value)
  * @method static Builder<static>|ApprovalComponent whereDeletedAt($value)
@@ -58,6 +62,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalComponent whereName($value)
  * @method static Builder<static>|ApprovalComponent whereStep($value)
  * @method static Builder<static>|ApprovalComponent whereType($value)
+ * @method static Builder<static>|ApprovalComponent whereUlid($value)
  * @method static Builder<static>|ApprovalComponent whereUpdatedAt($value)
  * @method static Builder<static>|ApprovalComponent whereUpdatedBy($value)
  * @method static Builder<static>|ApprovalComponent withTrashed(bool $withTrashed = true)

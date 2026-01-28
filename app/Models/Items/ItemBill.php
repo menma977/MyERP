@@ -5,6 +5,7 @@ namespace App\Models\Items;
 use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Items\ItemBillResource;
 use App\Models\User;
+use Database\Factories\Items\ItemBillFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,6 +21,7 @@ use Illuminate\Support\Carbon;
  * Represents an Item Bill in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $item_id
  * @property string $code
  * @property numeric $quantity
@@ -36,11 +38,13 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\Items\Item $item
  * @property-read User|null $updatedBy
  *
+ * @method static ItemBillFactory factory($count = null, $state = [])
  * @method static Builder<static>|ItemBill newModelQuery()
  * @method static Builder<static>|ItemBill newQuery()
  * @method static Builder<static>|ItemBill onlyTrashed()
  * @method static Builder<static>|ItemBill query()
  * @method static Builder<static>|ItemBill whereCode($value)
+ * @method static Builder<static>|ItemBill whereCompanyId($value)
  * @method static Builder<static>|ItemBill whereCreatedAt($value)
  * @method static Builder<static>|ItemBill whereCreatedBy($value)
  * @method static Builder<static>|ItemBill whereDeletedAt($value)

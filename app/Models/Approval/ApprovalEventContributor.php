@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $approval_event_component_id
  * @property int $user_id
  * @property Carbon|null $approved_at
@@ -45,6 +46,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalEventContributor whereApprovalEventComponentId($value)
  * @method static Builder<static>|ApprovalEventContributor whereApprovedAt($value)
  * @method static Builder<static>|ApprovalEventContributor whereCancelledAt($value)
+ * @method static Builder<static>|ApprovalEventContributor whereCompanyId($value)
  * @method static Builder<static>|ApprovalEventContributor whereCreatedAt($value)
  * @method static Builder<static>|ApprovalEventContributor whereCreatedBy($value)
  * @method static Builder<static>|ApprovalEventContributor whereDeletedAt($value)

@@ -9,6 +9,7 @@ use App\Models\Items\GoodReceipt;
 use App\Models\Items\GoodReceiptComponent;
 use App\Models\User;
 use App\Services\CodeGeneratorService;
+use Database\Factories\Purchases\PurchaseOrderFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,6 +28,7 @@ use Illuminate\Validation\ValidationException;
  * Represents a Purchase Order in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $purchase_request_id
  * @property string $purchase_procurement_id
  * @property string $code
@@ -44,16 +46,20 @@ use Illuminate\Validation\ValidationException;
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
- * @property-read \App\Models\Purchases\PurchaseProcurement|null $procurement
- * @property-read \App\Models\Purchases\PurchaseRequest|null $request
+ * @property-read Collection<int, GoodReceipt> $goodReceipts
+ * @property-read int|null $good_receipts_count
+ * @property-read \App\Models\Purchases\PurchaseProcurement $procurement
+ * @property-read \App\Models\Purchases\PurchaseRequest $request
  * @property-read \App\Models\Purchases\PurchaseReturn|null $return
  * @property-read User|null $updatedBy
  *
+ * @method static PurchaseOrderFactory factory($count = null, $state = [])
  * @method static Builder<static>|PurchaseOrder newModelQuery()
  * @method static Builder<static>|PurchaseOrder newQuery()
  * @method static Builder<static>|PurchaseOrder onlyTrashed()
  * @method static Builder<static>|PurchaseOrder query()
  * @method static Builder<static>|PurchaseOrder whereCode($value)
+ * @method static Builder<static>|PurchaseOrder whereCompanyId($value)
  * @method static Builder<static>|PurchaseOrder whereCreatedAt($value)
  * @method static Builder<static>|PurchaseOrder whereCreatedBy($value)
  * @method static Builder<static>|PurchaseOrder whereDeletedAt($value)

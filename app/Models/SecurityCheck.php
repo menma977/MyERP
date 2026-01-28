@@ -10,19 +10,27 @@ use Illuminate\Support\Facades\Cache;
  * @property int $id
  * @property string $executable
  * @property string $description
- * @property bool $status
+ * @property bool $is_active
+ * @property int|null $created_by
+ * @property int|null $updated_by
+ * @property int|null $deleted_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
  *
  * @method static Builder<static>|SecurityCheck newModelQuery()
  * @method static Builder<static>|SecurityCheck newQuery()
  * @method static Builder<static>|SecurityCheck query()
  * @method static Builder<static>|SecurityCheck whereCreatedAt($value)
+ * @method static Builder<static>|SecurityCheck whereCreatedBy($value)
+ * @method static Builder<static>|SecurityCheck whereDeletedAt($value)
+ * @method static Builder<static>|SecurityCheck whereDeletedBy($value)
  * @method static Builder<static>|SecurityCheck whereDescription($value)
  * @method static Builder<static>|SecurityCheck whereExecutable($value)
  * @method static Builder<static>|SecurityCheck whereId($value)
- * @method static Builder<static>|SecurityCheck whereStatus($value)
+ * @method static Builder<static>|SecurityCheck whereIsActive($value)
  * @method static Builder<static>|SecurityCheck whereUpdatedAt($value)
+ * @method static Builder<static>|SecurityCheck whereUpdatedBy($value)
  *
  * @mixin \Eloquent
  */
@@ -36,7 +44,7 @@ class SecurityCheck extends Model
     protected $fillable = [
         'executable',
         'description',
-        'status',
+        'is_active',
     ];
 
     /**
@@ -54,8 +62,8 @@ class SecurityCheck extends Model
         $cacheKey = "security_check:$executable";
 
         if ($cached = Cache::get($cacheKey)) {
-            if (isset($cached['status']) && isset($cached['description'])) {
-                if ($cached['status'] === $currentStatus && $cached['description'] === $description) {
+            if (isset($cached['is_active']) && isset($cached['description'])) {
+                if ($cached['is_active'] === $currentStatus && $cached['description'] === $description) {
                     $model = new self($cached);
                     $model->exists = isset($cached['id']);
 
@@ -67,13 +75,13 @@ class SecurityCheck extends Model
         $model = self::firstWhere('executable', $executable);
 
         if ($model) {
-            if ($model->status === $currentStatus && $model->description === $description) {
+            if ($model->is_active === $currentStatus && $model->description === $description) {
                 Cache::put($cacheKey, $model->toArray(), now()->addHour());
 
                 return $model;
             }
 
-            $model->status = $currentStatus;
+            $model->is_active = $currentStatus;
             $model->description = $description;
             $model->save();
             Cache::put($cacheKey, $model->toArray(), now()->addHour());
@@ -84,11 +92,23 @@ class SecurityCheck extends Model
         $model = self::create([
             'executable' => $executable,
             'description' => $description,
-            'status' => $currentStatus,
+            'is_active' => $currentStatus,
         ]);
 
         Cache::put($cacheKey, $model->toArray(), now()->addHour());
 
         return $model;
+    }
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
     }
 }

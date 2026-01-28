@@ -5,6 +5,7 @@ namespace App\Models\Items;
 use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Items\ItemBillComponentResource;
 use App\Models\User;
+use Database\Factories\Items\ItemBillComponentFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,7 @@ use Illuminate\Support\Carbon;
  * Represents an Item Bill Component in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $item_bill_id
  * @property string $item_id
  * @property numeric $quantity
@@ -27,16 +29,18 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read \App\Models\Items\ItemBill|null $bill
+ * @property-read \App\Models\Items\ItemBill $bill
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read \App\Models\Items\Item $item
  * @property-read User|null $updatedBy
  *
+ * @method static ItemBillComponentFactory factory($count = null, $state = [])
  * @method static Builder<static>|ItemBillComponent newModelQuery()
  * @method static Builder<static>|ItemBillComponent newQuery()
  * @method static Builder<static>|ItemBillComponent onlyTrashed()
  * @method static Builder<static>|ItemBillComponent query()
+ * @method static Builder<static>|ItemBillComponent whereCompanyId($value)
  * @method static Builder<static>|ItemBillComponent whereCreatedAt($value)
  * @method static Builder<static>|ItemBillComponent whereCreatedBy($value)
  * @method static Builder<static>|ItemBillComponent whereDeletedAt($value)

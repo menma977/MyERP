@@ -5,6 +5,7 @@ namespace App\Models\Approval;
 use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Approval\ApprovalContributorResource;
 use App\Models\User;
+use Database\Factories\Approval\ApprovalContributorFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property int $approval_component_id
  * @property string $approvable_type
  * @property string $approvable_id
@@ -28,11 +30,12 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Model $approvable
- * @property-read \App\Models\Approval\ApprovalComponent|null $component
+ * @property-read \App\Models\Approval\ApprovalComponent $component
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
  *
+ * @method static ApprovalContributorFactory factory($count = null, $state = [])
  * @method static Builder<static>|ApprovalContributor newModelQuery()
  * @method static Builder<static>|ApprovalContributor newQuery()
  * @method static Builder<static>|ApprovalContributor onlyTrashed()
@@ -40,6 +43,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalContributor whereApprovableId($value)
  * @method static Builder<static>|ApprovalContributor whereApprovableType($value)
  * @method static Builder<static>|ApprovalContributor whereApprovalComponentId($value)
+ * @method static Builder<static>|ApprovalContributor whereCompanyId($value)
  * @method static Builder<static>|ApprovalContributor whereCreatedAt($value)
  * @method static Builder<static>|ApprovalContributor whereCreatedBy($value)
  * @method static Builder<static>|ApprovalContributor whereDeletedAt($value)

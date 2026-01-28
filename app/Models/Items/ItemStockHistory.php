@@ -5,6 +5,7 @@ namespace App\Models\Items;
 use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Items\ItemStockHistoryResource;
 use App\Models\User;
+use Database\Factories\Items\ItemStockHistoryFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,7 @@ use Illuminate\Support\Carbon;
  * Represents an Item Stock History in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $item_stock_id
  * @property string $code
  * @property numeric $quantity
@@ -30,14 +32,16 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read \App\Models\Items\ItemStock|null $stock
+ * @property-read \App\Models\Items\ItemStock $stock
  * @property-read User|null $updatedBy
  *
+ * @method static ItemStockHistoryFactory factory($count = null, $state = [])
  * @method static Builder<static>|ItemStockHistory newModelQuery()
  * @method static Builder<static>|ItemStockHistory newQuery()
  * @method static Builder<static>|ItemStockHistory onlyTrashed()
  * @method static Builder<static>|ItemStockHistory query()
  * @method static Builder<static>|ItemStockHistory whereCode($value)
+ * @method static Builder<static>|ItemStockHistory whereCompanyId($value)
  * @method static Builder<static>|ItemStockHistory whereCreatedAt($value)
  * @method static Builder<static>|ItemStockHistory whereCreatedBy($value)
  * @method static Builder<static>|ItemStockHistory whereDeletedAt($value)

@@ -38,13 +38,18 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read \App\Models\FileBucket|null $avatar
+ * @property-read Collection<int, Company> $companies
+ * @property-read int|null $companies_count
+ * @property-read Collection<int, CompanyHasUser> $hasCompany
+ * @property-read int|null $has_company_count
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
- * @property-read Collection<int, Permission> $permissions
+ * @property-read Collection<int, \App\Models\Permission> $permissions
  * @property-read int|null $permissions_count
- * @property-read Collection<int, Role> $roles
+ * @property-read Collection<int, \App\Models\Role> $roles
  * @property-read int|null $roles_count
- * @property-read Collection<int, PersonalAccessToken> $tokens
+ * @property-read Collection<int, \App\Models\PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
  *
  * @method static UserFactory factory($count = null, $state = [])
@@ -62,6 +67,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static Builder<static>|User whereName($value)
  * @method static Builder<static>|User wherePassword($value)
  * @method static Builder<static>|User whereRememberToken($value)
+ * @method static Builder<static>|User whereUlid($value)
  * @method static Builder<static>|User whereUpdatedAt($value)
  * @method static Builder<static>|User whereUsername($value)
  * @method static Builder<static>|User withTrashed(bool $withTrashed = true)

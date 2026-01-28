@@ -5,6 +5,7 @@ namespace App\Models\Items;
 use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Items\ItemStockResource;
 use App\Models\User;
+use Database\Factories\Items\ItemStockFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,7 @@ use Illuminate\Support\Carbon;
  * Represents an Item Stock in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $item_batch_id
  * @property numeric $quantity
  * @property numeric $price
@@ -27,15 +29,17 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read \App\Models\Items\ItemBatch|null $batch
+ * @property-read \App\Models\Items\ItemBatch $batch
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
  *
+ * @method static ItemStockFactory factory($count = null, $state = [])
  * @method static Builder<static>|ItemStock newModelQuery()
  * @method static Builder<static>|ItemStock newQuery()
  * @method static Builder<static>|ItemStock onlyTrashed()
  * @method static Builder<static>|ItemStock query()
+ * @method static Builder<static>|ItemStock whereCompanyId($value)
  * @method static Builder<static>|ItemStock whereCreatedAt($value)
  * @method static Builder<static>|ItemStock whereCreatedBy($value)
  * @method static Builder<static>|ItemStock whereDeletedAt($value)

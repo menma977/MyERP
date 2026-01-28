@@ -7,6 +7,7 @@ use App\Http\Resources\Purchases\PurchaseProcurementResource;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\User;
 use App\Services\CodeGeneratorService;
+use Database\Factories\Purchases\PurchaseProcurementFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,6 +25,7 @@ use Illuminate\Validation\ValidationException;
  * Represents a Purchase Procurement in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $purchase_request_id
  * @property string $code
  * @property string|null $note
@@ -38,14 +40,16 @@ use Illuminate\Validation\ValidationException;
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
- * @property-read \App\Models\Purchases\PurchaseRequest|null $request
+ * @property-read \App\Models\Purchases\PurchaseRequest $request
  * @property-read User|null $updatedBy
  *
+ * @method static PurchaseProcurementFactory factory($count = null, $state = [])
  * @method static Builder<static>|PurchaseProcurement newModelQuery()
  * @method static Builder<static>|PurchaseProcurement newQuery()
  * @method static Builder<static>|PurchaseProcurement onlyTrashed()
  * @method static Builder<static>|PurchaseProcurement query()
  * @method static Builder<static>|PurchaseProcurement whereCode($value)
+ * @method static Builder<static>|PurchaseProcurement whereCompanyId($value)
  * @method static Builder<static>|PurchaseProcurement whereCreatedAt($value)
  * @method static Builder<static>|PurchaseProcurement whereCreatedBy($value)
  * @method static Builder<static>|PurchaseProcurement whereDeletedAt($value)

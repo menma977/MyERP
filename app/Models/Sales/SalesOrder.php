@@ -9,6 +9,7 @@ use App\Models\Approval\ApprovalEvent;
 use App\Models\Items\ItemBatch;
 use App\Models\User;
 use App\Services\CodeGeneratorService;
+use Database\Factories\Sales\SalesOrderFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -26,6 +27,7 @@ use Illuminate\Validation\ValidationException;
  * Represents a Sales Order in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $code
  * @property numeric $total
  * @property int|null $created_by
@@ -44,11 +46,13 @@ use Illuminate\Validation\ValidationException;
  * @property-read int|null $sales_returns_count
  * @property-read User|null $updatedBy
  *
+ * @method static SalesOrderFactory factory($count = null, $state = [])
  * @method static Builder<static>|SalesOrder newModelQuery()
  * @method static Builder<static>|SalesOrder newQuery()
  * @method static Builder<static>|SalesOrder onlyTrashed()
  * @method static Builder<static>|SalesOrder query()
  * @method static Builder<static>|SalesOrder whereCode($value)
+ * @method static Builder<static>|SalesOrder whereCompanyId($value)
  * @method static Builder<static>|SalesOrder whereCreatedAt($value)
  * @method static Builder<static>|SalesOrder whereCreatedBy($value)
  * @method static Builder<static>|SalesOrder whereDeletedAt($value)

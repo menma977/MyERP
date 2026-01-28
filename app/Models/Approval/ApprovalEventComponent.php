@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $approval_event_id
  * @property string $name
  * @property int $step The step using binary 1 -> 10 -> 100 -> 1000
@@ -53,6 +54,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ApprovalEventComponent whereApprovedAt($value)
  * @method static Builder<static>|ApprovalEventComponent whereCancelledAt($value)
  * @method static Builder<static>|ApprovalEventComponent whereColor($value)
+ * @method static Builder<static>|ApprovalEventComponent whereCompanyId($value)
  * @method static Builder<static>|ApprovalEventComponent whereCreatedAt($value)
  * @method static Builder<static>|ApprovalEventComponent whereCreatedBy($value)
  * @method static Builder<static>|ApprovalEventComponent whereDeletedAt($value)

@@ -5,6 +5,7 @@ namespace App\Models\Vendors;
 use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Vendors\VendorPaymentComponentResource;
 use App\Models\User;
+use Database\Factories\Vendors\VendorPaymentComponentFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,6 +17,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $vendor_payment_id
  * @property string $vendor_account_payable_component_id
  * @property numeric $quantity
@@ -33,10 +35,12 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\Vendors\VendorPayment|null $payment
  * @property-read User|null $updatedBy
  *
+ * @method static VendorPaymentComponentFactory factory($count = null, $state = [])
  * @method static Builder<static>|VendorPaymentComponent newModelQuery()
  * @method static Builder<static>|VendorPaymentComponent newQuery()
  * @method static Builder<static>|VendorPaymentComponent onlyTrashed()
  * @method static Builder<static>|VendorPaymentComponent query()
+ * @method static Builder<static>|VendorPaymentComponent whereCompanyId($value)
  * @method static Builder<static>|VendorPaymentComponent whereCreatedAt($value)
  * @method static Builder<static>|VendorPaymentComponent whereCreatedBy($value)
  * @method static Builder<static>|VendorPaymentComponent whereDeletedAt($value)

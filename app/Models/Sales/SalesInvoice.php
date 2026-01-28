@@ -11,6 +11,7 @@ use App\Models\Transactions\Ledger;
 use App\Models\Transactions\LedgerComponent;
 use App\Models\User;
 use App\Services\CodeGeneratorService;
+use Database\Factories\Sales\SalesInvoiceFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,6 +29,7 @@ use Illuminate\Validation\ValidationException;
  * Represents a Sales Invoice in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $sales_order_id
  * @property string $code
  * @property numeric $total
@@ -55,11 +57,13 @@ use Illuminate\Validation\ValidationException;
  * @property-read int|null $sales_returns_count
  * @property-read User|null $updatedBy
  *
+ * @method static SalesInvoiceFactory factory($count = null, $state = [])
  * @method static Builder<static>|SalesInvoice newModelQuery()
  * @method static Builder<static>|SalesInvoice newQuery()
  * @method static Builder<static>|SalesInvoice onlyTrashed()
  * @method static Builder<static>|SalesInvoice query()
  * @method static Builder<static>|SalesInvoice whereCode($value)
+ * @method static Builder<static>|SalesInvoice whereCompanyId($value)
  * @method static Builder<static>|SalesInvoice whereCreatedAt($value)
  * @method static Builder<static>|SalesInvoice whereCreatedBy($value)
  * @method static Builder<static>|SalesInvoice whereDeletedAt($value)

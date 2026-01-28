@@ -6,6 +6,7 @@ use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Sales\SalesOrderComponentResource;
 use App\Models\Items\Item;
 use App\Models\User;
+use Database\Factories\Sales\SalesOrderComponentFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,6 +18,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $sales_order_id
  * @property string $item_id
  * @property numeric $quantity
@@ -34,10 +36,12 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\Sales\SalesOrder|null $order
  * @property-read User|null $updatedBy
  *
+ * @method static SalesOrderComponentFactory factory($count = null, $state = [])
  * @method static Builder<static>|SalesOrderComponent newModelQuery()
  * @method static Builder<static>|SalesOrderComponent newQuery()
  * @method static Builder<static>|SalesOrderComponent onlyTrashed()
  * @method static Builder<static>|SalesOrderComponent query()
+ * @method static Builder<static>|SalesOrderComponent whereCompanyId($value)
  * @method static Builder<static>|SalesOrderComponent whereCreatedAt($value)
  * @method static Builder<static>|SalesOrderComponent whereCreatedBy($value)
  * @method static Builder<static>|SalesOrderComponent whereDeletedAt($value)
