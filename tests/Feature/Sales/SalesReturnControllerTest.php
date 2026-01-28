@@ -75,10 +75,12 @@ class SalesReturnControllerTest extends TestCase
 
         $order = SalesOrder::factory()->create();
         $invoice = SalesInvoice::factory()->create(['sales_order_id' => $order->id]);
+        $customer = $order->customer;
 
         $array = [
             'sales_order_id' => $order->id,
             'sales_invoice_id' => $invoice->id,
+            'customer_id' => $customer->id,
             'total' => 500.00,
         ];
 
@@ -167,7 +169,7 @@ class SalesReturnControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $user->givePermissionTo(Permission::where('name', 'sales.return.index')->where('guard_name', 'sanctum')->first());
-        $user->givePermissionTo(Permission::where('name', 'sales.return.store')->where('guard_name', 'sanctum')->first());
+        $user->givePermissionTo(Permission::where('name', 'sales.return.approve')->where('guard_name', 'sanctum')->first());
 
         $salesReturn = SalesReturn::factory()->create();
 
@@ -181,7 +183,7 @@ class SalesReturnControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $user->givePermissionTo(Permission::where('name', 'sales.return.index')->where('guard_name', 'sanctum')->first());
-        $user->givePermissionTo(Permission::where('name', 'sales.return.store')->where('guard_name', 'sanctum')->first());
+        $user->givePermissionTo(Permission::where('name', 'sales.return.reject')->where('guard_name', 'sanctum')->first());
 
         $salesReturn = SalesReturn::factory()->create();
 

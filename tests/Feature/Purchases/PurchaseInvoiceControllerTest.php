@@ -79,7 +79,7 @@ class PurchaseInvoiceControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $user->givePermissionTo(Permission::where('name', 'purchase.invoice.index')->where('guard_name', 'sanctum')->first());
-        $user->givePermissionTo(Permission::where('name', 'purchase.invoice.store')->where('guard_name', 'sanctum')->first());
+        $user->givePermissionTo(Permission::where('name', 'purchase.invoice.approve')->where('guard_name', 'sanctum')->first());
 
         $order = PurchaseOrder::factory()->create();
         $invoice = PurchaseInvoice::factory()->create([
@@ -121,6 +121,7 @@ class PurchaseInvoiceControllerTest extends TestCase
             'purchase.invoice.delete',
             'purchase.invoice.restore',
             'purchase.invoice.destroy',
+            'purchase.invoice.approve',
         ];
 
         foreach ($permissions as $permission) {

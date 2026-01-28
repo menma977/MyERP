@@ -45,11 +45,13 @@ class SalesReturnController extends Controller
         $request->validate([
             'sales_order_id' => ['required', 'exists:sales_orders,id'],
             'sales_invoice_id' => ['required', 'exists:sales_invoices,id'],
+            'customer_id' => ['required', 'exists:customers,id'],
             'total' => ['required', 'numeric', 'min:0'],
         ]);
 
         $salesReturn = new SalesReturn;
         $salesReturn->code = CodeGeneratorService::code('SR')->number(SalesReturn::count() + 1)->generate();
+        $salesReturn->customer_id = $request->input('customer_id');
         $salesReturn->sales_order_id = $request->input('sales_order_id');
         $salesReturn->sales_invoice_id = $request->input('sales_invoice_id');
         $salesReturn->total = $request->input('total');

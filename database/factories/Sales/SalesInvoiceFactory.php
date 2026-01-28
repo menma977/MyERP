@@ -3,6 +3,7 @@
 namespace Database\Factories\Sales;
 
 use App\Enums\DiscountTypeEnum;
+use App\Models\Customer\Customer;
 use App\Models\Sales\SalesInvoice;
 use App\Models\Sales\SalesOrder;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -17,6 +18,7 @@ class SalesInvoiceFactory extends Factory
 
         return [
             'sales_order_id' => SalesOrder::factory(),
+            'customer_id' => Customer::factory(),
             'code' => $this->faker->unique()->bothify('SI-####-????'),
             'total' => $total,
             'tax' => $total * 0.12,

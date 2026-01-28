@@ -2,6 +2,7 @@
 
 namespace Database\Factories\Sales;
 
+use App\Models\Customer\Customer;
 use App\Models\Sales\SalesInvoice;
 use App\Models\Sales\SalesOrder;
 use App\Models\Sales\SalesReturn;
@@ -19,6 +20,7 @@ class SalesReturnFactory extends Factory
         return [
             'sales_order_id' => SalesOrder::factory(),
             'sales_invoice_id' => SalesInvoice::factory(),
+            'customer_id' => Customer::factory(),
             'code' => 'SR-'.fake()->unique()->numerify('######'),
             'total' => fake()->randomFloat(2, 100, 10000),
             'created_by' => 1,

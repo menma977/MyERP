@@ -27,7 +27,7 @@ class StockHistoryControllerTest extends TestCase
         ItemStockHistory::factory()->count(3)->create();
 
         Sanctum::actingAs($user, ['*']);
-        $response = $this->getJson(route('api.v1.item.stock-history.index'));
+        $response = $this->getJson(route('api.v1.item.stock.history.index'));
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -49,7 +49,7 @@ class StockHistoryControllerTest extends TestCase
         $history = ItemStockHistory::factory()->create();
 
         Sanctum::actingAs($user, ['*']);
-        $response = $this->getJson(route('api.v1.item.stock-history.show', $history->id));
+        $response = $this->getJson(route('api.v1.item.stock.history.show', $history->id));
 
         $response->assertStatus(200)
             ->assertJson([
@@ -78,7 +78,7 @@ class StockHistoryControllerTest extends TestCase
         $history2 = ItemStockHistory::factory()->create(['item_stock_id' => $stock2->id]);
 
         Sanctum::actingAs($user, ['*']);
-        $response = $this->getJson(route('api.v1.item.stock-history.index', ['item_id' => $item1->id]));
+        $response = $this->getJson(route('api.v1.item.stock.history.index', ['item_id' => $item1->id]));
 
         $response->assertStatus(200)
             ->assertJsonCount(1, 'data')

@@ -131,7 +131,7 @@ class GoodReceiptControllerTest extends TestCase
         $user = User::factory()->create();
         $user->givePermissionTo(Permission::where('name', 'item.index')->where('guard_name', 'sanctum')->first());
         $user->givePermissionTo(Permission::where('name', 'good.receipt.index')->where('guard_name', 'sanctum')->first());
-        $user->givePermissionTo(Permission::where('name', 'good.receipt.store')->where('guard_name', 'sanctum')->first());
+        $user->givePermissionTo(Permission::where('name', 'good.receipt.approve')->where('guard_name', 'sanctum')->first());
 
         $goodReceipt = GoodReceipt::factory()->create();
 
@@ -154,6 +154,7 @@ class GoodReceiptControllerTest extends TestCase
             'good.receipt.restore',
             'good.receipt.destroy',
             'good.receipt.store',
+            'good.receipt.approve',
         ];
 
         foreach ($permissions as $permission) {

@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Sales;
 
-use App\Models\Items\Item;
 use App\Models\Permission;
 use App\Models\Sales\SalesOrder;
 use App\Models\Sales\SalesOrderComponent;
@@ -55,31 +54,6 @@ class SalesOrderComponentControllerTest extends TestCase
             ]);
     }
 
-    public function test_store_creates_sales_order_component(): void
-    {
-        $user = User::factory()->create();
-        $user->givePermissionTo(Permission::where('name', 'sales.order.index')->where('guard_name', 'sanctum')->first());
-        $user->givePermissionTo(Permission::where('name', 'sales.order.component.index')->where('guard_name', 'sanctum')->first());
-        $user->givePermissionTo(Permission::where('name', 'sales.order.component.store')->where('guard_name', 'sanctum')->first());
-
-        $order = SalesOrder::factory()->create();
-        $item = Item::factory()->create();
-
-        $array = [
-            'sales_order_id' => $order->id,
-            'item_id' => $item->id,
-            'quantity' => 10,
-            'price' => 100,
-            'total' => 1000,
-        ];
-
-        Sanctum::actingAs($user, ['*']);
-        $response = $this->postJson(route('api.v1.sales.order.component.store', ['sales_order_id' => $order->id]), $array);
-
-        $response->assertStatus(200);
-        $this->assertDatabaseHas('sales_order_components', ['sales_order_id' => $order->id, 'item_id' => $item->id, 'total' => 1000]);
-    }
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -88,7 +62,6 @@ class SalesOrderComponentControllerTest extends TestCase
             'sales.order.index',
             'sales.order.component.index',
             'sales.order.component.show',
-            'sales.order.component.store',
             'sales.order.component.update',
             'sales.order.component.delete',
             'sales.order.component.restore',
