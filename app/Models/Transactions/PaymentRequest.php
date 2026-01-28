@@ -171,8 +171,9 @@ class PaymentRequest extends ApprovalAbstract
                     $total += (float) $ledgerComponent->out;
                 }
 
+                $latestLedgerTotal = Ledger::latest()->value('total') ?? 0;
                 $ledger->out = $total;
-                $ledger->total = Ledger::sum('total') - $ledger->out;
+                $ledger->total = $latestLedgerTotal - $ledger->out;
                 $ledger->save();
             });
         }
