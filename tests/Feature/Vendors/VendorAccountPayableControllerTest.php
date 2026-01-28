@@ -34,7 +34,7 @@ class VendorAccountPayableControllerTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    '*' => ['id', 'vendor_id', 'vendor_invoice_id', 'amount', 'note'],
+                    '*' => ['id', 'vendor_id', 'vendor_invoice_id', 'total', 'note'],
                 ],
             ]);
     }
@@ -96,7 +96,7 @@ class VendorAccountPayableControllerTest extends TestCase
         $response = $this->postJson(route('api.v1.vendor.account.payable.store'), $array);
 
         $response->assertStatus(200);
-        $this->assertDatabaseHas('vendor_account_payables', ['vendor_id' => $array['vendor_id'], 'amount' => $array['amount']]);
+        $this->assertDatabaseHas('vendor_account_payables', ['vendor_id' => $array['vendor_id'], 'total' => $array['total']]);
     }
 
     public function test_update_updates_vendor_account_payable(): void
@@ -129,7 +129,7 @@ class VendorAccountPayableControllerTest extends TestCase
         $response = $this->putJson(route('api.v1.vendor.account.payable.update', $accountPayable->id), $newData);
 
         $response->assertStatus(200);
-        $this->assertDatabaseHas('vendor_account_payables', ['id' => $accountPayable->id, 'vendor_id' => $newData['vendor_id'], 'amount' => $newData['amount']]);
+        $this->assertDatabaseHas('vendor_account_payables', ['id' => $accountPayable->id, 'vendor_id' => $newData['vendor_id'], 'total' => $newData['total']]);
     }
 
     public function test_delete_soft_deletes_vendor_account_payable(): void

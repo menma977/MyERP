@@ -16,7 +16,7 @@ return new class extends Migration
             $table->ulid('id')->primary()->index();
             $table->foreignId('vendor_id')->constrained('vendors')->cascadeOnDelete();
             $table->foreignUlid('vendor_account_payable_id')->constrained('vendor_account_payables')->cascadeOnDelete();
-            $table->decimal('amount', 18, 4)->default(0);
+            $table->decimal('total', 18, 4)->default(0);
             $table->string('method')->default(PaymentMethodEnum::CASH->value);
             $table->text('note')->nullable();
             $table->timestamp('paid_at')->nullable();

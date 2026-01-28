@@ -39,11 +39,11 @@ class VendorPaymentTest extends TestCase
     {
         $payment = VendorPayment::factory()->create([
             'method' => PaymentMethodEnum::BANK_TRANSFER,
-            'amount' => '500.00',
+            'total' => '500.00',
         ]);
 
         $this->assertInstanceOf(PaymentMethodEnum::class, $payment->method);
         $this->assertEquals(PaymentMethodEnum::BANK_TRANSFER, $payment->method);
-        $this->assertSame('500.00', $payment->amount);
+        $this->assertSame('500.00', $payment->total);
     }
 }

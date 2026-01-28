@@ -26,7 +26,7 @@ class VendorAccountPayableResource extends JsonResource
             'id' => $this->id,
             'vendor_id' => $this->vendor_id,
             'vendor_invoice_id' => $this->vendor_invoice_id,
-            'amount' => $this->amount,
+            'total' => $this->total,
             'note' => $this->note,
             'vendor' => VendorResource::make($this->whenLoaded('vendor')),
             'vendor_invoice' => VendorInvoiceResource::make($this->whenLoaded('vendorInvoice')),

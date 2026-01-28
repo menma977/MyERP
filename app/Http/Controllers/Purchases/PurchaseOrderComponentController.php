@@ -159,7 +159,7 @@ class PurchaseOrderComponentController extends Controller
     }
 
     /**
-     * Save the purchase order component and update the total amount in the purchase order.
+     * Save the purchase order component and update the total in the purchase order.
      */
     protected function save(Request $request, PurchaseOrderComponent $purchaseOrderComponent): void
     {

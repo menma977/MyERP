@@ -175,7 +175,7 @@ class PurchaseReturnComponentController extends Controller
     }
 
     /**
-     * Save the purchase return component and update the total amount in purchase return.
+     * Save the purchase return component and update the total in purchase return.
      */
     protected function save(Request $request, PurchaseReturnComponent $purchaseReturnComponent): void
     {

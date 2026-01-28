@@ -74,14 +74,14 @@ class VendorAccountPayableController extends Controller
         $request->validate([
             'vendor_id' => ['required', 'exists:vendors,id'],
             'vendor_invoice_id' => ['required', 'string', 'exists:vendor_invoices,id'],
-            'amount' => ['required', 'numeric', 'min:0'],
+            'total' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string'],
         ]);
 
         $vendorAccountPayable = new VendorAccountPayable;
         $vendorAccountPayable->vendor_id = $request->input('vendor_id');
         $vendorAccountPayable->vendor_invoice_id = $request->input('vendor_invoice_id');
-        $vendorAccountPayable->amount = $request->input('amount');
+        $vendorAccountPayable->total = $request->input('total');
         $vendorAccountPayable->note = $request->input('note');
         $vendorAccountPayable->save();
 
@@ -103,7 +103,7 @@ class VendorAccountPayableController extends Controller
         $request->validate([
             'vendor_id' => ['required', 'exists:vendors,id'],
             'vendor_invoice_id' => ['required', 'string', 'exists:vendor_invoices,id'],
-            'amount' => ['required', 'numeric', 'min:0'],
+            'total' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string'],
         ]);
 
@@ -111,7 +111,7 @@ class VendorAccountPayableController extends Controller
         $vendorAccountPayable = VendorAccountPayable::where('id', $request->route('id'))->firstOrFail();
         $vendorAccountPayable->vendor_id = $request->input('vendor_id');
         $vendorAccountPayable->vendor_invoice_id = $request->input('vendor_invoice_id');
-        $vendorAccountPayable->amount = $request->input('amount');
+        $vendorAccountPayable->total = $request->input('total');
         $vendorAccountPayable->note = $request->input('note');
         $vendorAccountPayable->save();
 

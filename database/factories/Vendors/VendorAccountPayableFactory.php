@@ -16,7 +16,7 @@ class VendorAccountPayableFactory extends Factory
         return [
             'vendor_id' => Vendor::factory(),
             'vendor_invoice_id' => VendorInvoice::factory(),
-            'amount' => $this->faker->randomFloat(2, 10, 1000),
+            'total' => $this->faker->randomFloat(2, 10, 1000),
             'note' => $this->faker->sentence(),
         ];
     }

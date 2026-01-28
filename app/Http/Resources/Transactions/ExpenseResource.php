@@ -26,7 +26,7 @@ class ExpenseResource extends JsonResource
             'code' => $this->code,
             'category' => $this->category,
             'method' => $this->method,
-            'amount' => $this->amount,
+            'total' => $this->total,
             'note' => $this->note,
             'created_by' => UserResource::make($this->whenLoaded('createdBy')),
             'updated_by' => UserResource::make($this->whenLoaded('updatedBy')),
