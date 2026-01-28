@@ -2,7 +2,7 @@
 
 namespace App\Models\Approval;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Enums\ContributorTypeEnum;
 use App\Http\Resources\Approval\ApprovalComponentResource;
 use App\Models\User;
@@ -67,7 +67,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(ApprovalComponentResource::class)]
-class ApprovalComponent extends ModelAbstract
+class ApprovalComponent extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Approval\ApprovalComponentFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -76,6 +76,7 @@ class ApprovalComponent extends ModelAbstract
      * The attributes that are mass-assignable.
      */
     protected $fillable = [
+        'company_id',
         'approval_id',
         'name',
         'step',

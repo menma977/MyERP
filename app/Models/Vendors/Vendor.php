@@ -2,7 +2,7 @@
 
 namespace App\Models\Vendors;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Vendors\VendorResource;
 use App\Models\Purchases\PurchaseProcurementComponent;
 use App\Models\Purchases\PurchaseRequestComponent;
@@ -66,7 +66,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(VendorResource::class)]
-class Vendor extends ModelAbstract
+class Vendor extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Vendors\VendorFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -77,6 +77,7 @@ class Vendor extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'code',
         'name',
         'address',

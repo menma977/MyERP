@@ -76,6 +76,7 @@ class SalesOrder extends ApprovalAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'code',
         'total',
         'created_by',

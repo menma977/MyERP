@@ -77,6 +77,7 @@ class GoodIssue extends ApprovalAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'sales_invoice_id',
         'code',
         'cogs',

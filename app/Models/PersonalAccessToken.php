@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use App\Http\Resources\PersonalAccessTokenResource;
+use App\Models\Companies\Company;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $tokenable_type
  * @property int $tokenable_id
  * @property string $name
@@ -41,4 +44,12 @@ use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
 class PersonalAccessToken extends SanctumPersonalAccessToken
 {
     use HasUlids;
+
+    /**
+     * @return BelongsTo<Company, $this>
+     */
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
 }

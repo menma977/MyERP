@@ -74,6 +74,7 @@ class SalesReturn extends ApprovalAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'sales_order_id',
         'sales_invoice_id',
         'code',

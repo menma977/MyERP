@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,6 +17,10 @@ class CreatedByObserver
     {
         if (property_exists($model, 'created_by') && ! $model->created_by) {
             $model->created_by = Auth::id();
+        }
+
+        if (property_exists($model, 'company_id') && ! $model->company_id) {
+            $model->company_id = $this->resolveCompanyId();
         }
     }
 
@@ -33,5 +38,21 @@ class CreatedByObserver
             $model->created_by = Auth::id();
             $model->saveQuietly();
         }
+
+        if (property_exists($model, 'company_id') && ! $model->company_id) {
+            $model->company_id = $this->resolveCompanyId();
+            $model->saveQuietly();
+        }
+    }
+
+    private function resolveCompanyId(): ?int
+    {
+        $user = Auth::user();
+
+        if (! $user instanceof User) {
+            return null;
+        }
+
+        return $user->currentAccessToken()?->company_id;
     }
 }

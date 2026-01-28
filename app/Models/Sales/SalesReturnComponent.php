@@ -2,7 +2,7 @@
 
 namespace App\Models\Sales;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Sales\SalesReturnComponentResource;
 use App\Models\Items\Item;
 use App\Models\Items\ItemBatch;
@@ -65,7 +65,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(SalesReturnComponentResource::class)]
-class SalesReturnComponent extends ModelAbstract
+class SalesReturnComponent extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Sales\SalesReturnComponentFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -76,6 +76,7 @@ class SalesReturnComponent extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'sales_return_id',
         'item_id',
         'item_batch_id',

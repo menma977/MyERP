@@ -2,7 +2,7 @@
 
 namespace App\Models\Sales;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Sales\SalesInvoiceComponentResource;
 use App\Models\Items\Item;
 use App\Models\Items\ItemBatch;
@@ -65,7 +65,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(SalesInvoiceComponentResource::class)]
-class SalesInvoiceComponent extends ModelAbstract
+class SalesInvoiceComponent extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Sales\SalesInvoiceComponentFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -76,6 +76,7 @@ class SalesInvoiceComponent extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'sales_invoice_id',
         'item_id',
         'item_batch_id',

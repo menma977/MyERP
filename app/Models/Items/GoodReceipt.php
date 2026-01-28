@@ -83,6 +83,7 @@ class GoodReceipt extends ApprovalAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'purchase_order_id',
         'code',
         'total',

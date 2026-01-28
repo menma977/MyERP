@@ -2,7 +2,7 @@
 
 namespace App\Models\Vendors;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Vendors\VendorAccountPayableComponentResource;
 use App\Models\Purchases\PurchaseInvoiceComponent;
 use App\Models\User;
@@ -57,7 +57,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(VendorAccountPayableComponentResource::class)]
-class VendorAccountPayableComponent extends ModelAbstract
+class VendorAccountPayableComponent extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Vendors\VendorAccountPayableComponentFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -68,6 +68,7 @@ class VendorAccountPayableComponent extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'vendor_account_payable_id',
         'purchase_invoice_component_id',
         'quantity',

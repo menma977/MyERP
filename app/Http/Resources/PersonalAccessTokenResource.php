@@ -22,6 +22,7 @@ class PersonalAccessTokenResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'company_id' => $this->company?->ulid,
             'name' => $this->name,
             'token' => $this->token,
             'last_used_at' => $this->last_used_at,

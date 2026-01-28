@@ -2,7 +2,7 @@
 
 namespace App\Models\Items;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Items\ItemStockHistoryResource;
 use App\Models\User;
 use Eloquent;
@@ -55,7 +55,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(ItemStockHistoryResource::class)]
-class ItemStockHistory extends ModelAbstract
+class ItemStockHistory extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Items\ItemStockHistoryFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -66,6 +66,7 @@ class ItemStockHistory extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'item_stock_id',
         'code',
         'quantity',

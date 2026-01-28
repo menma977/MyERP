@@ -2,7 +2,7 @@
 
 namespace App\Models\Purchases;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Purchases\PurchaseRequestComponentResource;
 use App\Models\Items\Item;
 use App\Models\User;
@@ -61,7 +61,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(PurchaseRequestComponentResource::class)]
-class PurchaseRequestComponent extends ModelAbstract
+class PurchaseRequestComponent extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Purchases\PurchaseRequestComponentFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -72,6 +72,7 @@ class PurchaseRequestComponent extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'purchase_request_id',
         'vendor_id',
         'item_id',

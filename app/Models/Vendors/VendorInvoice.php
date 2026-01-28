@@ -69,6 +69,7 @@ class VendorInvoice extends ApprovalAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'vendor_id',
         'code',
         'total',

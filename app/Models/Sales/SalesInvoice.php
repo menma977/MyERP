@@ -94,6 +94,7 @@ class SalesInvoice extends ApprovalAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'sales_order_id',
         'code',
         'total',

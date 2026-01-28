@@ -2,7 +2,7 @@
 
 namespace App\Models\Vendors;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Vendors\VendorPaymentComponentResource;
 use App\Models\User;
 use Eloquent;
@@ -56,7 +56,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(VendorPaymentComponentResource::class)]
-class VendorPaymentComponent extends ModelAbstract
+class VendorPaymentComponent extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Vendors\VendorPaymentComponentFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -67,6 +67,7 @@ class VendorPaymentComponent extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'vendor_payment_id',
         'vendor_account_payable_component_id',
         'quantity',

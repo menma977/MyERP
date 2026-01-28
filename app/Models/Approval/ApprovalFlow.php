@@ -2,7 +2,7 @@
 
 namespace App\Models\Approval;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Approval\ApprovalFlowResource;
 use App\Models\User;
 use Eloquent;
@@ -51,7 +51,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(ApprovalFlowResource::class)]
-class ApprovalFlow extends ModelAbstract
+class ApprovalFlow extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Approval\ApprovalFlowFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -60,6 +60,7 @@ class ApprovalFlow extends ModelAbstract
      * The attributes that are mass-assignable.
      */
     protected $fillable = [
+        'company_id',
         'name',
         'created_by',
         'updated_by',

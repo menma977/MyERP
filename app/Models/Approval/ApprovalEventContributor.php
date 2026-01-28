@@ -2,7 +2,7 @@
 
 namespace App\Models\Approval;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Approval\ApprovalEventContributorResource;
 use App\Models\User;
 use Eloquent;
@@ -62,7 +62,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(ApprovalEventContributorResource::class)]
-class ApprovalEventContributor extends ModelAbstract
+class ApprovalEventContributor extends ModelWithCompanyAbstract
 {
     use HasUlids, SoftDeletes;
 
@@ -77,6 +77,7 @@ class ApprovalEventContributor extends ModelAbstract
      * The attributes that are mass-assignable.
      */
     protected $fillable = [
+        'company_id',
         'approval_event_component_id',
         'user_id',
         'approved_at',

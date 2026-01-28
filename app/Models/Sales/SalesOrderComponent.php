@@ -2,7 +2,7 @@
 
 namespace App\Models\Sales;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Sales\SalesOrderComponentResource;
 use App\Models\Items\Item;
 use App\Models\User;
@@ -57,7 +57,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(SalesOrderComponentResource::class)]
-class SalesOrderComponent extends ModelAbstract
+class SalesOrderComponent extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Sales\SalesOrderComponentFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -68,6 +68,7 @@ class SalesOrderComponent extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'sales_order_id',
         'item_id',
         'quantity',

@@ -5,6 +5,7 @@ namespace App\Abstracts;
 use App\Interfaces\ApprovalServiceInterface;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\Scopes\ApprovalAbstractScope;
+use App\Models\Scopes\WithCompanyScope;
 use App\Models\User;
 use App\Observers\CreatedByObserver;
 use App\Observers\DeletedByObserver;
@@ -20,7 +21,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
-#[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class]), ScopedBy([ApprovalAbstractScope::class])]
+#[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class]), ScopedBy([ApprovalAbstractScope::class, WithCompanyScope::class])]
 abstract class ApprovalAbstract extends Model
 {
     use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
