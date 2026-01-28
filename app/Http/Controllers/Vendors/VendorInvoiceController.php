@@ -70,7 +70,7 @@ class VendorInvoiceController extends Controller
     public function store(Request $request): array
     {
         $request->validate([
-            'vendor_id' => ['required', 'string', 'exists:vendors,id'],
+            'vendor_id' => ['required', 'exists:vendors,id'],
             'code' => ['required', 'string', 'max:255', new ValidationWithoutTrashed(VendorInvoice::class)],
             'total' => ['required', 'numeric', 'min:0'],
         ]);
@@ -97,7 +97,7 @@ class VendorInvoiceController extends Controller
     public function update(Request $request): array
     {
         $request->validate([
-            'vendor_id' => ['required', 'string', 'exists:vendors,id'],
+            'vendor_id' => ['required', 'exists:vendors,id'],
             'code' => ['required', 'string', 'max:255', new ValidationWithoutTrashed(VendorInvoice::class, 'code', $request->route('id'))],
             'total' => ['required', 'numeric', 'min:0'],
         ]);

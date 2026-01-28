@@ -71,7 +71,7 @@ class VendorPaymentController extends Controller
     public function store(Request $request): array
     {
         $request->validate([
-            'vendor_id' => ['required', 'string', 'exists:vendors,id'],
+            'vendor_id' => ['required', 'exists:vendors,id'],
             'vendor_account_payable_id' => ['required', 'string', 'exists:vendor_account_payables,id'],
             'amount' => ['required', 'numeric', 'min:0'],
             'method' => ['required', 'string', 'in:'.collect(PaymentMethodEnum::cases())->pluck('value')->implode(',')],
@@ -98,7 +98,7 @@ class VendorPaymentController extends Controller
     public function update(Request $request): array
     {
         $request->validate([
-            'vendor_id' => ['required', 'string', 'exists:vendors,id'],
+            'vendor_id' => ['required', 'exists:vendors,id'],
             'vendor_account_payable_id' => ['required', 'string', 'exists:vendor_account_payables,id'],
             'amount' => ['required', 'numeric', 'min:0'],
             'method' => ['required', 'string', 'in:'.collect(PaymentMethodEnum::cases())->pluck('value')->implode(',')],

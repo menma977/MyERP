@@ -72,7 +72,7 @@ class VendorAccountPayableController extends Controller
     public function store(Request $request): array
     {
         $request->validate([
-            'vendor_id' => ['required', 'string', 'exists:vendors,id'],
+            'vendor_id' => ['required', 'exists:vendors,id'],
             'vendor_invoice_id' => ['required', 'string', 'exists:vendor_invoices,id'],
             'amount' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string'],
@@ -101,7 +101,7 @@ class VendorAccountPayableController extends Controller
     public function update(Request $request): array
     {
         $request->validate([
-            'vendor_id' => ['required', 'string', 'exists:vendors,id'],
+            'vendor_id' => ['required', 'exists:vendors,id'],
             'vendor_invoice_id' => ['required', 'string', 'exists:vendor_invoices,id'],
             'amount' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string'],
