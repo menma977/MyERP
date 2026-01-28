@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Sales;
 
 use App\Http\Resources\Approval\ApprovalEventResource;
+use App\Http\Resources\Customer\CustomerResource;
 use App\Http\Resources\Items\GoodIssueResource;
 use App\Http\Resources\UserResource;
 use App\Models\Sales\SalesInvoice;
@@ -26,6 +27,7 @@ class SalesInvoiceResource extends JsonResource
         return [
             'id' => $this->id,
             'sales_order_id' => $this->sales_order_id,
+            'customer' => CustomerResource::make($this->whenLoaded('customer')),
             'code' => $this->code,
             'total' => $this->total,
             'tax' => $this->tax,
@@ -34,6 +36,8 @@ class SalesInvoiceResource extends JsonResource
             'fee' => $this->fee,
             'grand_total' => $this->grand_total,
             'note' => $this->note,
+            'method' => $this->method,
+            'status' => $this->status,
             'order' => SalesOrderResource::make($this->whenLoaded('order')),
             'components' => SalesInvoiceComponentResource::collection($this->whenLoaded('components')),
             'good_issues' => GoodIssueResource::collection($this->whenLoaded('goodIssues')),
