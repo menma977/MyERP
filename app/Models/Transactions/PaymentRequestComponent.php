@@ -2,7 +2,7 @@
 
 namespace App\Models\Transactions;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Transactions\PaymentRequestComponentResource;
 use App\Models\Purchases\PurchaseInvoiceComponent;
 use App\Models\Purchases\PurchaseOrderComponent;
@@ -63,7 +63,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(PaymentRequestComponentResource::class)]
-class PaymentRequestComponent extends ModelAbstract
+class PaymentRequestComponent extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Transactions\PaymentRequestComponentFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -74,6 +74,7 @@ class PaymentRequestComponent extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'payment_request_id',
         'purchase_order_component_id',
         'purchase_invoice_component_id',

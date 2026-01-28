@@ -18,6 +18,7 @@ class ApprovalAbstractScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
+        /** @noinspection DuplicatedCode */
         $request = request();
         $isAll = $request->boolean('all') && Auth::user()?->canAny(['user.super.index', 'user.super.developer.index']);
 

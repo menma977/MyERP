@@ -2,7 +2,7 @@
 
 namespace App\Models\Approval;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Approval\ApprovalGroupResource;
 use App\Models\User;
 use Eloquent;
@@ -49,7 +49,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(ApprovalGroupResource::class)]
-class ApprovalGroup extends ModelAbstract
+class ApprovalGroup extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Approval\ApprovalGroupFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -58,6 +58,7 @@ class ApprovalGroup extends ModelAbstract
      * The attributes that are mass-assignable.
      */
     protected $fillable = [
+        'company_id',
         'name',
         'created_by',
         'updated_by',

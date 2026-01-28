@@ -74,6 +74,7 @@ class PurchaseProcurement extends ApprovalAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'purchase_request_id',
         'code',
         'note',

@@ -2,7 +2,7 @@
 
 namespace App\Models\Vendors;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Vendors\VendorComponentHistoryResource;
 use App\Models\User;
 use Eloquent;
@@ -48,7 +48,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(VendorComponentHistoryResource::class)]
-class VendorComponentHistory extends ModelAbstract
+class VendorComponentHistory extends ModelWithCompanyAbstract
 {
     use HasUlids, SoftDeletes;
 
@@ -58,6 +58,7 @@ class VendorComponentHistory extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'vendor_component_id',
         'price',
         'created_by',

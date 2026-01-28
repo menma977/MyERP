@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\FileBucketResource;
 use Database\Factories\FileBucketFactory;
 use Eloquent;
@@ -77,7 +77,7 @@ use Illuminate\Support\Facades\Storage;
  * @mixin Eloquent
  */
 #[UseResource(FileBucketResource::class)]
-class FileBucket extends ModelAbstract
+class FileBucket extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<FileBucketFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -88,6 +88,7 @@ class FileBucket extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'model_type',
         'model_id',
         'name',

@@ -2,7 +2,7 @@
 
 namespace App\Models\Approval;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Enums\ApprovalStatusEnum;
 use App\Enums\ApprovalTypeEnum;
 use App\Http\Resources\Approval\ApprovalEventResource;
@@ -87,7 +87,7 @@ use Illuminate\Support\Facades\Auth;
  * @mixin Eloquent
  */
 #[UseResource(ApprovalEventResource::class)]
-class ApprovalEvent extends ModelAbstract
+class ApprovalEvent extends ModelWithCompanyAbstract
 {
     use HasUlids, SoftDeletes;
 
@@ -105,6 +105,7 @@ class ApprovalEvent extends ModelAbstract
      * The attributes that are mass-assignable.
      */
     protected $fillable = [
+        'company_id',
         'approval_id',
         'step',
         'target',

@@ -86,6 +86,7 @@ class PaymentRequest extends ApprovalAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'purchase_order_id',
         'purchase_invoice_id',
         'code',

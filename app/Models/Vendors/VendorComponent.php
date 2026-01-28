@@ -67,6 +67,7 @@ class VendorComponent extends ApprovalAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'vendor_id',
         'item_id',
         'price',

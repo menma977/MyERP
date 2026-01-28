@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Http\Resources\UserResource;
+use App\Models\Companies\Company;
+use App\Models\Companies\CompanyHasUser;
 use Database\Factories\UserFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
@@ -11,6 +13,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
@@ -18,6 +23,7 @@ use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Sanctum\PersonalAccessToken;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -34,11 +40,11 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon|null $deleted_at
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
- * @property-read Collection<int, \Spatie\Permission\Models\Permission> $permissions
+ * @property-read Collection<int, Permission> $permissions
  * @property-read int|null $permissions_count
- * @property-read Collection<int, \Spatie\Permission\Models\Role> $roles
+ * @property-read Collection<int, Role> $roles
  * @property-read int|null $roles_count
- * @property-read Collection<int, \App\Models\PersonalAccessToken> $tokens
+ * @property-read Collection<int, PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
  *
  * @method static UserFactory factory($count = null, $state = [])
@@ -99,6 +105,35 @@ class User extends Authenticatable
     public function uniqueIds(): array
     {
         return ['ulid'];
+    }
+
+    /**
+     * @return HasMany<CompanyHasUser, $this>
+     */
+    public function hasCompany(): HasMany
+    {
+        return $this->hasMany(CompanyHasUser::class, 'user_id');
+    }
+
+    /**
+     * @return HasManyThrough<Company, CompanyHasUser, $this>
+     */
+    public function companies(): HasManyThrough
+    {
+        return $this->hasManyThrough(Company::class, CompanyHasUser::class, 'user_id', 'id', 'id', 'company_id');
+    }
+
+    /**
+     * @return MorphOne<FileBucket, $this>
+     */
+    public function avatar(): MorphOne
+    {
+        return $this->morphOne(FileBucket::class, 'model', 'model_type', 'model_id');
+    }
+
+    public function currentAccessToken(): ?PersonalAccessToken
+    {
+        return $this->accessToken;
     }
 
     /**

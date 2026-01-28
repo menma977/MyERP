@@ -2,7 +2,7 @@
 
 namespace App\Models\Items;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Items\GoodIssueComponentResource;
 use App\Models\Sales\SalesInvoiceComponent;
 use App\Models\User;
@@ -63,7 +63,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(GoodIssueComponentResource::class)]
-class GoodIssueComponent extends ModelAbstract
+class GoodIssueComponent extends ModelWithCompanyAbstract
 {
     use HasUlids, SoftDeletes;
 
@@ -73,6 +73,7 @@ class GoodIssueComponent extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'good_issue_id',
         'sales_invoice_component_id',
         'item_id',

@@ -2,7 +2,7 @@
 
 namespace App\Models\Items;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Items\ItemBillComponentResource;
 use App\Models\User;
 use Eloquent;
@@ -54,7 +54,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(ItemBillComponentResource::class)]
-class ItemBillComponent extends ModelAbstract
+class ItemBillComponent extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Items\ItemBillComponentFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -65,6 +65,7 @@ class ItemBillComponent extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'item_bill_id',
         'item_id',
         'quantity',

@@ -2,7 +2,7 @@
 
 namespace App\Models\Vendors;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Vendors\VendorInvoiceComponentResource;
 use App\Models\Items\Item;
 use App\Models\User;
@@ -59,7 +59,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(VendorInvoiceComponentResource::class)]
-class VendorInvoiceComponent extends ModelAbstract
+class VendorInvoiceComponent extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Vendors\VendorInvoiceComponentFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -70,6 +70,7 @@ class VendorInvoiceComponent extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'vendor_invoice_id',
         'vendor_component_id',
         'item_id',

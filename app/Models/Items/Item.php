@@ -2,7 +2,7 @@
 
 namespace App\Models\Items;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Enums\ItemTypeEnum;
 use App\Enums\ItemUnitEnum;
 use App\Http\Resources\Items\ItemResource;
@@ -63,7 +63,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(ItemResource::class)]
-class Item extends ModelAbstract
+class Item extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Items\ItemFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -74,6 +74,7 @@ class Item extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'code',
         'name',
         'type',

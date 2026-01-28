@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Models\PersonalAccessToken;
 use App\Models\User;
 use App\Services\PermissionService;
 use Illuminate\Http\Request;
@@ -39,7 +40,15 @@ class LoginController extends Controller
         }
 
         $deviceName = $request->input('device_name', $request->userAgent() ?: 'Unknown Device');
-        $token = $user->createToken($deviceName, ['*'], now()->addMinutes(60))->plainTextToken;
+        $companyId = $user->hasCompany()->value('company_id');
+
+        $tokenResult = $user->createToken($deviceName, ['*'], now()->addMinutes(60));
+        /** @var PersonalAccessToken $accessToken */
+        $accessToken = $tokenResult->accessToken;
+        $accessToken->company_id = $companyId ? (int) $companyId : null;
+        $accessToken->save();
+
+        $token = $tokenResult->plainTextToken;
 
         return [
             'user' => [
@@ -60,8 +69,6 @@ class LoginController extends Controller
     /**
      * Log the user out (revoke the token).
      *
-     * @noinspection PhpPossiblePolymorphicInvocationInspection
-     *
      * @return array{message:string}
      */
     public function logout(): array
@@ -69,7 +76,8 @@ class LoginController extends Controller
         if (Auth::check()) {
             $user = User::find(Auth::id());
             if ($user) {
-                $user->currentAccessToken()->delete();
+                $token = $user->currentAccessToken();
+                $token?->delete();
             }
         }
 

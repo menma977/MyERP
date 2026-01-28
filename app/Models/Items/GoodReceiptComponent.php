@@ -2,7 +2,7 @@
 
 namespace App\Models\Items;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Items\GoodReceiptComponentResource;
 use App\Models\Purchases\PurchaseOrderComponent;
 use App\Models\User;
@@ -62,7 +62,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(GoodReceiptComponentResource::class)]
-class GoodReceiptComponent extends ModelAbstract
+class GoodReceiptComponent extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Items\GoodReceiptComponentFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -73,6 +73,7 @@ class GoodReceiptComponent extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'purchase_order_component_id',
         'good_receipt_id',
         'item_id',

@@ -74,6 +74,7 @@ class VendorPayment extends ApprovalAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'vendor_id',
         'vendor_account_payable_id',
         'amount',

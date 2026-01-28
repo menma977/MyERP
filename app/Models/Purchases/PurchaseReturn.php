@@ -77,6 +77,7 @@ class PurchaseReturn extends ApprovalAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'purchase_order_id',
         'good_receipt_id',
         'code',

@@ -2,7 +2,7 @@
 
 namespace App\Models\Purchases;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Purchases\PurchaseReturnComponentResource;
 use App\Models\Items\GoodReceiptComponent;
 use App\Models\Items\Item;
@@ -66,7 +66,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(PurchaseReturnComponentResource::class)]
-class PurchaseReturnComponent extends ModelAbstract
+class PurchaseReturnComponent extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Purchases\PurchaseReturnComponentFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -77,6 +77,7 @@ class PurchaseReturnComponent extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'purchase_return_id',
         'purchase_order_component_id',
         'good_receipt_component_id',

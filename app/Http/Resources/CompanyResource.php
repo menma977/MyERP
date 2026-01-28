@@ -2,17 +2,15 @@
 
 namespace App\Http\Resources;
 
-use App\Models\User;
+use App\Models\Companies\Company;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin User
+ * @mixin Company
  */
-class UserResource extends JsonResource
+class CompanyResource extends JsonResource
 {
-    public bool $preserveKeys = true;
-
     /**
      * Transform the resource into an array.
      *
@@ -22,14 +20,16 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->ulid,
-            'username' => $this->username,
             'name' => $this->name,
+            'code' => $this->code,
+            'phone' => $this->phone,
             'email' => $this->email,
-            'email_verified_at' => $this->email_verified_at,
-            'avatar' => $this->whenLoaded('avatar'),
-            'roles' => RoleResource::collection($this->whenLoaded('roles')),
-            'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
-            'tokens' => PersonalAccessTokenResource::collection($this->whenLoaded('tokens')),
+            'website' => $this->website,
+            'address' => $this->address,
+            'logo' => $this->whenLoaded('logo'),
+            'created_by' => $this->whenLoaded('createdBy'),
+            'updated_by' => $this->whenLoaded('updatedBy'),
+            'deleted_by' => $this->whenLoaded('deletedBy'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,

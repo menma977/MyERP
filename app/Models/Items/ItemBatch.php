@@ -2,7 +2,7 @@
 
 namespace App\Models\Items;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Items\ItemBatchResource;
 use App\Models\User;
 use Eloquent;
@@ -57,7 +57,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(ItemBatchResource::class)]
-class ItemBatch extends ModelAbstract
+class ItemBatch extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Items\ItemBatchFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -68,6 +68,7 @@ class ItemBatch extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'item_id',
         'code',
         'expired_at',

@@ -2,7 +2,7 @@
 
 namespace App\Models\Transactions;
 
-use App\Abstracts\ModelAbstract;
+use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Transactions\LedgerComponentResource;
 use App\Models\User;
 use Eloquent;
@@ -55,7 +55,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  */
 #[UseResource(LedgerComponentResource::class)]
-class LedgerComponent extends ModelAbstract
+class LedgerComponent extends ModelWithCompanyAbstract
 {
     /** @use HasFactory<\Database\Factories\Transactions\LedgerComponentFactory> */
     use HasFactory, HasUlids, SoftDeletes;
@@ -66,6 +66,7 @@ class LedgerComponent extends ModelAbstract
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
         'ledger_id',
         'in',
         'out',
