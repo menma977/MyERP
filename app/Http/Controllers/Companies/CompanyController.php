@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CompanyResource;
 use App\Models\Companies\Company;
 use App\Models\Companies\CompanyHasUser;
-use App\Models\Customer\Customer;
 use App\Models\User;
 use App\Rules\ValidationWithoutTrashed;
 use App\Services\FakeIdTranslationService;
@@ -227,12 +226,7 @@ class CompanyController extends Controller
         $company->save();
 
         if ($company->customerDefault()->doesntExist()) {
-            $customer = new Customer;
-            $customer->company_id = $company->id;
-            $customer->code = "WALK-IN-$company->code";
-            $customer->name = "WALK IN $company->name";
-            $customer->is_default = true;
-            $customer->save();
+            $company->makeCustomerDefault();
         }
     }
 

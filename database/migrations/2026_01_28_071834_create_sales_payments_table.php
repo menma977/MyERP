@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('sales_payments', function (Blueprint $table) {
             $table->ulid('id')->primary()->index();
             $table->foreignUlid('sales_invoice_id')->constrained('sales_invoices')->cascadeOnDelete();
-            $table->foreignUlid('customer_id')->nullable()->constrained('customers')->nullOnDelete();
+            $table->foreignUlid('customer_id')->constrained('customers')->nullOnDelete();
             $table->string('code')->unique();
             $table->decimal('total', 18, 4)->default(0);
             $table->string('method');

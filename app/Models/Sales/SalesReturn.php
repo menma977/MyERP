@@ -26,7 +26,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $company_id
  * @property string $sales_order_id
  * @property string $sales_invoice_id
- * @property string|null $customer_id
+ * @property string $customer_id
  * @property string $code
  * @property numeric $total
  * @property int|null $created_by

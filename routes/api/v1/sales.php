@@ -4,6 +4,7 @@ use App\Http\Controllers\Sales\SalesInvoiceComponentController;
 use App\Http\Controllers\Sales\SalesInvoiceController;
 use App\Http\Controllers\Sales\SalesOrderComponentController;
 use App\Http\Controllers\Sales\SalesOrderController;
+use App\Http\Controllers\Sales\SalesPaymentController;
 use App\Http\Controllers\Sales\SalesReturnComponentController;
 use App\Http\Controllers\Sales\SalesReturnController;
 use Illuminate\Support\Facades\Route;
@@ -73,5 +74,17 @@ Route::prefix('sales')->name('sales.')->middleware(['auth:sanctum'])->group(func
             Route::post('restore/{id}', [SalesReturnComponentController::class, 'restore'])->name('restore')->middleware('can:sales.return.component.restore');
             Route::delete('destroy/{id}', [SalesReturnComponentController::class, 'destroy'])->name('destroy')->middleware('can:sales.return.component.destroy');
         });
+    });
+
+    Route::prefix('payment')->name('payment.')->middleware('can:sales.payment.index')->group(function () {
+        Route::get('index', [SalesPaymentController::class, 'index'])->name('index');
+        Route::get('show/{id}', [SalesPaymentController::class, 'show'])->name('show')->middleware('can:sales.payment.show');
+        Route::post('store', [SalesPaymentController::class, 'store'])->name('store')->middleware('can:sales.payment.store');
+        Route::put('update/{id}', [SalesPaymentController::class, 'update'])->name('update')->middleware('can:sales.payment.update');
+        Route::delete('delete/{id}', [SalesPaymentController::class, 'delete'])->name('delete')->middleware('can:sales.payment.delete');
+        Route::post('restore/{id}', [SalesPaymentController::class, 'restore'])->name('restore')->middleware('can:sales.payment.restore');
+        Route::delete('destroy/{id}', [SalesPaymentController::class, 'destroy'])->name('destroy')->middleware('can:sales.payment.destroy');
+        Route::post('approve/{id}', [SalesPaymentController::class, 'approve'])->name('approve')->middleware('can:sales.payment.store');
+        Route::post('reject/{id}', [SalesPaymentController::class, 'reject'])->name('reject')->middleware('can:sales.payment.store');
     });
 });

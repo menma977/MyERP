@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Sales;
 
-use App\Http\Controllers\Controller;
+use App\Abstracts\ControllerClientDomainAbstract;
+use App\Enums\DomainEnum;
 use App\Http\Resources\Sales\SalesOrderResource;
+use App\Models\Companies\Company;
 use App\Models\Sales\SalesOrder;
 use App\Services\CodeGeneratorService;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,7 +15,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
-class SalesOrderController extends Controller
+class SalesOrderController extends ControllerClientDomainAbstract
 {
     /**
      * @return LengthAwarePaginator<int, SalesOrder>|Collection<int, SalesOrder>|JsonResource|int
@@ -42,14 +44,20 @@ class SalesOrderController extends Controller
      */
     public function store(Request $request): array
     {
-        $request->validate([
-            'total' => ['required', 'numeric', 'min:0'],
-        ]);
+        if ($this->clientDomain === DomainEnum::CASHER) {
+            $request->validate([
+                'total' => ['required', 'numeric', 'min:0'],
+            ]);
+        } else {
+            $request->validate([
+                'customer_id' => ['required', 'exists:customers,id'],
+                'total' => ['required', 'numeric', 'min:0'],
+            ]);
+        }
 
         $salesOrder = new SalesOrder;
         $salesOrder->code = CodeGeneratorService::code('SO')->number(SalesOrder::count() + 1)->generate();
-        $salesOrder->total = $request->input('total');
-        $salesOrder->save();
+        $this->save($salesOrder, $request);
 
         return [
             'message' => trans('messages.success.store', ['target' => 'Sales Order']),
@@ -74,14 +82,20 @@ class SalesOrderController extends Controller
      */
     public function update(Request $request): array
     {
-        $request->validate([
-            'total' => ['required', 'numeric', 'min:0'],
-        ]);
+        if ($this->clientDomain === DomainEnum::CASHER) {
+            $request->validate([
+                'total' => ['required', 'numeric', 'min:0'],
+            ]);
+        } else {
+            $request->validate([
+                'customer_id' => ['required', 'exists:customers,id'],
+                'total' => ['required', 'numeric', 'min:0'],
+            ]);
+        }
 
         /** @var SalesOrder $salesOrder */
         $salesOrder = SalesOrder::where('id', $request->route('id'))->firstOrFail();
-        $salesOrder->total = $request->input('total');
-        $salesOrder->save();
+        $this->save($salesOrder, $request);
 
         return [
             'message' => trans('messages.success.update', ['target' => 'Sales Order']),
@@ -178,5 +192,36 @@ class SalesOrderController extends Controller
             'message' => trans('messages.success.reject', ['target' => 'Sales Order']),
             'sales_order' => $salesOrder->toResource(),
         ];
+    }
+
+    protected function save(SalesOrder $salesOrder, Request $request): void
+    {
+        if ($this->clientDomain === DomainEnum::CASHER) {
+            $user = Auth::user();
+            if (! $user) {
+                throw ValidationException::withMessages([
+                    'user' => trans('messages.fail.action.cost', ['action' => 'create', 'attribute' => 'Sales Order', 'target' => 'Access']),
+                ]);
+            }
+            $company = $user->currentAccessToken()?->company_id;
+            $company = Company::with('customerDefault')->where('id', $company)->first();
+            if (! $company) {
+                throw ValidationException::withMessages([
+                    'company' => trans('messages.fail.action.cost', ['action' => 'create', 'attribute' => 'Sales Order', 'target' => 'Company']),
+                ]);
+            }
+
+            if (! $company->customerDefault) {
+                $customer = $company->makeCustomerDefault();
+            } else {
+                $customer = $company->customerDefault;
+            }
+
+            $salesOrder->customer_id = $customer->id;
+        } else {
+            $salesOrder->customer_id = $request->input('customer_id');
+        }
+        $salesOrder->total = $request->input('total');
+        $salesOrder->save();
     }
 }

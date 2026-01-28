@@ -139,4 +139,13 @@ class Company extends ModelAbstract
     {
         return $this->morphOne(FileBucket::class, 'model', 'model_type', 'model_id');
     }
+
+    public function makeCustomerDefault(): Customer
+    {
+        return $this->customerDefault()->firstOrCreate([
+            'code' => "WALK-IN-$this->code",
+            'name' => "WALK IN $this->name",
+            'is_default' => true,
+        ]);
+    }
 }
