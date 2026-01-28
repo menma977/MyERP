@@ -59,6 +59,15 @@ class SalesInvoiceController extends Controller
         $salesInvoice->sales_order_id = $request->input('sales_order_id');
         $this->save($request, $salesInvoice);
 
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Sales Invoice', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesInvoice->initEvent($user);
+
         return [
             'message' => trans('messages.success.store', ['target' => 'Sales Invoice']),
             'sales_invoice' => $salesInvoice->toResource(),
@@ -181,6 +190,75 @@ class SalesInvoiceController extends Controller
 
         return [
             'message' => trans('messages.success.reject', ['target' => 'Sales Invoice']),
+            'sales_invoice' => $salesInvoice->toResource(),
+        ];
+    }
+
+    /**
+     * @return array{message: string, sales_invoice: JsonResource}
+     */
+    public function cancel(Request $request): array
+    {
+        /** @var SalesInvoice $salesInvoice */
+        $salesInvoice = SalesInvoice::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Sales Invoice', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesInvoice->cancel($user);
+
+        return [
+            'message' => trans('messages.success.cancel', ['target' => 'Sales Invoice']),
+            'sales_invoice' => $salesInvoice->toResource(),
+        ];
+    }
+
+    /**
+     * @return array{message: string, sales_invoice: JsonResource}
+     */
+    public function rollback(Request $request): array
+    {
+        /** @var SalesInvoice $salesInvoice */
+        $salesInvoice = SalesInvoice::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Sales Invoice', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesInvoice->rollback($user);
+
+        return [
+            'message' => trans('messages.success.rollback', ['target' => 'Sales Invoice']),
+            'sales_invoice' => $salesInvoice->toResource(),
+        ];
+    }
+
+    /**
+     * @return array{message: string, sales_invoice: JsonResource}
+     */
+    public function force(Request $request): array
+    {
+        /** @var SalesInvoice $salesInvoice */
+        $salesInvoice = SalesInvoice::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Sales Invoice', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesInvoice->force($user, $request->input('step'));
+
+        return [
+            'message' => trans('messages.success.force', ['target' => 'Sales Invoice']),
             'sales_invoice' => $salesInvoice->toResource(),
         ];
     }

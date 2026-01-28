@@ -54,6 +54,15 @@ class SalesPaymentController extends ControllerClientDomainAbstract
         $salesPayment->code = CodeGeneratorService::code('SP')->number(SalesPayment::count() + 1)->generate();
         $this->save($salesPayment, $request);
 
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Sales Payment', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesPayment->initEvent($user);
+
         return [
             'message' => trans('messages.success.store', ['target' => 'Sales Payment']),
             'sales_payment' => $salesPayment->toResource(),
@@ -176,6 +185,75 @@ class SalesPaymentController extends ControllerClientDomainAbstract
 
         return [
             'message' => trans('messages.success.reject', ['target' => 'Sales Payment']),
+            'sales_payment' => $salesPayment->toResource(),
+        ];
+    }
+
+    /**
+     * @return array{message: string, sales_payment: JsonResource}
+     */
+    public function cancel(Request $request): array
+    {
+        /** @var SalesPayment $salesPayment */
+        $salesPayment = SalesPayment::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Sales Payment', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesPayment->cancel($user);
+
+        return [
+            'message' => trans('messages.success.cancel', ['target' => 'Sales Payment']),
+            'sales_payment' => $salesPayment->toResource(),
+        ];
+    }
+
+    /**
+     * @return array{message: string, sales_payment: JsonResource}
+     */
+    public function rollback(Request $request): array
+    {
+        /** @var SalesPayment $salesPayment */
+        $salesPayment = SalesPayment::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Sales Payment', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesPayment->rollback($user);
+
+        return [
+            'message' => trans('messages.success.rollback', ['target' => 'Sales Payment']),
+            'sales_payment' => $salesPayment->toResource(),
+        ];
+    }
+
+    /**
+     * @return array{message: string, sales_payment: JsonResource}
+     */
+    public function force(Request $request): array
+    {
+        /** @var SalesPayment $salesPayment */
+        $salesPayment = SalesPayment::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Sales Payment', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesPayment->force($user, $request->input('step'));
+
+        return [
+            'message' => trans('messages.success.force', ['target' => 'Sales Payment']),
             'sales_payment' => $salesPayment->toResource(),
         ];
     }

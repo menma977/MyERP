@@ -55,6 +55,15 @@ class SalesReturnController extends Controller
         $salesReturn->total = $request->input('total');
         $salesReturn->save();
 
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Sales Return', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesReturn->initEvent($user);
+
         return [
             'message' => trans('messages.success.store', ['target' => 'Sales Return']),
             'sales_return' => $salesReturn->toResource(),
@@ -175,6 +184,75 @@ class SalesReturnController extends Controller
 
         return [
             'message' => trans('messages.success.reject', ['target' => 'Sales Return']),
+            'sales_return' => $salesReturn->toResource(),
+        ];
+    }
+
+    /**
+     * @return array{message: string, sales_return: JsonResource}
+     */
+    public function cancel(Request $request): array
+    {
+        /** @var SalesReturn $salesReturn */
+        $salesReturn = SalesReturn::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Sales Return', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesReturn->cancel($user);
+
+        return [
+            'message' => trans('messages.success.cancel', ['target' => 'Sales Return']),
+            'sales_return' => $salesReturn->toResource(),
+        ];
+    }
+
+    /**
+     * @return array{message: string, sales_return: JsonResource}
+     */
+    public function rollback(Request $request): array
+    {
+        /** @var SalesReturn $salesReturn */
+        $salesReturn = SalesReturn::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Sales Return', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesReturn->rollback($user);
+
+        return [
+            'message' => trans('messages.success.rollback', ['target' => 'Sales Return']),
+            'sales_return' => $salesReturn->toResource(),
+        ];
+    }
+
+    /**
+     * @return array{message: string, sales_return: JsonResource}
+     */
+    public function force(Request $request): array
+    {
+        /** @var SalesReturn $salesReturn */
+        $salesReturn = SalesReturn::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Sales Return', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesReturn->force($user, $request->input('step'));
+
+        return [
+            'message' => trans('messages.success.force', ['target' => 'Sales Return']),
             'sales_return' => $salesReturn->toResource(),
         ];
     }

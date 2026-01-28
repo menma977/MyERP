@@ -59,6 +59,15 @@ class SalesOrderController extends ControllerClientDomainAbstract
         $salesOrder->code = CodeGeneratorService::code('SO')->number(SalesOrder::count() + 1)->generate();
         $this->save($salesOrder, $request);
 
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Sales Order', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesOrder->initEvent($user);
+
         return [
             'message' => trans('messages.success.store', ['target' => 'Sales Order']),
             'sales_order' => $salesOrder->toResource(),
@@ -190,6 +199,75 @@ class SalesOrderController extends ControllerClientDomainAbstract
 
         return [
             'message' => trans('messages.success.reject', ['target' => 'Sales Order']),
+            'sales_order' => $salesOrder->toResource(),
+        ];
+    }
+
+    /**
+     * @return array{message: string, sales_order: JsonResource}
+     */
+    public function cancel(Request $request): array
+    {
+        /** @var SalesOrder $salesOrder */
+        $salesOrder = SalesOrder::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Sales Order', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesOrder->cancel($user);
+
+        return [
+            'message' => trans('messages.success.cancel', ['target' => 'Sales Order']),
+            'sales_order' => $salesOrder->toResource(),
+        ];
+    }
+
+    /**
+     * @return array{message: string, sales_order: JsonResource}
+     */
+    public function rollback(Request $request): array
+    {
+        /** @var SalesOrder $salesOrder */
+        $salesOrder = SalesOrder::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Sales Order', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesOrder->rollback($user);
+
+        return [
+            'message' => trans('messages.success.rollback', ['target' => 'Sales Order']),
+            'sales_order' => $salesOrder->toResource(),
+        ];
+    }
+
+    /**
+     * @return array{message: string, sales_order: JsonResource}
+     */
+    public function force(Request $request): array
+    {
+        /** @var SalesOrder $salesOrder */
+        $salesOrder = SalesOrder::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Sales Order', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesOrder->force($user, $request->input('step'));
+
+        return [
+            'message' => trans('messages.success.force', ['target' => 'Sales Order']),
             'sales_order' => $salesOrder->toResource(),
         ];
     }
