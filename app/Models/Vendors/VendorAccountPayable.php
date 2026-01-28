@@ -23,7 +23,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $company_id
  * @property int $vendor_id
  * @property string $vendor_invoice_id
- * @property numeric $amount
+ * @property numeric $total
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -45,7 +45,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|VendorAccountPayable newQuery()
  * @method static Builder<static>|VendorAccountPayable onlyTrashed()
  * @method static Builder<static>|VendorAccountPayable query()
- * @method static Builder<static>|VendorAccountPayable whereAmount($value)
+ * @method static Builder<static>|VendorAccountPayable whereTotal($value)
  * @method static Builder<static>|VendorAccountPayable whereCompanyId($value)
  * @method static Builder<static>|VendorAccountPayable whereCreatedAt($value)
  * @method static Builder<static>|VendorAccountPayable whereCreatedBy($value)
@@ -79,7 +79,7 @@ class VendorAccountPayable extends ApprovalAbstract
         'company_id',
         'vendor_id',
         'vendor_invoice_id',
-        'amount',
+        'total',
         'note',
         'created_by',
         'updated_by',
@@ -114,7 +114,7 @@ class VendorAccountPayable extends ApprovalAbstract
     protected function casts(): array
     {
         return [
-            'amount' => 'decimal:2',
+            'total' => 'decimal:2',
         ];
     }
 }

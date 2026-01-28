@@ -24,7 +24,7 @@ use Illuminate\Validation\ValidationException;
  * @property string $code
  * @property ExpenseCategoryEnum $category
  * @property PaymentMethodEnum $method
- * @property numeric $amount
+ * @property numeric $total
  * @property string|null $note
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -64,7 +64,7 @@ class Expense extends ApprovalAbstract
         'code',
         'category',
         'method',
-        'amount',
+        'total',
         'note',
         'created_by',
         'updated_by',
@@ -74,7 +74,7 @@ class Expense extends ApprovalAbstract
     protected function casts(): array
     {
         return [
-            'amount' => 'decimal:2',
+            'total' => 'decimal:2',
             'category' => ExpenseCategoryEnum::class,
             'method' => PaymentMethodEnum::class,
         ];
@@ -100,14 +100,14 @@ class Expense extends ApprovalAbstract
                 $ledger = new Ledger;
                 $ledger->code = CodeGeneratorService::code('LDG-EXP')->number(Ledger::count())->generate();
                 $ledger->in = 0;
-                $ledger->out = $expense->amount;
-                $ledger->total = $latestLedgerTotal - $expense->amount;
+                $ledger->out = $expense->total;
+                $ledger->total = $latestLedgerTotal - $expense->total;
                 $ledger->save();
 
                 $ledgerComponent = new LedgerComponent;
                 $ledgerComponent->ledger_id = $ledger->id;
                 $ledgerComponent->in = 0;
-                $ledgerComponent->out = $expense->amount;
+                $ledgerComponent->out = $expense->total;
                 $ledgerComponent->total = $ledger->total;
                 $ledgerComponent->save();
             });

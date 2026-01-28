@@ -30,7 +30,7 @@ class VendorPaymentControllerTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    '*' => ['id', 'vendor_id', 'vendor_account_payable_id', 'amount', 'method'],
+                    '*' => ['id', 'vendor_id', 'vendor_account_payable_id', 'total', 'method'],
                 ],
             ]);
     }
@@ -76,7 +76,7 @@ class VendorPaymentControllerTest extends TestCase
         $response = $this->postJson(route('api.v1.vendor.payment.store'), $array);
 
         $response->assertStatus(200);
-        $this->assertDatabaseHas('vendor_payments', ['vendor_id' => $array['vendor_id'], 'amount' => $array['amount']]);
+        $this->assertDatabaseHas('vendor_payments', ['vendor_id' => $array['vendor_id'], 'total' => $array['total']]);
     }
 
     public function test_update_updates_vendor_payment()
@@ -100,7 +100,7 @@ class VendorPaymentControllerTest extends TestCase
         $response = $this->putJson(route('api.v1.vendor.payment.update', $payment->id), $newData);
 
         $response->assertStatus(200);
-        $this->assertDatabaseHas('vendor_payments', ['id' => $payment->id, 'vendor_id' => $newData['vendor_id'], 'amount' => $newData['amount']]);
+        $this->assertDatabaseHas('vendor_payments', ['id' => $payment->id, 'vendor_id' => $newData['vendor_id'], 'total' => $newData['total']]);
     }
 
     public function test_delete_soft_deletes_vendor_payment()

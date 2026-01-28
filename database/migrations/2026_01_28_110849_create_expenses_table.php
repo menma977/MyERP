@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('category')->default(ExpenseCategoryEnum::SALARY->value)->index();
             $table->string('method')->default(PaymentMethodEnum::CASH->value)->index();
             /** @noinspection DuplicatedCode */
-            $table->decimal('amount', 18, 4)->default(0);
+            $table->decimal('total', 18, 4)->default(0);
             $table->text('note')->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();

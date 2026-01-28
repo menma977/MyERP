@@ -29,7 +29,7 @@ class VendorPaymentComponentController extends Controller
         ])->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where(function (Builder $query) use ($request) {
                 return $query->whereHas('payment', function (Builder $query) use ($request) {
-                    $query->where('amount', 'like', '%'.$request->input('search').'%');
+                    $query->where('total', 'like', '%'.$request->input('search').'%');
                 });
             });
         })->where('vendor_payment_id', $request->route('vendor_payment_id'))

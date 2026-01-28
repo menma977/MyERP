@@ -73,7 +73,7 @@ class VendorPaymentController extends Controller
         $request->validate([
             'vendor_id' => ['required', 'exists:vendors,id'],
             'vendor_account_payable_id' => ['required', 'string', 'exists:vendor_account_payables,id'],
-            'amount' => ['required', 'numeric', 'min:0'],
+            'total' => ['required', 'numeric', 'min:0'],
             'method' => ['required', 'string', 'in:'.collect(PaymentMethodEnum::cases())->pluck('value')->implode(',')],
             'note' => ['nullable', 'string'],
             'paid_at' => ['nullable', 'date'],
@@ -100,7 +100,7 @@ class VendorPaymentController extends Controller
         $request->validate([
             'vendor_id' => ['required', 'exists:vendors,id'],
             'vendor_account_payable_id' => ['required', 'string', 'exists:vendor_account_payables,id'],
-            'amount' => ['required', 'numeric', 'min:0'],
+            'total' => ['required', 'numeric', 'min:0'],
             'method' => ['required', 'string', 'in:'.collect(PaymentMethodEnum::cases())->pluck('value')->implode(',')],
             'note' => ['nullable', 'string'],
             'paid_at' => ['nullable', 'date'],
@@ -316,7 +316,7 @@ class VendorPaymentController extends Controller
     {
         $vendorPayment->vendor_id = $request->input('vendor_id');
         $vendorPayment->vendor_account_payable_id = $request->input('vendor_account_payable_id');
-        $vendorPayment->amount = $request->input('amount');
+        $vendorPayment->total = $request->input('total');
         $vendorPayment->method = PaymentMethodEnum::from($request->input('method'));
         $vendorPayment->note = $request->input('note');
         $vendorPayment->paid_at = $request->input('paid_at');

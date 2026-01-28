@@ -184,7 +184,7 @@ class PurchaseRequestComponentController extends Controller
     }
 
     /**
-     * Save the purchase request component and update the total amount in the purchase request.
+     * Save the purchase request component and update the total in the purchase request.
      */
     protected function save(Request $request, PurchaseRequestComponent $purchaseRequestComponent): void
     {

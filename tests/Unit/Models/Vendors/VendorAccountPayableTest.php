@@ -41,9 +41,9 @@ class VendorAccountPayableTest extends TestCase
     {
         /** @var VendorAccountPayable $accountPayable */
         $accountPayable = VendorAccountPayable::factory()->create([
-            'amount' => '100.50',
+            'total' => '100.50',
         ]);
 
-        $this->assertSame('100.50', $accountPayable->amount);
+        $this->assertSame('100.50', $accountPayable->total);
     }
 }

@@ -23,7 +23,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $company_id
  * @property int $vendor_id
  * @property string $vendor_account_payable_id
- * @property numeric $amount
+ * @property numeric $total
  * @property PaymentMethodEnum $method
  * @property string|null $note
  * @property string|null $paid_at
@@ -47,7 +47,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|VendorPayment newQuery()
  * @method static Builder<static>|VendorPayment onlyTrashed()
  * @method static Builder<static>|VendorPayment query()
- * @method static Builder<static>|VendorPayment whereAmount($value)
+ * @method static Builder<static>|VendorPayment whereTotal($value)
  * @method static Builder<static>|VendorPayment whereCompanyId($value)
  * @method static Builder<static>|VendorPayment whereCreatedAt($value)
  * @method static Builder<static>|VendorPayment whereCreatedBy($value)
@@ -83,7 +83,7 @@ class VendorPayment extends ApprovalAbstract
         'company_id',
         'vendor_id',
         'vendor_account_payable_id',
-        'amount',
+        'total',
         'method',
         'note',
         'paid_at',
@@ -121,7 +121,7 @@ class VendorPayment extends ApprovalAbstract
     {
         return [
             'method' => PaymentMethodEnum::class,
-            'amount' => 'decimal:2',
+            'total' => 'decimal:2',
         ];
     }
 }

@@ -26,7 +26,7 @@ class VendorPaymentResource extends JsonResource
             'id' => $this->id,
             'vendor_id' => $this->vendor_id,
             'vendor_account_payable_id' => $this->vendor_account_payable_id,
-            'amount' => $this->amount,
+            'total' => $this->total,
             'method' => $this->method,
             'note' => $this->note,
             'paid_at' => $this->paid_at,

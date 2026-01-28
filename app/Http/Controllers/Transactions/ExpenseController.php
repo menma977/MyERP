@@ -57,7 +57,7 @@ class ExpenseController extends Controller
         $request->validate([
             'category' => ['required', Rule::enum(ExpenseCategoryEnum::class)],
             'method' => ['required', Rule::enum(PaymentMethodEnum::class)],
-            'amount' => ['required', 'numeric', 'min:0'],
+            'total' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string', 'max:1000'],
         ]);
 
@@ -72,7 +72,7 @@ class ExpenseController extends Controller
         $expense->code = CodeGeneratorService::code('EXP')->number(Expense::count())->generate();
         $expense->category = $request->input('category');
         $expense->method = $request->input('method');
-        $expense->amount = $request->input('amount');
+        $expense->total = $request->input('total');
         $expense->note = $request->input('note');
         $expense->save();
 
@@ -109,7 +109,7 @@ class ExpenseController extends Controller
         $request->validate([
             'category' => ['required', Rule::enum(ExpenseCategoryEnum::class)],
             'method' => ['required', Rule::enum(PaymentMethodEnum::class)],
-            'amount' => ['required', 'numeric', 'min:0'],
+            'total' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable', 'string', 'max:1000'],
         ]);
 
@@ -117,7 +117,7 @@ class ExpenseController extends Controller
         $expense = Expense::where('id', $request->route('id'))->firstOrFail();
         $expense->category = $request->input('category');
         $expense->method = $request->input('method');
-        $expense->amount = $request->input('amount');
+        $expense->total = $request->input('total');
         $expense->note = $request->input('note');
         $expense->save();
 
