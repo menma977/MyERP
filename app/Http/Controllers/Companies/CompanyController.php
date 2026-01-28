@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CompanyResource;
 use App\Models\Companies\Company;
 use App\Models\Companies\CompanyHasUser;
+use App\Models\Customer\Customer;
 use App\Models\User;
 use App\Rules\ValidationWithoutTrashed;
 use App\Services\FakeIdTranslationService;
@@ -33,15 +34,16 @@ class CompanyController extends Controller
      */
     public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
-        $companies = Company::query()
-            ->when($request->input('search'), function (Builder $query) use ($request) {
-                return $query->where(function (Builder $query) use ($request) {
-                    return $query->where('name', 'like', '%'.$request->input('search').'%')
-                        ->orWhere('code', 'like', '%'.$request->input('search').'%')
-                        ->orWhere('email', 'like', '%'.$request->input('search').'%');
-                });
-            })
-            ->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
+        $companies = Company::with([
+            'logo',
+            'customerDefault',
+        ])->withCount('customers')->withCount('users')->when($request->input('search'), function (Builder $query) use ($request) {
+            return $query->where(function (Builder $query) use ($request) {
+                return $query->where('name', 'like', '%'.$request->input('search').'%')
+                    ->orWhere('code', 'like', '%'.$request->input('search').'%')
+                    ->orWhere('email', 'like', '%'.$request->input('search').'%');
+            });
+        })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type', 'paginate') === 'collection') {
             return CompanyResource::collection($companies->get());
@@ -63,7 +65,9 @@ class CompanyController extends Controller
     {
         return Company::with([
             'logo',
-            'hasUsers.user',
+            'users',
+            'customerDefault',
+            'customers',
         ])->withUsers()->where(
             'id',
             FakeIdTranslationService::model(new Company)->key($request->route('id'))->translateUlid()
@@ -221,6 +225,15 @@ class CompanyController extends Controller
         $company->website = $request->input('website');
         $company->address = $request->input('address');
         $company->save();
+
+        if ($company->customerDefault()->doesntExist()) {
+            $customer = new Customer;
+            $customer->company_id = $company->id;
+            $customer->code = "WALK-IN-$company->code";
+            $customer->name = "WALK IN $company->name";
+            $customer->is_default = true;
+            $customer->save();
+        }
     }
 
     /**
