@@ -29,20 +29,20 @@ class ExpenseController extends Controller
      */
     public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
-        $Expenses = Expense::withContributors()->withUsers()->when($request->input('search'), function (Builder $query) use ($request) {
+        $expenses = Expense::withContributors()->withUsers()->when($request->input('search'), function (Builder $query) use ($request) {
             return $query->where('code', 'like', '%'.$request->input('search').'%')
                 ->orWhere('note', 'like', '%'.$request->input('search').'%');
         })->orderBy($request->input('sort_by', 'id'), $request->input('sort_order', 'desc'));
 
         if ($request->input('type', 'paginate') === 'collection') {
-            return ExpenseResource::collection($Expenses->get());
+            return ExpenseResource::collection($expenses->get());
         }
 
         if ($request->input('type', 'paginate') === 'count') {
-            return $Expenses->count();
+            return $expenses->count();
         }
 
-        return ExpenseResource::collection($Expenses->paginate($request->input('per_page', 10)));
+        return ExpenseResource::collection($expenses->paginate($request->input('per_page', 10)));
     }
 
     /**
@@ -50,7 +50,7 @@ class ExpenseController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @return array{message: string, Expense: JsonResource}
+     * @return array{message: string, expense: JsonResource}
      */
     public function store(Request $request): array
     {
@@ -80,7 +80,7 @@ class ExpenseController extends Controller
 
         return [
             'message' => trans('messages.success.store', ['target' => 'Expense'], App::getLocale()),
-            'Expense' => $expense->toResource(),
+            'expense' => $expense->toResource(),
         ];
     }
 
