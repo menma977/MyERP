@@ -4,14 +4,14 @@ namespace App\Http\Resources\Transactions;
 
 use App\Http\Resources\CompanyResource;
 use App\Http\Resources\UserResource;
-use App\Models\Transactions\Expanse;
+use App\Models\Transactions\Expense;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin Expanse
+ * @mixin Expense
  */
-class ExpanseResource extends JsonResource
+class ExpenseResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

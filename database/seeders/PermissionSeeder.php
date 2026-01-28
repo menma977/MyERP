@@ -388,7 +388,7 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'purchase.invoice.component.restore', 'label' => 'Purchase Invoice Component Restore', 'group' => 'purchase.invoice.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'purchase.invoice.component.destroy', 'label' => 'Purchase Invoice Component Destroy', 'group' => 'purchase.invoice.component', 'guard_name' => 'sanctum']);
 
-        /**Transaction Expanse permissions*/
+        /**Transaction Expense permissions*/
         $collector->push(['name' => 'transaction.expanse.index', 'label' => 'Transaction Expanse Index', 'group' => 'transaction.expanse', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'transaction.expanse.show', 'label' => 'Transaction Expanse Show', 'group' => 'transaction.expanse', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'transaction.expanse.store', 'label' => 'Transaction Expanse Store', 'group' => 'transaction.expanse', 'guard_name' => 'sanctum']);

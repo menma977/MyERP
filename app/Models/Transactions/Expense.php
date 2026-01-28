@@ -3,9 +3,9 @@
 namespace App\Models\Transactions;
 
 use App\Abstracts\ApprovalAbstract;
-use App\Enums\ExpanseCategoryEnum;
+use App\Enums\ExpenseCategoryEnum;
 use App\Enums\PaymentMethodEnum;
-use App\Http\Resources\Transactions\ExpanseResource;
+use App\Http\Resources\Transactions\ExpenseResource;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -13,12 +13,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
- * Represents an Expanse transaction in the system.
+ * Represents an Expense transaction in the system.
  *
  * @property string $id
  * @property int|null $company_id
  * @property string $code
- * @property ExpanseCategoryEnum $category
+ * @property ExpenseCategoryEnum $category
  * @property PaymentMethodEnum $method
  * @property string $amount
  * @property string|null $note
@@ -34,19 +34,19 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\User|null $updatedBy
  * @property-read \App\Models\User|null $deletedBy
  *
- * @method static Builder<static>|Expanse newModelQuery()
- * @method static Builder<static>|Expanse newQuery()
- * @method static Builder<static>|Expanse onlyTrashed()
- * @method static Builder<static>|Expanse query()
- * @method static Builder<static>|Expanse withContributors()
- * @method static Builder<static>|Expanse withUsers()
- * @method static Builder<static>|Expanse withTrashed(bool $withTrashed = true)
- * @method static Builder<static>|Expanse withoutTrashed()
+ * @method static Builder<static>|Expense newModelQuery()
+ * @method static Builder<static>|Expense newQuery()
+ * @method static Builder<static>|Expense onlyTrashed()
+ * @method static Builder<static>|Expense query()
+ * @method static Builder<static>|Expense withContributors()
+ * @method static Builder<static>|Expense withUsers()
+ * @method static Builder<static>|Expense withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Expense withoutTrashed()
  *
  * @mixin \Eloquent
  */
-#[UseResource(ExpanseResource::class)]
-class Expanse extends ApprovalAbstract
+#[UseResource(ExpenseResource::class)]
+class Expense extends ApprovalAbstract
 {
     use HasUlids, SoftDeletes;
 
@@ -71,7 +71,7 @@ class Expanse extends ApprovalAbstract
     {
         return [
             'amount' => 'decimal:2',
-            'category' => ExpanseCategoryEnum::class,
+            'category' => ExpenseCategoryEnum::class,
             'method' => PaymentMethodEnum::class,
         ];
     }

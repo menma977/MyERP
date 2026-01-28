@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum ExpanseCategoryEnum: string
+enum ExpenseCategoryEnum: string
 {
     case OPERATIONAL = 'operational';
     case SALARY = 'salary';

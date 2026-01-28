@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\ExpanseCategoryEnum;
+use App\Enums\ExpenseCategoryEnum;
 use App\Enums\PaymentMethodEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('expanses', function (Blueprint $table) {
+        Schema::create('expenses', function (Blueprint $table) {
             $table->ulid('id')->primary()->index();
             $table->foreignId('company_id')->constrained('companies')->cascadeOnDelete();
             $table->string('code')->unique();
-            $table->string('category')->default(ExpanseCategoryEnum::SALARY->value)->index();
+            $table->string('category')->default(ExpenseCategoryEnum::SALARY->value)->index();
             $table->string('method')->default(PaymentMethodEnum::CASH->value)->index();
             /** @noinspection DuplicatedCode */
             $table->decimal('amount', 18, 4)->default(0);
@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('expanses');
+        Schema::dropIfExists('expenses');
     }
 };
