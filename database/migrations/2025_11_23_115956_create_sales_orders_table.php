@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('sales_orders', function (Blueprint $table) {
             $table->ulid('id')->primary()->index();
+            $table->foreignUlid('customer_id')->nullable()->constrained('customers')->nullOnDelete();
             $table->string('code')->unique();
             $table->decimal('total', 18, 4)->default(0);
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();

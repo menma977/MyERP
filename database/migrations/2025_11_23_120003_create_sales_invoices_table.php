@@ -1,6 +1,8 @@
 <?php
 
 use App\Enums\DiscountTypeEnum;
+use App\Enums\PaymentMethodEnum;
+use App\Enums\PaymentStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,6 +17,7 @@ return new class extends Migration
         Schema::create('sales_invoices', function (Blueprint $table) {
             $table->ulid('id')->primary()->index();
             $table->foreignUlid('sales_order_id')->constrained('sales_orders')->cascadeOnDelete();
+            $table->foreignUlid('customer_id')->nullable()->constrained('customers')->nullOnDelete();
             $table->string('code')->unique();
             $table->decimal('total', 18, 4)->default(0);
             $table->decimal('tax', 18, 4)->default(0);
@@ -22,7 +25,10 @@ return new class extends Migration
             $table->decimal('discount', 18, 4)->default(0);
             $table->decimal('fee', 18, 4)->default(0);
             $table->decimal('grand_total', 18, 4)->default(0);
+            $table->decimal('paid', 18, 4)->default(0);
             $table->text('note')->nullable();
+            $table->string('method')->default(PaymentMethodEnum::CASH->value)->index();
+            $table->string('status')->default(PaymentStatusEnum::PAID->value)->index();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('deleted_by')->nullable()->constrained('users')->nullOnDelete();
