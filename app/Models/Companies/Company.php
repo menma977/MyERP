@@ -4,6 +4,7 @@ namespace App\Models\Companies;
 
 use App\Abstracts\ModelAbstract;
 use App\Http\Resources\CompanyResource;
+use App\Models\Customer\Customer;
 use App\Models\FileBucket;
 use App\Models\User;
 use Database\Factories\Companies\CompanyFactory;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -112,6 +114,22 @@ class Company extends ModelAbstract
     public function users(): HasManyThrough
     {
         return $this->hasManyThrough(User::class, CompanyHasUser::class, 'company_id', 'id', 'id', 'user_id');
+    }
+
+    /**
+     * @return HasOne<Customer, $this>
+     */
+    public function customerDefault(): HasOne
+    {
+        return $this->hasOne(Customer::class, 'company_id')->where('is_default', true)->withDefault(['name' => 'No Default Customer']);
+    }
+
+    /**
+     * @return HasMany<Customer, $this>
+     */
+    public function customers(): HasMany
+    {
+        return $this->hasMany(Customer::class, 'company_id')->where('is_default', false);
     }
 
     /**

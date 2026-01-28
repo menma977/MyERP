@@ -4,8 +4,11 @@ namespace App\Models\Sales;
 
 use App\Abstracts\ApprovalAbstract;
 use App\Enums\DiscountTypeEnum;
+use App\Enums\PaymentMethodEnum;
+use App\Enums\PaymentStatusEnum;
 use App\Http\Resources\Sales\SalesInvoiceResource;
 use App\Models\Approval\ApprovalEvent;
+use App\Models\Customer\Customer;
 use App\Models\Items\GoodIssue;
 use App\Models\Transactions\Ledger;
 use App\Models\Transactions\LedgerComponent;
@@ -31,6 +34,7 @@ use Illuminate\Validation\ValidationException;
  * @property string $id
  * @property int|null $company_id
  * @property string $sales_order_id
+ * @property string|null $customer_id
  * @property string $code
  * @property numeric $total
  * @property numeric $tax
@@ -38,7 +42,10 @@ use Illuminate\Validation\ValidationException;
  * @property numeric $discount
  * @property numeric $fee
  * @property numeric $grand_total
+ * @property numeric $paid
  * @property string|null $note
+ * @property PaymentMethodEnum $method
+ * @property PaymentStatusEnum $status
  * @property int|null $created_by
  * @property int|null $updated_by
  * @property int|null $deleted_by
@@ -48,6 +55,7 @@ use Illuminate\Validation\ValidationException;
  * @property-read Collection<int, \App\Models\Sales\SalesInvoiceComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
+ * @property-read \App\Models\Customer\Customer|null $customer
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
  * @property-read Collection<int, GoodIssue> $goodIssues
@@ -100,6 +108,7 @@ class SalesInvoice extends ApprovalAbstract
     protected $fillable = [
         'company_id',
         'sales_order_id',
+        'customer_id',
         'code',
         'total',
         'tax',
@@ -107,12 +116,23 @@ class SalesInvoice extends ApprovalAbstract
         'discount',
         'fee',
         'grand_total',
+        'paid',
         'note',
+        'method',
+        'status',
         'created_by',
         'updated_by',
         'deleted_by',
         'deleted_at',
     ];
+
+    /**
+     * @return BelongsTo<\App\Models\Customer\Customer, $this>
+     */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
 
     /**
      * @return BelongsTo<SalesOrder, $this>
@@ -159,6 +179,9 @@ class SalesInvoice extends ApprovalAbstract
             'discount' => 'decimal:2',
             'fee' => 'decimal:2',
             'grand_total' => 'decimal:2',
+            'paid' => 'decimal:2',
+            'method' => PaymentMethodEnum::class,
+            'status' => PaymentStatusEnum::class,
         ];
     }
 
@@ -177,28 +200,30 @@ class SalesInvoice extends ApprovalAbstract
                     ]);
                 }
 
-                $ledger = new Ledger;
-                $ledger->code = CodeGeneratorService::code('LDG')->number(Ledger::count())->generate();
-                $ledger->in = 0.0;
-                $ledger->out = 0.0;
-                $ledger->total = 0.0;
-                $ledger->save();
+                if ($salesInvoice->paid < $salesInvoice->grand_total) {
+                    $salesInvoice->status = PaymentStatusEnum::PARTIAL;
+                } else {
+                    $salesInvoice->status = PaymentStatusEnum::PAID;
+                }
+                $salesInvoice->save();
 
-                $total = 0;
-                foreach ($salesInvoice->components as $component) {
+                if ($salesInvoice->paid > 0) {
+                    $latestLedgerTotal = Ledger::latest()->value('total') ?? 0;
+
+                    $ledger = new Ledger;
+                    $ledger->code = CodeGeneratorService::code('LDG')->number(Ledger::count())->generate();
+                    $ledger->in = $salesInvoice->paid;
+                    $ledger->out = 0.0;
+                    $ledger->total = $latestLedgerTotal + $salesInvoice->paid;
+                    $ledger->save();
+
                     $ledgerComponent = new LedgerComponent;
                     $ledgerComponent->ledger_id = $ledger->id;
-                    $ledgerComponent->in = $component->total;
+                    $ledgerComponent->in = $salesInvoice->paid;
                     $ledgerComponent->out = 0.0;
-                    $ledgerComponent->total = LedgerComponent::where('ledger_id', $ledger->id)->sum('total') + $ledgerComponent->in;
+                    $ledgerComponent->total = $ledger->total;
                     $ledgerComponent->save();
-
-                    $total += $ledgerComponent->in;
                 }
-
-                $ledger->in = $total;
-                $ledger->total = Ledger::sum('total') + $ledger->in;
-                $ledger->save();
             });
         }
     }

@@ -5,6 +5,7 @@ namespace App\Models\Sales;
 use App\Abstracts\ApprovalAbstract;
 use App\Http\Resources\Sales\SalesReturnResource;
 use App\Models\Approval\ApprovalEvent;
+use App\Models\Customer\Customer;
 use App\Models\User;
 use Database\Factories\Sales\SalesReturnFactory;
 use Eloquent;
@@ -25,6 +26,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $company_id
  * @property string $sales_order_id
  * @property string $sales_invoice_id
+ * @property string|null $customer_id
  * @property string $code
  * @property numeric $total
  * @property int|null $created_by
@@ -36,6 +38,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, \App\Models\Sales\SalesReturnComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
+ * @property-read \App\Models\Customer\Customer|null $customer
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
  * @property-read \App\Models\Sales\SalesInvoice|null $invoice
@@ -81,6 +84,7 @@ class SalesReturn extends ApprovalAbstract
         'company_id',
         'sales_order_id',
         'sales_invoice_id',
+        'customer_id',
         'code',
         'total',
         'created_by',
@@ -88,6 +92,14 @@ class SalesReturn extends ApprovalAbstract
         'deleted_by',
         'deleted_at',
     ];
+
+    /**
+     * @return BelongsTo<\App\Models\Customer\Customer, $this>
+     */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
 
     /**
      * @return BelongsTo<SalesOrder, $this>
