@@ -508,6 +508,15 @@ class PermissionSeeder extends Seeder
         $collector->push(['name' => 'payment.request.component.destroy', 'label' => 'Payment Request Component Destroy', 'group' => 'payment.request.component', 'guard_name' => 'sanctum']);
         $collector->push(['name' => 'payment.request.component.restore', 'label' => 'Payment Request Component Restore', 'group' => 'payment.request.component', 'guard_name' => 'sanctum']);
 
+        /**Company permissions*/
+        $collector->push(['name' => 'company.index', 'label' => 'Company Index', 'group' => 'company', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'company.show', 'label' => 'Company Show', 'group' => 'company', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'company.store', 'label' => 'Company Store', 'group' => 'company', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'company.update', 'label' => 'Company Update', 'group' => 'company', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'company.delete', 'label' => 'Company Delete', 'group' => 'company', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'company.destroy', 'label' => 'Company Destroy', 'group' => 'company', 'guard_name' => 'sanctum']);
+        $collector->push(['name' => 'company.restore', 'label' => 'Company Restore', 'group' => 'company', 'guard_name' => 'sanctum']);
+
         return $collector;
     }
 }
