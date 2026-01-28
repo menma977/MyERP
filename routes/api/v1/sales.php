@@ -4,6 +4,7 @@ use App\Http\Controllers\Sales\SalesInvoiceComponentController;
 use App\Http\Controllers\Sales\SalesInvoiceController;
 use App\Http\Controllers\Sales\SalesOrderComponentController;
 use App\Http\Controllers\Sales\SalesOrderController;
+use App\Http\Controllers\Sales\SalesPaymentController;
 use App\Http\Controllers\Sales\SalesReturnComponentController;
 use App\Http\Controllers\Sales\SalesReturnController;
 use Illuminate\Support\Facades\Route;
@@ -17,8 +18,11 @@ Route::prefix('sales')->name('sales.')->middleware(['auth:sanctum'])->group(func
         Route::delete('delete/{id}', [SalesOrderController::class, 'delete'])->name('delete')->middleware('can:sales.order.delete');
         Route::post('restore/{id}', [SalesOrderController::class, 'restore'])->name('restore')->middleware('can:sales.order.restore');
         Route::delete('destroy/{id}', [SalesOrderController::class, 'destroy'])->name('destroy')->middleware('can:sales.order.destroy');
-        Route::post('approve/{id}', [SalesOrderController::class, 'approve'])->name('approve')->middleware('can:sales.order.store');
-        Route::post('reject/{id}', [SalesOrderController::class, 'reject'])->name('reject')->middleware('can:sales.order.store');
+        Route::post('approve/{id}', [SalesOrderController::class, 'approve'])->name('approve')->middleware('can:sales.order.approve');
+        Route::post('reject/{id}', [SalesOrderController::class, 'reject'])->name('reject')->middleware('can:sales.order.reject');
+        Route::post('cancel/{id}', [SalesOrderController::class, 'cancel'])->name('cancel')->middleware('can:sales.order.cancel');
+        Route::post('rollback/{id}', [SalesOrderController::class, 'rollback'])->name('rollback')->middleware('can:sales.order.rollback');
+        Route::post('force/{id}', [SalesOrderController::class, 'force'])->name('force')->middleware('can:sales.order.force');
 
         Route::prefix('component/{sales_order_id}')->name('component.')->middleware('can:sales.order.component.index')->group(function () {
             Route::get('index', [SalesOrderComponentController::class, 'index'])->name('index');
@@ -39,8 +43,11 @@ Route::prefix('sales')->name('sales.')->middleware(['auth:sanctum'])->group(func
         Route::delete('delete/{id}', [SalesInvoiceController::class, 'delete'])->name('delete')->middleware('can:sales.invoice.delete');
         Route::post('restore/{id}', [SalesInvoiceController::class, 'restore'])->name('restore')->middleware('can:sales.invoice.restore');
         Route::delete('destroy/{id}', [SalesInvoiceController::class, 'destroy'])->name('destroy')->middleware('can:sales.invoice.destroy');
-        Route::post('approve/{id}', [SalesInvoiceController::class, 'approve'])->name('approve')->middleware('can:sales.invoice.store');
-        Route::post('reject/{id}', [SalesInvoiceController::class, 'reject'])->name('reject')->middleware('can:sales.invoice.store');
+        Route::post('approve/{id}', [SalesInvoiceController::class, 'approve'])->name('approve')->middleware('can:sales.invoice.approve');
+        Route::post('reject/{id}', [SalesInvoiceController::class, 'reject'])->name('reject')->middleware('can:sales.invoice.reject');
+        Route::post('cancel/{id}', [SalesInvoiceController::class, 'cancel'])->name('cancel')->middleware('can:sales.invoice.cancel');
+        Route::post('rollback/{id}', [SalesInvoiceController::class, 'rollback'])->name('rollback')->middleware('can:sales.invoice.rollback');
+        Route::post('force/{id}', [SalesInvoiceController::class, 'force'])->name('force')->middleware('can:sales.invoice.force');
 
         Route::prefix('component/{sales_invoice_id}')->name('component.')->middleware('can:sales.invoice.component.index')->group(function () {
             Route::get('index', [SalesInvoiceComponentController::class, 'index'])->name('index');
@@ -61,8 +68,11 @@ Route::prefix('sales')->name('sales.')->middleware(['auth:sanctum'])->group(func
         Route::delete('delete/{id}', [SalesReturnController::class, 'delete'])->name('delete')->middleware('can:sales.return.delete');
         Route::post('restore/{id}', [SalesReturnController::class, 'restore'])->name('restore')->middleware('can:sales.return.restore');
         Route::delete('destroy/{id}', [SalesReturnController::class, 'destroy'])->name('destroy')->middleware('can:sales.return.destroy');
-        Route::post('approve/{id}', [SalesReturnController::class, 'approve'])->name('approve')->middleware('can:sales.return.store');
-        Route::post('reject/{id}', [SalesReturnController::class, 'reject'])->name('reject')->middleware('can:sales.return.store');
+        Route::post('approve/{id}', [SalesReturnController::class, 'approve'])->name('approve')->middleware('can:sales.return.approve');
+        Route::post('reject/{id}', [SalesReturnController::class, 'reject'])->name('reject')->middleware('can:sales.return.reject');
+        Route::post('cancel/{id}', [SalesReturnController::class, 'cancel'])->name('cancel')->middleware('can:sales.return.cancel');
+        Route::post('rollback/{id}', [SalesReturnController::class, 'rollback'])->name('rollback')->middleware('can:sales.return.rollback');
+        Route::post('force/{id}', [SalesReturnController::class, 'force'])->name('force')->middleware('can:sales.return.force');
 
         Route::prefix('component/{sales_return_id}')->name('component.')->middleware('can:sales.return.component.index')->group(function () {
             Route::get('index', [SalesReturnComponentController::class, 'index'])->name('index');
@@ -73,5 +83,20 @@ Route::prefix('sales')->name('sales.')->middleware(['auth:sanctum'])->group(func
             Route::post('restore/{id}', [SalesReturnComponentController::class, 'restore'])->name('restore')->middleware('can:sales.return.component.restore');
             Route::delete('destroy/{id}', [SalesReturnComponentController::class, 'destroy'])->name('destroy')->middleware('can:sales.return.component.destroy');
         });
+    });
+
+    Route::prefix('payment')->name('payment.')->middleware('can:sales.payment.index')->group(function () {
+        Route::get('index', [SalesPaymentController::class, 'index'])->name('index');
+        Route::get('show/{id}', [SalesPaymentController::class, 'show'])->name('show')->middleware('can:sales.payment.show');
+        Route::post('store', [SalesPaymentController::class, 'store'])->name('store')->middleware('can:sales.payment.store');
+        Route::put('update/{id}', [SalesPaymentController::class, 'update'])->name('update')->middleware('can:sales.payment.update');
+        Route::delete('delete/{id}', [SalesPaymentController::class, 'delete'])->name('delete')->middleware('can:sales.payment.delete');
+        Route::post('restore/{id}', [SalesPaymentController::class, 'restore'])->name('restore')->middleware('can:sales.payment.restore');
+        Route::delete('destroy/{id}', [SalesPaymentController::class, 'destroy'])->name('destroy')->middleware('can:sales.payment.destroy');
+        Route::post('approve/{id}', [SalesPaymentController::class, 'approve'])->name('approve')->middleware('can:sales.payment.approve');
+        Route::post('reject/{id}', [SalesPaymentController::class, 'reject'])->name('reject')->middleware('can:sales.payment.reject');
+        Route::post('cancel/{id}', [SalesPaymentController::class, 'cancel'])->name('cancel')->middleware('can:sales.payment.cancel');
+        Route::post('rollback/{id}', [SalesPaymentController::class, 'rollback'])->name('rollback')->middleware('can:sales.payment.rollback');
+        Route::post('force/{id}', [SalesPaymentController::class, 'force'])->name('force')->middleware('can:sales.payment.force');
     });
 });

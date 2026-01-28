@@ -15,6 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary()->index();
             $table->foreignId('vendor_id')->constrained('vendors')->cascadeOnDelete();
             $table->foreignUlid('vendor_invoice_id')->constrained('vendor_invoices')->cascadeOnDelete();
+            /** @noinspection DuplicatedCode */
             $table->decimal('amount', 18, 4)->default(0);
             $table->text('note')->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();

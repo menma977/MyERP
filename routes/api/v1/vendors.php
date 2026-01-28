@@ -25,6 +25,11 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth:sanctum', 'can:vendo
         Route::delete('delete/{id}', [VendorComponentController::class, 'delete'])->name('delete')->middleware('can:vendor.component.delete');
         Route::post('restore/{id}', [VendorComponentController::class, 'restore'])->name('restore')->middleware('can:vendor.component.restore');
         Route::delete('destroy/{id}', [VendorComponentController::class, 'destroy'])->name('destroy')->middleware('can:vendor.component.destroy');
+        Route::post('approve/{id}', [VendorComponentController::class, 'approve'])->name('approve')->middleware('can:vendor.component.approve');
+        Route::post('reject/{id}', [VendorComponentController::class, 'reject'])->name('reject')->middleware('can:vendor.component.reject');
+        Route::post('cancel/{id}', [VendorComponentController::class, 'cancel'])->name('cancel')->middleware('can:vendor.component.cancel');
+        Route::post('rollback/{id}', [VendorComponentController::class, 'rollback'])->name('rollback')->middleware('can:vendor.component.rollback');
+        Route::post('force/{id}', [VendorComponentController::class, 'force'])->name('force')->middleware('can:vendor.component.force');
     });
 
     Route::prefix('invoice')->name('invoice.')->middleware('can:vendor.invoice.index')->group(function () {

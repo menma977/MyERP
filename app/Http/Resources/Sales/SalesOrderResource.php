@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Sales;
 
 use App\Http\Resources\Approval\ApprovalEventResource;
+use App\Http\Resources\Customer\CustomerResource;
 use App\Http\Resources\UserResource;
 use App\Models\Sales\SalesOrder;
 use Illuminate\Http\Request;
@@ -24,6 +25,7 @@ class SalesOrderResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'customer' => CustomerResource::make($this->whenLoaded('customer')),
             'code' => $this->code,
             'total' => $this->total,
             'components' => SalesOrderComponentResource::collection($this->whenLoaded('components')),

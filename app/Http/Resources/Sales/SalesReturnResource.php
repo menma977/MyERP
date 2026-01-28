@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Sales;
 
 use App\Http\Resources\Approval\ApprovalEventResource;
+use App\Http\Resources\Customer\CustomerResource;
 use App\Http\Resources\UserResource;
 use App\Models\Sales\SalesReturn;
 use Illuminate\Http\Request;
@@ -26,6 +27,7 @@ class SalesReturnResource extends JsonResource
             'id' => $this->id,
             'sales_order_id' => $this->sales_order_id,
             'sales_invoice_id' => $this->sales_invoice_id,
+            'customer' => CustomerResource::make($this->whenLoaded('customer')),
             'code' => $this->code,
             'total' => $this->total,
             'order' => SalesOrderResource::make($this->whenLoaded('order')),

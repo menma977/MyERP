@@ -5,6 +5,7 @@ namespace App\Models\Items;
 use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Items\ItemBatchResource;
 use App\Models\User;
+use Database\Factories\Items\ItemBatchFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,6 +20,7 @@ use Illuminate\Support\Carbon;
  * Represents an Item Batch in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $item_id
  * @property string $code
  * @property Carbon|null $expired_at
@@ -35,11 +37,13 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\Items\ItemStock|null $stock
  * @property-read User|null $updatedBy
  *
+ * @method static ItemBatchFactory factory($count = null, $state = [])
  * @method static Builder<static>|ItemBatch newModelQuery()
  * @method static Builder<static>|ItemBatch newQuery()
  * @method static Builder<static>|ItemBatch onlyTrashed()
  * @method static Builder<static>|ItemBatch query()
  * @method static Builder<static>|ItemBatch whereCode($value)
+ * @method static Builder<static>|ItemBatch whereCompanyId($value)
  * @method static Builder<static>|ItemBatch whereCreatedAt($value)
  * @method static Builder<static>|ItemBatch whereCreatedBy($value)
  * @method static Builder<static>|ItemBatch whereDeletedAt($value)

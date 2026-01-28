@@ -84,7 +84,7 @@ class PurchaseRequestControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $user->givePermissionTo(Permission::where('name', 'purchase.request.index')->where('guard_name', 'sanctum')->first());
-        $user->givePermissionTo(Permission::where('name', 'purchase.request.store')->where('guard_name', 'sanctum')->first());
+        $user->givePermissionTo(Permission::where('name', 'purchase.request.approve')->where('guard_name', 'sanctum')->first());
 
         $purchaseRequest = PurchaseRequest::factory()->create();
         PurchaseRequestComponent::factory()->count(2)->create(['purchase_request_id' => $purchaseRequest->id]);
@@ -113,6 +113,7 @@ class PurchaseRequestControllerTest extends TestCase
             'purchase.request.rollback',
             'purchase.request.force',
             'purchase.procurement.store',
+            'purchase.request.approve',
         ];
 
         foreach ($permissions as $permission) {

@@ -5,6 +5,7 @@ namespace App\Models\Approval;
 use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Approval\ApprovalFlowResource;
 use App\Models\User;
+use Database\Factories\Approval\ApprovalFlowFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $name
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -32,10 +34,12 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
  *
+ * @method static ApprovalFlowFactory factory($count = null, $state = [])
  * @method static Builder<static>|ApprovalFlow newModelQuery()
  * @method static Builder<static>|ApprovalFlow newQuery()
  * @method static Builder<static>|ApprovalFlow onlyTrashed()
  * @method static Builder<static>|ApprovalFlow query()
+ * @method static Builder<static>|ApprovalFlow whereCompanyId($value)
  * @method static Builder<static>|ApprovalFlow whereCreatedAt($value)
  * @method static Builder<static>|ApprovalFlow whereCreatedBy($value)
  * @method static Builder<static>|ApprovalFlow whereDeletedAt($value)

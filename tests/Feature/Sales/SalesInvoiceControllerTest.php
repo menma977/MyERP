@@ -88,9 +88,9 @@ class SalesInvoiceControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $user->givePermissionTo(Permission::where('name', 'sales.invoice.index')->where('guard_name', 'sanctum')->first());
-        $user->givePermissionTo(Permission::where('name', 'sales.invoice.store')->where('guard_name', 'sanctum')->first());
+        $user->givePermissionTo(Permission::where('name', 'sales.invoice.approve')->where('guard_name', 'sanctum')->first());
 
-        $invoice = SalesInvoice::factory()->create(['total' => 1000]);
+        $invoice = SalesInvoice::factory()->create(['total' => 1000, 'paid' => 1000]);
         SalesInvoiceComponent::factory()->count(2)->create([
             'sales_invoice_id' => $invoice->id,
             'total' => 500,
@@ -101,7 +101,7 @@ class SalesInvoiceControllerTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('ledgers', ['in' => 1000]);
-        $this->assertDatabaseCount('ledger_components', 2);
+        $this->assertDatabaseCount('ledger_components', 1);
     }
 
     protected function setUp(): void
@@ -111,7 +111,6 @@ class SalesInvoiceControllerTest extends TestCase
         $permissions = [
             'sales.invoice.index',
             'sales.invoice.show',
-            'sales.invoice.store',
             'sales.invoice.update',
             'sales.invoice.delete',
             'sales.invoice.restore',

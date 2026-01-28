@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Items\BatchController;
+use App\Http\Controllers\Items\GoodIssueComponentController;
+use App\Http\Controllers\Items\GoodIssueController;
 use App\Http\Controllers\Items\GoodReceiptComponentController;
 use App\Http\Controllers\Items\GoodReceiptController;
 use App\Http\Controllers\Items\ItemBillController;
@@ -28,7 +30,7 @@ Route::prefix('item')->name('item.')->middleware(['auth:sanctum', 'can:item.inde
         Route::get('show/{id}', [StockController::class, 'show'])->name('show')->middleware('can:item.batch.stock.show');
     });
 
-    Route::prefix('stock-history')->name('stock-history.')->middleware('can:item.batch.stock.history.index')->group(function () {
+    Route::prefix('stock/history')->name('stock.history.')->middleware('can:item.batch.stock.history.index')->group(function () {
         Route::get('index', [StockHistoryController::class, 'index'])->name('index');
         Route::get('show/{id}', [StockHistoryController::class, 'show'])->name('show')->middleware('can:item.batch.stock.history.show');
     });
@@ -41,11 +43,11 @@ Route::prefix('item')->name('item.')->middleware(['auth:sanctum', 'can:item.inde
             Route::delete('delete/{id}', [GoodReceiptController::class, 'delete'])->name('delete')->middleware('can:good.receipt.delete');
             Route::post('restore/{id}', [GoodReceiptController::class, 'restore'])->name('restore')->middleware('can:good.receipt.restore');
             Route::delete('destroy/{id}', [GoodReceiptController::class, 'destroy'])->name('destroy')->middleware('can:good.receipt.destroy');
-            Route::post('approve/{id}', [GoodReceiptController::class, 'approve'])->name('approve')->middleware('can:good.receipt.store');
-            Route::post('reject/{id}', [GoodReceiptController::class, 'reject'])->name('reject')->middleware('can:good.receipt.store');
-            Route::post('cancel/{id}', [GoodReceiptController::class, 'cancel'])->name('cancel')->middleware('can:good.receipt.store');
-            Route::post('rollback/{id}', [GoodReceiptController::class, 'rollback'])->name('rollback')->middleware('can:good.receipt.store');
-            Route::post('force/{id}', [GoodReceiptController::class, 'force'])->name('force')->middleware('can:good.receipt.store');
+            Route::post('approve/{id}', [GoodReceiptController::class, 'approve'])->name('approve')->middleware('can:good.receipt.approve');
+            Route::post('reject/{id}', [GoodReceiptController::class, 'reject'])->name('reject')->middleware('can:good.receipt.reject');
+            Route::post('cancel/{id}', [GoodReceiptController::class, 'cancel'])->name('cancel')->middleware('can:good.receipt.cancel');
+            Route::post('rollback/{id}', [GoodReceiptController::class, 'rollback'])->name('rollback')->middleware('can:good.receipt.rollback');
+            Route::post('force/{id}', [GoodReceiptController::class, 'force'])->name('force')->middleware('can:good.receipt.force');
 
             Route::prefix('component/{good_receipt_id}')->name('component.')->middleware('can:good.receipt.component.index')->group(function () {
                 Route::get('index', [GoodReceiptComponentController::class, 'index'])->name('index');
@@ -55,6 +57,31 @@ Route::prefix('item')->name('item.')->middleware(['auth:sanctum', 'can:item.inde
                 Route::delete('delete/{id}', [GoodReceiptComponentController::class, 'delete'])->name('delete')->middleware('can:good.receipt.component.delete');
                 Route::post('restore/{id}', [GoodReceiptComponentController::class, 'restore'])->name('restore')->middleware('can:good.receipt.component.restore');
                 Route::delete('destroy/{id}', [GoodReceiptComponentController::class, 'destroy'])->name('destroy')->middleware('can:good.receipt.component.destroy');
+            });
+        });
+
+        Route::prefix('issue')->name('issue.')->middleware('can:good.issue.index')->group(function () {
+            Route::get('index', [GoodIssueController::class, 'index'])->name('index');
+            Route::get('show/{id}', [GoodIssueController::class, 'show'])->name('show')->middleware('can:good.issue.show');
+            Route::post('store', [GoodIssueController::class, 'store'])->name('store')->middleware('can:good.issue.store');
+            Route::put('update/{id}', [GoodIssueController::class, 'update'])->name('update')->middleware('can:good.issue.update');
+            Route::delete('delete/{id}', [GoodIssueController::class, 'delete'])->name('delete')->middleware('can:good.issue.delete');
+            Route::post('restore/{id}', [GoodIssueController::class, 'restore'])->name('restore')->middleware('can:good.issue.restore');
+            Route::delete('destroy/{id}', [GoodIssueController::class, 'destroy'])->name('destroy')->middleware('can:good.issue.destroy');
+            Route::post('approve/{id}', [GoodIssueController::class, 'approve'])->name('approve')->middleware('can:good.issue.approve');
+            Route::post('reject/{id}', [GoodIssueController::class, 'reject'])->name('reject')->middleware('can:good.issue.reject');
+            Route::post('cancel/{id}', [GoodIssueController::class, 'cancel'])->name('cancel')->middleware('can:good.issue.cancel');
+            Route::post('rollback/{id}', [GoodIssueController::class, 'rollback'])->name('rollback')->middleware('can:good.issue.rollback');
+            Route::post('force/{id}', [GoodIssueController::class, 'force'])->name('force')->middleware('can:good.issue.force');
+
+            Route::prefix('component/{good_issue_id}')->name('component.')->middleware('can:good.issue.component.index')->group(function () {
+                Route::get('index', [GoodIssueComponentController::class, 'index'])->name('index');
+                Route::get('show/{id}', [GoodIssueComponentController::class, 'show'])->name('show')->middleware('can:good.issue.component.show');
+                Route::post('store', [GoodIssueComponentController::class, 'store'])->name('store')->middleware('can:good.issue.component.store');
+                Route::put('update/{id}', [GoodIssueComponentController::class, 'update'])->name('update')->middleware('can:good.issue.component.update');
+                Route::delete('delete/{id}', [GoodIssueComponentController::class, 'delete'])->name('delete')->middleware('can:good.issue.component.delete');
+                Route::post('restore/{id}', [GoodIssueComponentController::class, 'restore'])->name('restore')->middleware('can:good.issue.component.restore');
+                Route::delete('destroy/{id}', [GoodIssueComponentController::class, 'destroy'])->name('destroy')->middleware('can:good.issue.component.destroy');
             });
         });
     });

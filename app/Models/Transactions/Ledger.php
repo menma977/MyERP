@@ -5,6 +5,7 @@ namespace App\Models\Transactions;
 use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Transactions\LedgerResource;
 use App\Models\User;
+use Database\Factories\Transactions\LedgerFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,6 +20,7 @@ use Illuminate\Support\Carbon;
  * Represents a Ledger in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $code
  * @property numeric $in
  * @property numeric $out
@@ -35,11 +37,13 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $deletedBy
  * @property-read User|null $updatedBy
  *
+ * @method static LedgerFactory factory($count = null, $state = [])
  * @method static Builder<static>|Ledger newModelQuery()
  * @method static Builder<static>|Ledger newQuery()
  * @method static Builder<static>|Ledger onlyTrashed()
  * @method static Builder<static>|Ledger query()
  * @method static Builder<static>|Ledger whereCode($value)
+ * @method static Builder<static>|Ledger whereCompanyId($value)
  * @method static Builder<static>|Ledger whereCreatedAt($value)
  * @method static Builder<static>|Ledger whereCreatedBy($value)
  * @method static Builder<static>|Ledger whereDeletedAt($value)

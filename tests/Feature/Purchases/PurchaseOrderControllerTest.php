@@ -82,7 +82,7 @@ class PurchaseOrderControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $user->givePermissionTo(Permission::where('name', 'purchase.order.index')->where('guard_name', 'sanctum')->first());
-        $user->givePermissionTo(Permission::where('name', 'purchase.order.store')->where('guard_name', 'sanctum')->first());
+        $user->givePermissionTo(Permission::where('name', 'purchase.order.approve')->where('guard_name', 'sanctum')->first());
 
         $order = PurchaseOrder::factory()->create();
         PurchaseOrderComponent::factory()->count(2)->create(['purchase_order_id' => $order->id]);
@@ -107,6 +107,7 @@ class PurchaseOrderControllerTest extends TestCase
             'purchase.order.delete',
             'purchase.order.restore',
             'purchase.order.destroy',
+            'purchase.order.approve',
         ];
 
         foreach ($permissions as $permission) {

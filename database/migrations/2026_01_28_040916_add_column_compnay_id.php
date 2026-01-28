@@ -80,7 +80,6 @@ return new class extends Migration
             'approval_group_contributors',
             'approval_groups',
             'approvals',
-            'companies',
             'file_buckets',
             'good_issue_components',
             'good_receipt_components',

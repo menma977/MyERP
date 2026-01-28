@@ -28,8 +28,7 @@ class PurchaseReturnController extends Controller
      */
     public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
-        $purchaseReturns = PurchaseReturn::query()
-            ->withContributors()
+        $purchaseReturns = PurchaseReturn::withContributors()
             ->withUsers()
             ->with([
                 'components',
@@ -98,14 +97,16 @@ class PurchaseReturnController extends Controller
      */
     public function show(Request $request): JsonResource
     {
-        return PurchaseReturn::query()
-            ->withContributors()
+        /** @var PurchaseReturn $purchaseReturn */
+        $purchaseReturn = PurchaseReturn::withContributors()
             ->withUsers()
             ->with([
                 'components',
                 'goodReceipt',
                 'order',
-            ])->where('id', $request->route('id'))->firstOrFail()->toResource();
+            ])->where('id', $request->route('id'))->firstOrFail();
+
+        return $purchaseReturn->toResource();
     }
 
     /**

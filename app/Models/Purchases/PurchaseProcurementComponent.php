@@ -7,6 +7,7 @@ use App\Http\Resources\Purchases\PurchaseProcurementComponentResource;
 use App\Models\Items\Item;
 use App\Models\User;
 use App\Models\Vendors\Vendor;
+use Database\Factories\Purchases\PurchaseProcurementComponentFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $purchase_procurement_id
  * @property int $vendor_id
  * @property string $item_id
@@ -38,10 +40,12 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $updatedBy
  * @property-read Vendor $vendor
  *
+ * @method static PurchaseProcurementComponentFactory factory($count = null, $state = [])
  * @method static Builder<static>|PurchaseProcurementComponent newModelQuery()
  * @method static Builder<static>|PurchaseProcurementComponent newQuery()
  * @method static Builder<static>|PurchaseProcurementComponent onlyTrashed()
  * @method static Builder<static>|PurchaseProcurementComponent query()
+ * @method static Builder<static>|PurchaseProcurementComponent whereCompanyId($value)
  * @method static Builder<static>|PurchaseProcurementComponent whereCreatedAt($value)
  * @method static Builder<static>|PurchaseProcurementComponent whereCreatedBy($value)
  * @method static Builder<static>|PurchaseProcurementComponent whereDeletedAt($value)

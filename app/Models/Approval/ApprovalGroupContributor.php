@@ -5,6 +5,7 @@ namespace App\Models\Approval;
 use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Approval\ApprovalGroupContributorResource;
 use App\Models\User;
+use Database\Factories\Approval\ApprovalGroupContributorFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,6 +17,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $approval_group_id
  * @property int $user_id
  * @property int|null $created_by
@@ -26,15 +28,17 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read \App\Models\Approval\ApprovalGroup|null $group
+ * @property-read \App\Models\Approval\ApprovalGroup $group
  * @property-read User|null $updatedBy
  * @property-read User $user
  *
+ * @method static ApprovalGroupContributorFactory factory($count = null, $state = [])
  * @method static Builder<static>|ApprovalGroupContributor newModelQuery()
  * @method static Builder<static>|ApprovalGroupContributor newQuery()
  * @method static Builder<static>|ApprovalGroupContributor onlyTrashed()
  * @method static Builder<static>|ApprovalGroupContributor query()
  * @method static Builder<static>|ApprovalGroupContributor whereApprovalGroupId($value)
+ * @method static Builder<static>|ApprovalGroupContributor whereCompanyId($value)
  * @method static Builder<static>|ApprovalGroupContributor whereCreatedAt($value)
  * @method static Builder<static>|ApprovalGroupContributor whereCreatedBy($value)
  * @method static Builder<static>|ApprovalGroupContributor whereDeletedAt($value)

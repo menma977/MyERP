@@ -7,6 +7,7 @@ use App\Http\Resources\Purchases\PurchaseReturnComponentResource;
 use App\Models\Items\GoodReceiptComponent;
 use App\Models\Items\Item;
 use App\Models\User;
+use Database\Factories\Purchases\PurchaseReturnComponentFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $purchase_return_id
  * @property string $purchase_order_component_id
  * @property string $good_receipt_component_id
@@ -34,16 +36,18 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read GoodReceiptComponent|null $goodReceiptComponent
- * @property-read Item|null $item
- * @property-read \App\Models\Purchases\PurchaseOrderComponent|null $orderComponent
- * @property-read \App\Models\Purchases\PurchaseReturn|null $return
+ * @property-read GoodReceiptComponent $goodReceiptComponent
+ * @property-read Item $item
+ * @property-read \App\Models\Purchases\PurchaseOrderComponent $orderComponent
+ * @property-read \App\Models\Purchases\PurchaseReturn $return
  * @property-read User|null $updatedBy
  *
+ * @method static PurchaseReturnComponentFactory factory($count = null, $state = [])
  * @method static Builder<static>|PurchaseReturnComponent newModelQuery()
  * @method static Builder<static>|PurchaseReturnComponent newQuery()
  * @method static Builder<static>|PurchaseReturnComponent onlyTrashed()
  * @method static Builder<static>|PurchaseReturnComponent query()
+ * @method static Builder<static>|PurchaseReturnComponent whereCompanyId($value)
  * @method static Builder<static>|PurchaseReturnComponent whereCreatedAt($value)
  * @method static Builder<static>|PurchaseReturnComponent whereCreatedBy($value)
  * @method static Builder<static>|PurchaseReturnComponent whereDeletedAt($value)

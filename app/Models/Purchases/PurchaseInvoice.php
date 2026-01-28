@@ -10,6 +10,7 @@ use App\Models\Transactions\PaymentRequest;
 use App\Models\Transactions\PaymentRequestComponent;
 use App\Models\User;
 use App\Services\CodeGeneratorService;
+use Database\Factories\Purchases\PurchaseInvoiceFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,6 +28,7 @@ use Illuminate\Validation\ValidationException;
  * Represents a Pro form Invoice in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $purchase_order_id
  * @property string $code
  * @property numeric $total
@@ -42,14 +44,16 @@ use Illuminate\Validation\ValidationException;
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
- * @property-read \App\Models\Purchases\PurchaseOrder|null $order
+ * @property-read \App\Models\Purchases\PurchaseOrder $order
  * @property-read User|null $updatedBy
  *
+ * @method static PurchaseInvoiceFactory factory($count = null, $state = [])
  * @method static Builder<static>|PurchaseInvoice newModelQuery()
  * @method static Builder<static>|PurchaseInvoice newQuery()
  * @method static Builder<static>|PurchaseInvoice onlyTrashed()
  * @method static Builder<static>|PurchaseInvoice query()
  * @method static Builder<static>|PurchaseInvoice whereCode($value)
+ * @method static Builder<static>|PurchaseInvoice whereCompanyId($value)
  * @method static Builder<static>|PurchaseInvoice whereCreatedAt($value)
  * @method static Builder<static>|PurchaseInvoice whereCreatedBy($value)
  * @method static Builder<static>|PurchaseInvoice whereDeletedAt($value)
@@ -138,7 +142,7 @@ class PurchaseInvoice extends ApprovalAbstract
                 $payment->total = $purchaseInvoice->total;
                 $payment->tax = $purchaseInvoice->tax;
                 $payment->method = PaymentMethodEnum::BANK_TRANSFER;
-                $payment->note = $purchaseInvoice->order?->note;
+                $payment->note = $purchaseInvoice->order->note;
                 $payment->save();
 
                 foreach ($purchaseInvoice->components as $component) {

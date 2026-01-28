@@ -27,7 +27,7 @@ class PurchaseProcurementController extends Controller
      */
     public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
-        $purchaseProcurements = PurchaseProcurement::query()->with([
+        $purchaseProcurements = PurchaseProcurement::with([
             'request',
             'components',
         ])->when($request->input('search'), function (Builder $query) use ($request) {
@@ -54,13 +54,15 @@ class PurchaseProcurementController extends Controller
      */
     public function show(Request $request): JsonResource
     {
-        return PurchaseProcurement::query()
-            ->withContributors()
+        /** @var PurchaseProcurement $purchaseProcurement */
+        $purchaseProcurement = PurchaseProcurement::withContributors()
             ->withUsers()
             ->with([
                 'request',
                 'components',
-            ])->where('id', $request->route('id'))->firstOrFail()->toResource();
+            ])->where('id', $request->route('id'))->firstOrFail();
+
+        return $purchaseProcurement->toResource();
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Vendors\VendorInvoiceComponentResource;
 use App\Models\Items\Item;
 use App\Models\User;
+use Database\Factories\Vendors\VendorInvoiceComponentFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,6 +18,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $vendor_invoice_id
  * @property string $vendor_component_id
  * @property string $item_id
@@ -32,13 +34,16 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
  * @property-read \App\Models\Vendors\VendorInvoice|null $invoice
+ * @property-read Item $item
  * @property-read User|null $updatedBy
  * @property-read \App\Models\Vendors\VendorComponent $vendorComponent
  *
+ * @method static VendorInvoiceComponentFactory factory($count = null, $state = [])
  * @method static Builder<static>|VendorInvoiceComponent newModelQuery()
  * @method static Builder<static>|VendorInvoiceComponent newQuery()
  * @method static Builder<static>|VendorInvoiceComponent onlyTrashed()
  * @method static Builder<static>|VendorInvoiceComponent query()
+ * @method static Builder<static>|VendorInvoiceComponent whereCompanyId($value)
  * @method static Builder<static>|VendorInvoiceComponent whereCreatedAt($value)
  * @method static Builder<static>|VendorInvoiceComponent whereCreatedBy($value)
  * @method static Builder<static>|VendorInvoiceComponent whereDeletedAt($value)

@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Companies\Company;
+use App\Models\Companies\CompanyHasUser;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -22,9 +24,9 @@ class UserSeeder extends Seeder
         ]);
 
         $collector->push([
-            'name' => 'admin',
-            'username' => 'admin',
-            'email' => 'admin@mail.com',
+            'name' => 'owner',
+            'username' => 'owner',
+            'email' => 'owner@mail.com',
             'password' => bcrypt('1'),
         ]);
 
@@ -34,6 +36,11 @@ class UserSeeder extends Seeder
             'email' => 'user@mail.com',
             'password' => bcrypt('1'),
         ]);
+
+        $company = new Company;
+        $company->name = 'DEFAULT COMPANY';
+        $company->code = 'DEFAULT';
+        $company->save();
 
         foreach ($collector as $item) {
             $user = User::where('username', $item['username'])->first();
@@ -47,6 +54,11 @@ class UserSeeder extends Seeder
             $user->email = $item['email'];
             $user->password = $item['password'];
             $user->save();
+
+            $companyHasUser = new CompanyHasUser;
+            $companyHasUser->company_id = $company->id;
+            $companyHasUser->user_id = $user->id;
+            $companyHasUser->save();
         }
     }
 }

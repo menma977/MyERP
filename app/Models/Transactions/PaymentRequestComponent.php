@@ -7,6 +7,7 @@ use App\Http\Resources\Transactions\PaymentRequestComponentResource;
 use App\Models\Purchases\PurchaseInvoiceComponent;
 use App\Models\Purchases\PurchaseOrderComponent;
 use App\Models\User;
+use Database\Factories\Transactions\PaymentRequestComponentFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $payment_request_id
  * @property string $purchase_order_component_id
  * @property string $purchase_invoice_component_id
@@ -38,10 +40,12 @@ use Illuminate\Support\Carbon;
  * @property-read PurchaseOrderComponent $purchaseOrderComponent
  * @property-read User|null $updatedBy
  *
+ * @method static PaymentRequestComponentFactory factory($count = null, $state = [])
  * @method static Builder<static>|PaymentRequestComponent newModelQuery()
  * @method static Builder<static>|PaymentRequestComponent newQuery()
  * @method static Builder<static>|PaymentRequestComponent onlyTrashed()
  * @method static Builder<static>|PaymentRequestComponent query()
+ * @method static Builder<static>|PaymentRequestComponent whereCompanyId($value)
  * @method static Builder<static>|PaymentRequestComponent whereCreatedAt($value)
  * @method static Builder<static>|PaymentRequestComponent whereCreatedBy($value)
  * @method static Builder<static>|PaymentRequestComponent whereDeletedAt($value)

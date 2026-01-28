@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\Customer\CustomerResource;
 use App\Models\Companies\Company;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -26,6 +27,8 @@ class CompanyResource extends JsonResource
             'email' => $this->email,
             'website' => $this->website,
             'address' => $this->address,
+            'default_customer' => CustomerResource::make($this->whenLoaded('customerDefault')),
+            'customers' => CustomerResource::collection($this->whenLoaded('customers')),
             'logo' => $this->whenLoaded('logo'),
             'created_by' => $this->whenLoaded('createdBy'),
             'updated_by' => $this->whenLoaded('updatedBy'),

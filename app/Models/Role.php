@@ -36,7 +36,7 @@ use Spatie\Permission\Models\Role as SpatieRole;
  * @property Carbon|null $deleted_at
  * @property-read \App\Models\User|null $createdBy
  * @property-read \App\Models\User|null $deletedBy
- * @property-read Collection<int, \Spatie\Permission\Models\Permission> $permissions
+ * @property-read Collection<int, \App\Models\Permission> $permissions
  * @property-read int|null $permissions_count
  * @property-read \App\Models\User|null $updatedBy
  * @property-read Collection<int, \App\Models\User> $users
@@ -54,6 +54,7 @@ use Spatie\Permission\Models\Role as SpatieRole;
  * @method static Builder<static>|Role whereGuardName($value)
  * @method static Builder<static>|Role whereId($value)
  * @method static Builder<static>|Role whereName($value)
+ * @method static Builder<static>|Role whereUlid($value)
  * @method static Builder<static>|Role whereUpdatedAt($value)
  * @method static Builder<static>|Role whereUpdatedBy($value)
  * @method static Builder<static>|Role withTrashed(bool $withTrashed = true)

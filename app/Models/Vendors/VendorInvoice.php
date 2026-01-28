@@ -6,6 +6,7 @@ use App\Abstracts\ApprovalAbstract;
 use App\Http\Resources\Vendors\VendorInvoiceResource;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\User;
+use Database\Factories\Vendors\VendorInvoiceFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,6 +20,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property int $vendor_id
  * @property string $code
  * @property numeric $total
@@ -36,11 +38,13 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $updatedBy
  * @property-read \App\Models\Vendors\Vendor $vendor
  *
+ * @method static VendorInvoiceFactory factory($count = null, $state = [])
  * @method static Builder<static>|VendorInvoice newModelQuery()
  * @method static Builder<static>|VendorInvoice newQuery()
  * @method static Builder<static>|VendorInvoice onlyTrashed()
  * @method static Builder<static>|VendorInvoice query()
  * @method static Builder<static>|VendorInvoice whereCode($value)
+ * @method static Builder<static>|VendorInvoice whereCompanyId($value)
  * @method static Builder<static>|VendorInvoice whereCreatedAt($value)
  * @method static Builder<static>|VendorInvoice whereCreatedBy($value)
  * @method static Builder<static>|VendorInvoice whereDeletedAt($value)

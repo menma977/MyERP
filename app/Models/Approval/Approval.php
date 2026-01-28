@@ -6,6 +6,7 @@ use App\Abstracts\ModelWithCompanyAbstract;
 use App\Enums\ApprovalTypeEnum;
 use App\Http\Resources\Approval\ApprovalResource;
 use App\Models\User;
+use Database\Factories\Approval\ApprovalFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,6 +20,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property int|null $company_id
  * @property string $ulid
  * @property string $approval_flow_id
  * @property string $name
@@ -39,12 +41,14 @@ use Illuminate\Support\Carbon;
  * @property-read \App\Models\Approval\ApprovalFlow $flow
  * @property-read User|null $updatedBy
  *
+ * @method static ApprovalFactory factory($count = null, $state = [])
  * @method static Builder<static>|Approval newModelQuery()
  * @method static Builder<static>|Approval newQuery()
  * @method static Builder<static>|Approval onlyTrashed()
  * @method static Builder<static>|Approval query()
  * @method static Builder<static>|Approval whereApprovalFlowId($value)
  * @method static Builder<static>|Approval whereCanChange($value)
+ * @method static Builder<static>|Approval whereCompanyId($value)
  * @method static Builder<static>|Approval whereCreatedAt($value)
  * @method static Builder<static>|Approval whereCreatedBy($value)
  * @method static Builder<static>|Approval whereDeletedAt($value)
@@ -52,6 +56,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Approval whereId($value)
  * @method static Builder<static>|Approval whereName($value)
  * @method static Builder<static>|Approval whereType($value)
+ * @method static Builder<static>|Approval whereUlid($value)
  * @method static Builder<static>|Approval whereUpdatedAt($value)
  * @method static Builder<static>|Approval whereUpdatedBy($value)
  * @method static Builder<static>|Approval withTrashed(bool $withTrashed = true)

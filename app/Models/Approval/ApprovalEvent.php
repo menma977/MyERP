@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property int|null $approval_id
  * @property int $step The step using binary system: 0, 1, 3, 7, etc.
  * @property int $target The target of a binary system: 1, 2, 4, 8, etc.
@@ -65,6 +66,7 @@ use Illuminate\Support\Facades\Auth;
  * @method static Builder<static>|ApprovalEvent whereApprovalId($value)
  * @method static Builder<static>|ApprovalEvent whereApprovedAt($value)
  * @method static Builder<static>|ApprovalEvent whereCancelledAt($value)
+ * @method static Builder<static>|ApprovalEvent whereCompanyId($value)
  * @method static Builder<static>|ApprovalEvent whereCreatedAt($value)
  * @method static Builder<static>|ApprovalEvent whereCreatedBy($value)
  * @method static Builder<static>|ApprovalEvent whereDeletedAt($value)

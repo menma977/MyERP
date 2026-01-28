@@ -5,7 +5,9 @@ namespace App\Models\Sales;
 use App\Abstracts\ApprovalAbstract;
 use App\Http\Resources\Sales\SalesReturnResource;
 use App\Models\Approval\ApprovalEvent;
+use App\Models\Customer\Customer;
 use App\Models\User;
+use Database\Factories\Sales\SalesReturnFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,8 +23,10 @@ use Illuminate\Support\Carbon;
  * Represents a Sales Return in the system.
  *
  * @property string $id
+ * @property int|null $company_id
  * @property string $sales_order_id
  * @property string $sales_invoice_id
+ * @property string $customer_id
  * @property string $code
  * @property numeric $total
  * @property int|null $created_by
@@ -34,17 +38,20 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, \App\Models\Sales\SalesReturnComponent> $components
  * @property-read int|null $components_count
  * @property-read User|null $createdBy
+ * @property-read \App\Models\Customer\Customer|null $customer
  * @property-read User|null $deletedBy
  * @property-read ApprovalEvent|null $event
  * @property-read \App\Models\Sales\SalesInvoice|null $invoice
  * @property-read \App\Models\Sales\SalesOrder|null $order
  * @property-read User|null $updatedBy
  *
+ * @method static SalesReturnFactory factory($count = null, $state = [])
  * @method static Builder<static>|SalesReturn newModelQuery()
  * @method static Builder<static>|SalesReturn newQuery()
  * @method static Builder<static>|SalesReturn onlyTrashed()
  * @method static Builder<static>|SalesReturn query()
  * @method static Builder<static>|SalesReturn whereCode($value)
+ * @method static Builder<static>|SalesReturn whereCompanyId($value)
  * @method static Builder<static>|SalesReturn whereCreatedAt($value)
  * @method static Builder<static>|SalesReturn whereCreatedBy($value)
  * @method static Builder<static>|SalesReturn whereDeletedAt($value)
@@ -77,6 +84,7 @@ class SalesReturn extends ApprovalAbstract
         'company_id',
         'sales_order_id',
         'sales_invoice_id',
+        'customer_id',
         'code',
         'total',
         'created_by',
@@ -84,6 +92,14 @@ class SalesReturn extends ApprovalAbstract
         'deleted_by',
         'deleted_at',
     ];
+
+    /**
+     * @return BelongsTo<\App\Models\Customer\Customer, $this>
+     */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
 
     /**
      * @return BelongsTo<SalesOrder, $this>

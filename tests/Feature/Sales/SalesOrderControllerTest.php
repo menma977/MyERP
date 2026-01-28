@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Sales;
 
+use App\Models\Customer\Customer;
 use App\Models\Items\Item;
 use App\Models\Items\ItemBatch;
 use App\Models\Items\ItemStock;
@@ -56,31 +57,18 @@ class SalesOrderControllerTest extends TestCase
             ]);
     }
 
-    public function test_store_creates_sales_order(): void
-    {
-        $user = User::factory()->create();
-        $user->givePermissionTo(Permission::where('name', 'sales.order.index')->where('guard_name', 'sanctum')->first());
-        $user->givePermissionTo(Permission::where('name', 'sales.order.store')->where('guard_name', 'sanctum')->first());
-
-        Sanctum::actingAs($user, ['*']);
-        $response = $this->postJson(route('api.v1.sales.order.store'), [
-            'total' => 1000,
-        ]);
-
-        $response->assertStatus(200);
-        $this->assertDatabaseHas('sales_orders', ['total' => 1000]);
-    }
-
     public function test_update_updates_sales_order(): void
     {
         $user = User::factory()->create();
         $user->givePermissionTo(Permission::where('name', 'sales.order.index')->where('guard_name', 'sanctum')->first());
         $user->givePermissionTo(Permission::where('name', 'sales.order.update')->where('guard_name', 'sanctum')->first());
 
-        $order = SalesOrder::factory()->create();
+        $customer = Customer::factory()->create();
+        $order = SalesOrder::factory()->create(['customer_id' => $customer->id]);
 
         Sanctum::actingAs($user, ['*']);
         $response = $this->putJson(route('api.v1.sales.order.update', $order->id), [
+            'customer_id' => $customer->id,
             'total' => 2500,
         ]);
 
@@ -145,7 +133,7 @@ class SalesOrderControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $user->givePermissionTo(Permission::where('name', 'sales.order.index')->where('guard_name', 'sanctum')->first());
-        $user->givePermissionTo(Permission::where('name', 'sales.order.store')->where('guard_name', 'sanctum')->first());
+        $user->givePermissionTo(Permission::where('name', 'sales.order.approve')->where('guard_name', 'sanctum')->first());
 
         $item = Item::factory()->create();
         $batch = ItemBatch::factory()->create([
@@ -188,7 +176,7 @@ class SalesOrderControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $user->givePermissionTo(Permission::where('name', 'sales.order.index')->where('guard_name', 'sanctum')->first());
-        $user->givePermissionTo(Permission::where('name', 'sales.order.store')->where('guard_name', 'sanctum')->first());
+        $user->givePermissionTo(Permission::where('name', 'sales.order.reject')->where('guard_name', 'sanctum')->first());
 
         $order = SalesOrder::factory()->create();
 
@@ -205,7 +193,6 @@ class SalesOrderControllerTest extends TestCase
         $permissions = [
             'sales.order.index',
             'sales.order.show',
-            'sales.order.store',
             'sales.order.update',
             'sales.order.delete',
             'sales.order.restore',

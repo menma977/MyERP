@@ -6,6 +6,7 @@ use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Items\GoodReceiptComponentResource;
 use App\Models\Purchases\PurchaseOrderComponent;
 use App\Models\User;
+use Database\Factories\Items\GoodReceiptComponentFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,6 +18,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $purchase_order_component_id
  * @property string $good_receipt_id
  * @property string $item_id
@@ -37,10 +39,12 @@ use Illuminate\Support\Carbon;
  * @property-read PurchaseOrderComponent $purchaseOrderComponent
  * @property-read User|null $updatedBy
  *
+ * @method static GoodReceiptComponentFactory factory($count = null, $state = [])
  * @method static Builder<static>|GoodReceiptComponent newModelQuery()
  * @method static Builder<static>|GoodReceiptComponent newQuery()
  * @method static Builder<static>|GoodReceiptComponent onlyTrashed()
  * @method static Builder<static>|GoodReceiptComponent query()
+ * @method static Builder<static>|GoodReceiptComponent whereCompanyId($value)
  * @method static Builder<static>|GoodReceiptComponent whereCreatedAt($value)
  * @method static Builder<static>|GoodReceiptComponent whereCreatedBy($value)
  * @method static Builder<static>|GoodReceiptComponent whereDeletedAt($value)
@@ -117,6 +121,7 @@ class GoodReceiptComponent extends ModelWithCompanyAbstract
             'quantity' => 'decimal:2',
             'price' => 'decimal:2',
             'total' => 'decimal:2',
+            'expired_at' => 'datetime',
         ];
     }
 }

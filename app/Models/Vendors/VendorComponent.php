@@ -7,6 +7,7 @@ use App\Http\Resources\Vendors\VendorComponentResource;
 use App\Models\Approval\ApprovalEvent;
 use App\Models\Items\Item;
 use App\Models\User;
+use Database\Factories\Vendors\VendorComponentFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property int $vendor_id
  * @property string $item_id
  * @property numeric $price
@@ -34,10 +36,12 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $updatedBy
  * @property-read \App\Models\Vendors\Vendor $vendor
  *
+ * @method static VendorComponentFactory factory($count = null, $state = [])
  * @method static Builder<static>|VendorComponent newModelQuery()
  * @method static Builder<static>|VendorComponent newQuery()
  * @method static Builder<static>|VendorComponent onlyTrashed()
  * @method static Builder<static>|VendorComponent query()
+ * @method static Builder<static>|VendorComponent whereCompanyId($value)
  * @method static Builder<static>|VendorComponent whereCreatedAt($value)
  * @method static Builder<static>|VendorComponent whereCreatedBy($value)
  * @method static Builder<static>|VendorComponent whereDeletedAt($value)

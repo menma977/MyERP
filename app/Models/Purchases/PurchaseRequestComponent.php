@@ -7,6 +7,7 @@ use App\Http\Resources\Purchases\PurchaseRequestComponentResource;
 use App\Models\Items\Item;
 use App\Models\User;
 use App\Models\Vendors\Vendor;
+use Database\Factories\Purchases\PurchaseRequestComponentFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $purchase_request_id
  * @property int $vendor_id
  * @property string $item_id
@@ -33,19 +35,23 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
+ * @property-read Item $item
  * @property-read \App\Models\Purchases\PurchaseRequest|null $request
  * @property-read User|null $updatedBy
  * @property-read Vendor $vendor
  *
+ * @method static PurchaseRequestComponentFactory factory($count = null, $state = [])
  * @method static Builder<static>|PurchaseRequestComponent newModelQuery()
  * @method static Builder<static>|PurchaseRequestComponent newQuery()
  * @method static Builder<static>|PurchaseRequestComponent onlyTrashed()
  * @method static Builder<static>|PurchaseRequestComponent query()
+ * @method static Builder<static>|PurchaseRequestComponent whereCompanyId($value)
  * @method static Builder<static>|PurchaseRequestComponent whereCreatedAt($value)
  * @method static Builder<static>|PurchaseRequestComponent whereCreatedBy($value)
  * @method static Builder<static>|PurchaseRequestComponent whereDeletedAt($value)
  * @method static Builder<static>|PurchaseRequestComponent whereDeletedBy($value)
  * @method static Builder<static>|PurchaseRequestComponent whereId($value)
+ * @method static Builder<static>|PurchaseRequestComponent whereItemId($value)
  * @method static Builder<static>|PurchaseRequestComponent whereNote($value)
  * @method static Builder<static>|PurchaseRequestComponent wherePrice($value)
  * @method static Builder<static>|PurchaseRequestComponent wherePurchaseRequestId($value)

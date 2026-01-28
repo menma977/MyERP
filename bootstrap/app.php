@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Support\Facades\Route;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 require base_path('routes/api/v1/sales.php');
                 require base_path('routes/api/v1/transactions.php');
                 require base_path('routes/api/v1/vendors.php');
+                require base_path('routes/api/v1/companies.php');
             });
         }
     )

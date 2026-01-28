@@ -11,6 +11,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class VendorComponentController extends Controller
 {
@@ -82,6 +84,15 @@ class VendorComponentController extends Controller
         $vendorComponent->item_id = $request->input('item_id');
         $vendorComponent->price = $request->input('price');
         $vendorComponent->save();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Vendor Component', 'target' => 'Access'], App::getLocale()),
+            ]);
+        }
+
+        $vendorComponent->initEvent($user);
 
         return [
             'message' => trans('messages.success.store', ['target' => 'Vendor Component'], App::getLocale()),
@@ -170,6 +181,141 @@ class VendorComponentController extends Controller
 
         return [
             'message' => trans('messages.success.destroy', ['target' => 'Vendor Component'], App::getLocale()),
+            'vendor_component' => $vendorComponent->toResource(),
+        ];
+    }
+
+    /**
+     * Vendor Component Approve
+     *
+     * Approve specified resource.
+     *
+     * @return array{message: string, vendor_component: JsonResource}
+     */
+    public function approve(Request $request): array
+    {
+        /** @var VendorComponent $vendorComponent */
+        $vendorComponent = VendorComponent::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'approve', 'attribute' => 'Vendor Component', 'target' => 'Access'], App::getLocale()),
+            ]);
+        }
+
+        $vendorComponent->approve($user);
+
+        return [
+            'message' => trans('messages.success.approve', ['target' => 'Vendor Component'], App::getLocale()),
+            'vendor_component' => $vendorComponent->toResource(),
+        ];
+    }
+
+    /**
+     * Vendor Component Reject
+     *
+     * Reject specified resource.
+     *
+     * @return array{message: string, vendor_component: JsonResource}
+     */
+    public function reject(Request $request): array
+    {
+        /** @var VendorComponent $vendorComponent */
+        $vendorComponent = VendorComponent::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'reject', 'attribute' => 'Vendor Component', 'target' => 'Access'], App::getLocale()),
+            ]);
+        }
+
+        $vendorComponent->reject($user);
+
+        return [
+            'message' => trans('messages.success.reject', ['target' => 'Vendor Component'], App::getLocale()),
+            'vendor_component' => $vendorComponent->toResource(),
+        ];
+    }
+
+    /**
+     * Vendor Component Cancel
+     *
+     * Cancel specified resource.
+     *
+     * @return array{message: string, vendor_component: JsonResource}
+     */
+    public function cancel(Request $request): array
+    {
+        /** @var VendorComponent $vendorComponent */
+        $vendorComponent = VendorComponent::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Vendor Component', 'target' => 'Access'], App::getLocale()),
+            ]);
+        }
+
+        $vendorComponent->cancel($user);
+
+        return [
+            'message' => trans('messages.success.cancel', ['target' => 'Vendor Component'], App::getLocale()),
+            'vendor_component' => $vendorComponent->toResource(),
+        ];
+    }
+
+    /**
+     * Vendor Component Rollback
+     *
+     * Roll back specified resource.
+     *
+     * @return array{message: string, vendor_component: JsonResource}
+     */
+    public function rollback(Request $request): array
+    {
+        /** @var VendorComponent $vendorComponent */
+        $vendorComponent = VendorComponent::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Vendor Component', 'target' => 'Access'], App::getLocale()),
+            ]);
+        }
+
+        $vendorComponent->rollback($user);
+
+        return [
+            'message' => trans('messages.success.rollback', ['target' => 'Vendor Component'], App::getLocale()),
+            'vendor_component' => $vendorComponent->toResource(),
+        ];
+    }
+
+    /**
+     * Vendor Component Force
+     *
+     * Force to execute action on a specified resource.
+     *
+     * @return array{message: string, vendor_component: JsonResource}
+     */
+    public function force(Request $request): array
+    {
+        /** @var VendorComponent $vendorComponent */
+        $vendorComponent = VendorComponent::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Vendor Component', 'target' => 'Access'], App::getLocale()),
+            ]);
+        }
+
+        $vendorComponent->force($user, $request->input('step'));
+
+        return [
+            'message' => trans('messages.success.force', ['target' => 'Vendor Component'], App::getLocale()),
             'vendor_component' => $vendorComponent->toResource(),
         ];
     }

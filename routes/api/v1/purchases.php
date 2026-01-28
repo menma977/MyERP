@@ -20,11 +20,11 @@ Route::prefix('purchase')->name('purchase.')->middleware(['auth:sanctum'])->grou
         Route::delete('delete/{id}', [PurchaseRequestController::class, 'delete'])->name('delete')->middleware('can:purchase.request.delete');
         Route::post('restore/{id}', [PurchaseRequestController::class, 'restore'])->name('restore')->middleware('can:purchase.request.restore');
         Route::delete('destroy/{id}', [PurchaseRequestController::class, 'destroy'])->name('destroy')->middleware('can:purchase.request.destroy');
-        Route::post('approve/{id}', [PurchaseRequestController::class, 'approve'])->name('approve')->middleware('can:purchase.request.store');
-        Route::post('reject/{id}', [PurchaseRequestController::class, 'reject'])->name('reject')->middleware('can:purchase.request.store');
-        Route::post('cancel/{id}', [PurchaseRequestController::class, 'cancel'])->name('cancel')->middleware('can:purchase.request.store');
-        Route::post('rollback/{id}', [PurchaseRequestController::class, 'rollback'])->name('rollback')->middleware('can:purchase.request.store');
-        Route::post('force/{id}', [PurchaseRequestController::class, 'force'])->name('force')->middleware('can:purchase.request.store');
+        Route::post('approve/{id}', [PurchaseRequestController::class, 'approve'])->name('approve')->middleware('can:purchase.request.approve');
+        Route::post('reject/{id}', [PurchaseRequestController::class, 'reject'])->name('reject')->middleware('can:purchase.request.reject');
+        Route::post('cancel/{id}', [PurchaseRequestController::class, 'cancel'])->name('cancel')->middleware('can:purchase.request.cancel');
+        Route::post('rollback/{id}', [PurchaseRequestController::class, 'rollback'])->name('rollback')->middleware('can:purchase.request.rollback');
+        Route::post('force/{id}', [PurchaseRequestController::class, 'force'])->name('force')->middleware('can:purchase.request.force');
 
         Route::prefix('component/{purchase_request_id}')->name('component.')->middleware('can:purchase.component.index')->group(function () {
             Route::get('index', [PurchaseRequestComponentController::class, 'index'])->name('index');
@@ -43,11 +43,11 @@ Route::prefix('purchase')->name('purchase.')->middleware(['auth:sanctum'])->grou
         Route::put('update/{id}', [PurchaseProcurementController::class, 'update'])->name('update')->middleware('can:purchase.procurement.update');
         Route::post('restore/{id}', [PurchaseProcurementController::class, 'restore'])->name('restore')->middleware('can:purchase.procurement.restore');
         Route::delete('destroy/{id}', [PurchaseProcurementController::class, 'destroy'])->name('destroy')->middleware('can:purchase.procurement.destroy');
-        Route::post('approve/{id}', [PurchaseProcurementController::class, 'approve'])->name('approve')->middleware('can:purchase.procurement.store');
-        Route::post('reject/{id}', [PurchaseProcurementController::class, 'reject'])->name('reject')->middleware('can:purchase.procurement.store');
-        Route::post('cancel/{id}', [PurchaseProcurementController::class, 'cancel'])->name('cancel')->middleware('can:purchase.procurement.store');
-        Route::post('rollback/{id}', [PurchaseProcurementController::class, 'rollback'])->name('rollback')->middleware('can:purchase.procurement.store');
-        Route::post('force/{id}', [PurchaseProcurementController::class, 'force'])->name('force')->middleware('can:purchase.procurement.store');
+        Route::post('approve/{id}', [PurchaseProcurementController::class, 'approve'])->name('approve')->middleware('can:purchase.procurement.approve');
+        Route::post('reject/{id}', [PurchaseProcurementController::class, 'reject'])->name('reject')->middleware('can:purchase.procurement.reject');
+        Route::post('cancel/{id}', [PurchaseProcurementController::class, 'cancel'])->name('cancel')->middleware('can:purchase.procurement.cancel');
+        Route::post('rollback/{id}', [PurchaseProcurementController::class, 'rollback'])->name('rollback')->middleware('can:purchase.procurement.rollback');
+        Route::post('force/{id}', [PurchaseProcurementController::class, 'force'])->name('force')->middleware('can:purchase.procurement.force');
 
         Route::prefix('component/{purchase_procurement_id}')->name('component.')->middleware('can:purchase.component.index')->group(function () {
             Route::get('index', [PurchaseProcurementComponentController::class, 'index'])->name('index');
@@ -67,11 +67,11 @@ Route::prefix('purchase')->name('purchase.')->middleware(['auth:sanctum'])->grou
         Route::delete('delete/{id}', [PurchaseOrderController::class, 'delete'])->name('delete')->middleware('can:purchase.order.delete');
         Route::post('restore/{id}', [PurchaseOrderController::class, 'restore'])->name('restore')->middleware('can:purchase.order.restore');
         Route::delete('destroy/{id}', [PurchaseOrderController::class, 'destroy'])->name('destroy')->middleware('can:purchase.order.destroy');
-        Route::post('approve/{id}', [PurchaseOrderController::class, 'approve'])->name('approve')->middleware('can:purchase.order.store');
-        Route::post('reject/{id}', [PurchaseOrderController::class, 'reject'])->name('reject')->middleware('can:purchase.order.store');
-        Route::post('cancel/{id}', [PurchaseOrderController::class, 'cancel'])->name('cancel')->middleware('can:purchase.order.store');
-        Route::post('rollback/{id}', [PurchaseOrderController::class, 'rollback'])->name('rollback')->middleware('can:purchase.order.store');
-        Route::post('force/{id}', [PurchaseOrderController::class, 'force'])->name('force')->middleware('can:purchase.order.store');
+        Route::post('approve/{id}', [PurchaseOrderController::class, 'approve'])->name('approve')->middleware('can:purchase.order.approve');
+        Route::post('reject/{id}', [PurchaseOrderController::class, 'reject'])->name('reject')->middleware('can:purchase.order.reject');
+        Route::post('cancel/{id}', [PurchaseOrderController::class, 'cancel'])->name('cancel')->middleware('can:purchase.order.cancel');
+        Route::post('rollback/{id}', [PurchaseOrderController::class, 'rollback'])->name('rollback')->middleware('can:purchase.order.rollback');
+        Route::post('force/{id}', [PurchaseOrderController::class, 'force'])->name('force')->middleware('can:purchase.order.force');
 
         Route::prefix('component/{purchase_order_id}')->name('component.')->middleware('can:purchase.order.component.index')->group(function () {
             Route::get('index', [PurchaseOrderComponentController::class, 'index'])->name('index');
@@ -92,11 +92,11 @@ Route::prefix('purchase')->name('purchase.')->middleware(['auth:sanctum'])->grou
         Route::delete('delete/{id}', [PurchaseReturnController::class, 'delete'])->name('delete')->middleware('can:purchase.return.delete');
         Route::post('restore/{id}', [PurchaseReturnController::class, 'restore'])->name('restore')->middleware('can:purchase.return.restore');
         Route::delete('destroy/{id}', [PurchaseReturnController::class, 'destroy'])->name('destroy')->middleware('can:purchase.return.destroy');
-        Route::post('approve/{id}', [PurchaseReturnController::class, 'approve'])->name('approve')->middleware('can:purchase.return.store');
-        Route::post('reject/{id}', [PurchaseReturnController::class, 'reject'])->name('reject')->middleware('can:purchase.return.store');
-        Route::post('cancel/{id}', [PurchaseReturnController::class, 'cancel'])->name('cancel')->middleware('can:purchase.return.store');
-        Route::post('rollback/{id}', [PurchaseReturnController::class, 'rollback'])->name('rollback')->middleware('can:purchase.return.store');
-        Route::post('force/{id}', [PurchaseReturnController::class, 'force'])->name('force')->middleware('can:purchase.return.store');
+        Route::post('approve/{id}', [PurchaseReturnController::class, 'approve'])->name('approve')->middleware('can:purchase.return.approve');
+        Route::post('reject/{id}', [PurchaseReturnController::class, 'reject'])->name('reject')->middleware('can:purchase.return.reject');
+        Route::post('cancel/{id}', [PurchaseReturnController::class, 'cancel'])->name('cancel')->middleware('can:purchase.return.cancel');
+        Route::post('rollback/{id}', [PurchaseReturnController::class, 'rollback'])->name('rollback')->middleware('can:purchase.return.rollback');
+        Route::post('force/{id}', [PurchaseReturnController::class, 'force'])->name('force')->middleware('can:purchase.return.force');
 
         Route::prefix('component/{purchase_return_id}')->name('component.')->middleware('can:purchase.component.index')->group(function () {
             Route::get('index', [PurchaseReturnComponentController::class, 'index'])->name('index');
@@ -116,11 +116,11 @@ Route::prefix('purchase')->name('purchase.')->middleware(['auth:sanctum'])->grou
         Route::delete('delete/{id}', [PurchaseInvoiceController::class, 'delete'])->name('delete')->middleware('can:purchase.invoice.delete');
         Route::post('restore/{id}', [PurchaseInvoiceController::class, 'restore'])->name('restore')->middleware('can:purchase.invoice.restore');
         Route::delete('destroy/{id}', [PurchaseInvoiceController::class, 'destroy'])->name('destroy')->middleware('can:purchase.invoice.destroy');
-        Route::post('approve/{id}', [PurchaseInvoiceController::class, 'approve'])->name('approve')->middleware('can:purchase.invoice.store');
-        Route::post('reject/{id}', [PurchaseInvoiceController::class, 'reject'])->name('reject')->middleware('can:purchase.invoice.store');
-        Route::post('cancel/{id}', [PurchaseInvoiceController::class, 'cancel'])->name('cancel')->middleware('can:purchase.invoice.store');
-        Route::post('rollback/{id}', [PurchaseInvoiceController::class, 'rollback'])->name('rollback')->middleware('can:purchase.invoice.store');
-        Route::post('force/{id}', [PurchaseInvoiceController::class, 'force'])->name('force')->middleware('can:purchase.invoice.store');
+        Route::post('approve/{id}', [PurchaseInvoiceController::class, 'approve'])->name('approve')->middleware('can:purchase.invoice.approve');
+        Route::post('reject/{id}', [PurchaseInvoiceController::class, 'reject'])->name('reject')->middleware('can:purchase.invoice.reject');
+        Route::post('cancel/{id}', [PurchaseInvoiceController::class, 'cancel'])->name('cancel')->middleware('can:purchase.invoice.cancel');
+        Route::post('rollback/{id}', [PurchaseInvoiceController::class, 'rollback'])->name('rollback')->middleware('can:purchase.invoice.rollback');
+        Route::post('force/{id}', [PurchaseInvoiceController::class, 'force'])->name('force')->middleware('can:purchase.invoice.force');
 
         Route::prefix('component/{purchase_invoice_id}')->name('component.')->middleware('can:purchase.component.index')->group(function () {
             Route::get('index', [PurchaseInvoiceComponentController::class, 'index'])->name('index');

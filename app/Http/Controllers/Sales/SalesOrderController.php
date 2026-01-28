@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Sales;
 
-use App\Http\Controllers\Controller;
+use App\Abstracts\ControllerClientDomainAbstract;
+use App\Enums\DomainEnum;
 use App\Http\Resources\Sales\SalesOrderResource;
+use App\Models\Companies\Company;
 use App\Models\Sales\SalesOrder;
 use App\Services\CodeGeneratorService;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,14 +15,14 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
-class SalesOrderController extends Controller
+class SalesOrderController extends ControllerClientDomainAbstract
 {
     /**
      * @return LengthAwarePaginator<int, SalesOrder>|Collection<int, SalesOrder>|JsonResource|int
      */
     public function index(Request $request): LengthAwarePaginator|Collection|JsonResource|int
     {
-        $salesOrders = SalesOrder::query()->with([
+        $salesOrders = SalesOrder::with([
             'components',
         ])->when($request->input('search'), function ($query) use ($request) {
             return $query->where('code', 'like', '%'.$request->input('search').'%');
@@ -42,14 +44,29 @@ class SalesOrderController extends Controller
      */
     public function store(Request $request): array
     {
-        $request->validate([
-            'total' => ['required', 'numeric', 'min:0'],
-        ]);
+        if ($this->clientDomain === DomainEnum::CASHER) {
+            $request->validate([
+                'total' => ['required', 'numeric', 'min:0'],
+            ]);
+        } else {
+            $request->validate([
+                'customer_id' => ['required', 'exists:customers,id'],
+                'total' => ['required', 'numeric', 'min:0'],
+            ]);
+        }
 
         $salesOrder = new SalesOrder;
         $salesOrder->code = CodeGeneratorService::code('SO')->number(SalesOrder::count() + 1)->generate();
-        $salesOrder->total = $request->input('total');
-        $salesOrder->save();
+        $this->save($salesOrder, $request);
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Sales Order', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesOrder->initEvent($user);
 
         return [
             'message' => trans('messages.success.store', ['target' => 'Sales Order']),
@@ -59,12 +76,14 @@ class SalesOrderController extends Controller
 
     public function show(Request $request): JsonResource
     {
-        return SalesOrder::query()
-            ->withContributors()
+        /** @var SalesOrder $salesOrder */
+        $salesOrder = SalesOrder::withContributors()
             ->withUsers()
             ->with('components')
             ->where('id', $request->route('id'))
-            ->firstOrFail()->toResource();
+            ->firstOrFail();
+
+        return $salesOrder->toResource();
     }
 
     /**
@@ -72,14 +91,20 @@ class SalesOrderController extends Controller
      */
     public function update(Request $request): array
     {
-        $request->validate([
-            'total' => ['required', 'numeric', 'min:0'],
-        ]);
+        if ($this->clientDomain === DomainEnum::CASHER) {
+            $request->validate([
+                'total' => ['required', 'numeric', 'min:0'],
+            ]);
+        } else {
+            $request->validate([
+                'customer_id' => ['required', 'exists:customers,id'],
+                'total' => ['required', 'numeric', 'min:0'],
+            ]);
+        }
 
         /** @var SalesOrder $salesOrder */
         $salesOrder = SalesOrder::where('id', $request->route('id'))->firstOrFail();
-        $salesOrder->total = $request->input('total');
-        $salesOrder->save();
+        $this->save($salesOrder, $request);
 
         return [
             'message' => trans('messages.success.update', ['target' => 'Sales Order']),
@@ -176,5 +201,105 @@ class SalesOrderController extends Controller
             'message' => trans('messages.success.reject', ['target' => 'Sales Order']),
             'sales_order' => $salesOrder->toResource(),
         ];
+    }
+
+    /**
+     * @return array{message: string, sales_order: JsonResource}
+     */
+    public function cancel(Request $request): array
+    {
+        /** @var SalesOrder $salesOrder */
+        $salesOrder = SalesOrder::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'cancel', 'attribute' => 'Sales Order', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesOrder->cancel($user);
+
+        return [
+            'message' => trans('messages.success.cancel', ['target' => 'Sales Order']),
+            'sales_order' => $salesOrder->toResource(),
+        ];
+    }
+
+    /**
+     * @return array{message: string, sales_order: JsonResource}
+     */
+    public function rollback(Request $request): array
+    {
+        /** @var SalesOrder $salesOrder */
+        $salesOrder = SalesOrder::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'rollback', 'attribute' => 'Sales Order', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesOrder->rollback($user);
+
+        return [
+            'message' => trans('messages.success.rollback', ['target' => 'Sales Order']),
+            'sales_order' => $salesOrder->toResource(),
+        ];
+    }
+
+    /**
+     * @return array{message: string, sales_order: JsonResource}
+     */
+    public function force(Request $request): array
+    {
+        /** @var SalesOrder $salesOrder */
+        $salesOrder = SalesOrder::where('id', $request->route('id'))->firstOrFail();
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'force', 'attribute' => 'Sales Order', 'target' => 'Access']),
+            ]);
+        }
+
+        $salesOrder->force($user, $request->input('step'));
+
+        return [
+            'message' => trans('messages.success.force', ['target' => 'Sales Order']),
+            'sales_order' => $salesOrder->toResource(),
+        ];
+    }
+
+    protected function save(SalesOrder $salesOrder, Request $request): void
+    {
+        if ($this->clientDomain === DomainEnum::CASHER) {
+            $user = Auth::user();
+            if (! $user) {
+                throw ValidationException::withMessages([
+                    'user' => trans('messages.fail.action.cost', ['action' => 'create', 'attribute' => 'Sales Order', 'target' => 'Access']),
+                ]);
+            }
+            $company = $user->currentAccessToken()?->company_id;
+            $company = Company::with('customerDefault')->where('id', $company)->first();
+            if (! $company) {
+                throw ValidationException::withMessages([
+                    'company' => trans('messages.fail.action.cost', ['action' => 'create', 'attribute' => 'Sales Order', 'target' => 'Company']),
+                ]);
+            }
+
+            if (! $company->customerDefault) {
+                $customer = $company->makeCustomerDefault();
+            } else {
+                $customer = $company->customerDefault;
+            }
+
+            $salesOrder->customer_id = $customer->id;
+        } else {
+            $salesOrder->customer_id = $request->input('customer_id');
+        }
+        $salesOrder->total = $request->input('total');
+        $salesOrder->save();
     }
 }

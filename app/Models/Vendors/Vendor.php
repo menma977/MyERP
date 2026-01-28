@@ -6,6 +6,7 @@ use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Vendors\VendorResource;
 use App\Models\Purchases\PurchaseProcurementComponent;
 use App\Models\Purchases\PurchaseRequestComponent;
+use Database\Factories\Vendors\VendorFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property int|null $company_id
  * @property string $ulid
  * @property string $code
  * @property string $name
@@ -29,7 +31,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $deleted_by
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property string|null $deleted_at
+ * @property Carbon|null $deleted_at
  * @property-read Collection<int, \App\Models\Vendors\VendorComponent> $components
  * @property-read int|null $components_count
  * @property-read \App\Models\User|null $createdBy
@@ -46,11 +48,14 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, \App\Models\Vendors\VendorPayment> $vendorPayments
  * @property-read int|null $vendor_payments_count
  *
+ * @method static VendorFactory factory($count = null, $state = [])
  * @method static Builder<static>|Vendor newModelQuery()
  * @method static Builder<static>|Vendor newQuery()
+ * @method static Builder<static>|Vendor onlyTrashed()
  * @method static Builder<static>|Vendor query()
  * @method static Builder<static>|Vendor whereAddress($value)
  * @method static Builder<static>|Vendor whereCode($value)
+ * @method static Builder<static>|Vendor whereCompanyId($value)
  * @method static Builder<static>|Vendor whereCreatedAt($value)
  * @method static Builder<static>|Vendor whereCreatedBy($value)
  * @method static Builder<static>|Vendor whereDeletedAt($value)
@@ -59,9 +64,12 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Vendor whereId($value)
  * @method static Builder<static>|Vendor whereName($value)
  * @method static Builder<static>|Vendor wherePhone($value)
+ * @method static Builder<static>|Vendor whereUlid($value)
  * @method static Builder<static>|Vendor whereUpdatedAt($value)
  * @method static Builder<static>|Vendor whereUpdatedBy($value)
+ * @method static Builder<static>|Vendor withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|Vendor withUsers()
+ * @method static Builder<static>|Vendor withoutTrashed()
  *
  * @mixin Eloquent
  */

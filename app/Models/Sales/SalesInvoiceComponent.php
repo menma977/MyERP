@@ -8,6 +8,7 @@ use App\Models\Items\Item;
 use App\Models\Items\ItemBatch;
 use App\Models\Items\ItemStock;
 use App\Models\User;
+use Database\Factories\Sales\SalesInvoiceComponentFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,6 +20,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $sales_invoice_id
  * @property string $item_id
  * @property string $item_batch_id
@@ -40,10 +42,12 @@ use Illuminate\Support\Carbon;
  * @property-read ItemStock|null $stock
  * @property-read User|null $updatedBy
  *
+ * @method static SalesInvoiceComponentFactory factory($count = null, $state = [])
  * @method static Builder<static>|SalesInvoiceComponent newModelQuery()
  * @method static Builder<static>|SalesInvoiceComponent newQuery()
  * @method static Builder<static>|SalesInvoiceComponent onlyTrashed()
  * @method static Builder<static>|SalesInvoiceComponent query()
+ * @method static Builder<static>|SalesInvoiceComponent whereCompanyId($value)
  * @method static Builder<static>|SalesInvoiceComponent whereCreatedAt($value)
  * @method static Builder<static>|SalesInvoiceComponent whereCreatedBy($value)
  * @method static Builder<static>|SalesInvoiceComponent whereDeletedAt($value)

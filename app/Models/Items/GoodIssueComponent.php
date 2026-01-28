@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $good_issue_id
  * @property string $sales_invoice_component_id
  * @property string $item_id
@@ -42,12 +43,13 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|GoodIssueComponent newQuery()
  * @method static Builder<static>|GoodIssueComponent onlyTrashed()
  * @method static Builder<static>|GoodIssueComponent query()
+ * @method static Builder<static>|GoodIssueComponent whereCogs($value)
+ * @method static Builder<static>|GoodIssueComponent whereCompanyId($value)
  * @method static Builder<static>|GoodIssueComponent whereCreatedAt($value)
  * @method static Builder<static>|GoodIssueComponent whereCreatedBy($value)
  * @method static Builder<static>|GoodIssueComponent whereDeletedAt($value)
  * @method static Builder<static>|GoodIssueComponent whereDeletedBy($value)
  * @method static Builder<static>|GoodIssueComponent whereGoodIssueId($value)
- * @method static Builder<static>|GoodIssueComponent whereHpp($value)
  * @method static Builder<static>|GoodIssueComponent whereId($value)
  * @method static Builder<static>|GoodIssueComponent whereItemBatchId($value)
  * @method static Builder<static>|GoodIssueComponent whereItemId($value)

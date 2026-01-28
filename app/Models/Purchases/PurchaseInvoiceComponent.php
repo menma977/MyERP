@@ -5,6 +5,7 @@ namespace App\Models\Purchases;
 use App\Abstracts\ModelWithCompanyAbstract;
 use App\Http\Resources\Purchases\PurchaseInvoiceComponentResource;
 use App\Models\User;
+use Database\Factories\Purchases\PurchaseInvoiceComponentFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,6 +17,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property int|null $company_id
  * @property string $purchase_invoice_id
  * @property string $purchase_order_component_id
  * @property string $item_id
@@ -30,14 +32,16 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User|null $createdBy
  * @property-read User|null $deletedBy
- * @property-read \App\Models\Purchases\PurchaseInvoice|null $invoice
- * @property-read \App\Models\Purchases\PurchaseOrderComponent|null $orderComponent
+ * @property-read \App\Models\Purchases\PurchaseInvoice $invoice
+ * @property-read \App\Models\Purchases\PurchaseOrderComponent $orderComponent
  * @property-read User|null $updatedBy
  *
+ * @method static PurchaseInvoiceComponentFactory factory($count = null, $state = [])
  * @method static Builder<static>|PurchaseInvoiceComponent newModelQuery()
  * @method static Builder<static>|PurchaseInvoiceComponent newQuery()
  * @method static Builder<static>|PurchaseInvoiceComponent onlyTrashed()
  * @method static Builder<static>|PurchaseInvoiceComponent query()
+ * @method static Builder<static>|PurchaseInvoiceComponent whereCompanyId($value)
  * @method static Builder<static>|PurchaseInvoiceComponent whereCreatedAt($value)
  * @method static Builder<static>|PurchaseInvoiceComponent whereCreatedBy($value)
  * @method static Builder<static>|PurchaseInvoiceComponent whereDeletedAt($value)
