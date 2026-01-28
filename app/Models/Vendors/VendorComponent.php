@@ -11,6 +11,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -57,7 +58,8 @@ use Illuminate\Support\Carbon;
 #[UseResource(VendorComponentResource::class)]
 class VendorComponent extends ApprovalAbstract
 {
-    use HasUlids, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\Vendors\VendorComponentFactory> */
+    use HasFactory, HasUlids, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.

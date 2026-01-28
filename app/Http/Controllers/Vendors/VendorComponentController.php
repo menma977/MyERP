@@ -72,7 +72,7 @@ class VendorComponentController extends Controller
     public function store(Request $request): array
     {
         $request->validate([
-            'vendor_id' => ['required', 'string', 'exists:vendors,id'],
+            'vendor_id' => ['required', 'exists:vendors,id'],
             'item_id' => ['required', 'string', 'exists:items,id'],
             'price' => ['required', 'numeric', 'min:0'],
         ]);
@@ -99,7 +99,7 @@ class VendorComponentController extends Controller
     public function update(Request $request): array
     {
         $request->validate([
-            'vendor_id' => ['required', 'string', 'exists:vendors,id'],
+            'vendor_id' => ['required', 'exists:vendors,id'],
             'item_id' => ['required', 'string', 'exists:items,id'],
             'price' => ['required', 'numeric', 'min:0'],
         ]);
