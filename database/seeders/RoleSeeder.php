@@ -20,7 +20,7 @@ class RoleSeeder extends Seeder
         ]);
 
         $collector->push([
-            'name' => 'admin',
+            'name' => 'owner',
             'guard_name' => 'sanctum',
         ]);
 

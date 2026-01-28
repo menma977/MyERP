@@ -15,7 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary()->index();
             $table->foreignUlid('sales_order_id')->constrained('sales_orders')->cascadeOnDelete();
             $table->foreignUlid('sales_invoice_id')->constrained('sales_invoices')->cascadeOnDelete();
-            $table->foreignUlid('customer_id')->constrained('customers')->nullOnDelete();
+            $table->foreignUlid('customer_id')->constrained('customers')->cascadeOnDelete();
             $table->string('code')->unique();
             $table->decimal('total', 18, 4)->default(0);
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
