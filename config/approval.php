@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\Approval\ApprovalGroup;
+use App\Models\Role;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
 
 return [
     'group' => [
