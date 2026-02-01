@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Http\Resources\RoleResource;
 use App\Models\Companies\Company;
+use App\Models\Scopes\WithCompanyScope;
 use App\Observers\CreatedByObserver;
 use App\Observers\DeletedByObserver;
 use App\Observers\UpdatedByObserver;
@@ -12,6 +13,7 @@ use App\Traits\DeletedByTrait;
 use App\Traits\UpdatedByTrait;
 use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -66,7 +68,7 @@ use Spatie\Permission\Models\Role as SpatieRole;
  *
  * @mixin Eloquent
  */
-#[UseResource(RoleResource::class), ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
+#[UseResource(RoleResource::class), ScopedBy([WithCompanyScope::class]), ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
 class Role extends SpatieRole
 {
     use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
