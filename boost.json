@@ -7,5 +7,9 @@
         "opencode",
         "phpstorm"
     ],
-    "guidelines": []
+    "guidelines": [],
+    "mcp": true,
+    "skills": [
+        "laravel"
+    ]
 }
