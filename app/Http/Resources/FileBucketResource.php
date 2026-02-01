@@ -28,7 +28,6 @@ class FileBucketResource extends JsonResource
             'extension' => $this->extension,
             'size' => $this->size,
             'tags' => $this->tags,
-            'publicised_at' => $this->publicised_at,
             'finished_at' => $this->finished_at,
             'created_by' => $this->whenLoaded('createdBy'),
             'updated_by' => $this->whenLoaded('updatedBy'),
