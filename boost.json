@@ -1,10 +1,15 @@
 {
     "agents": [
+        "opencode",
         "phpstorm"
     ],
     "editors": [
-        "phpstorm",
-        "vscode"
+        "opencode",
+        "phpstorm"
     ],
-    "guidelines": []
+    "guidelines": [],
+    "mcp": true,
+    "skills": [
+        "laravel"
+    ]
 }

@@ -34,7 +34,6 @@ use Illuminate\Support\Facades\Storage;
  * @property numeric $size
  * @property Collection<string, mixed>|null $data
  * @property Collection<int, string>|null $tags
- * @property Carbon|null $publicised_at
  * @property string|null $finished_at
  * @property int|null $created_by
  * @property int|null $updated_by
@@ -101,7 +100,6 @@ class FileBucket extends ModelWithCompanyAbstract
         'size',
         'data',
         'tags',
-        'publicised_at',
         'finished_at',
         'created_by',
         'updated_by',
