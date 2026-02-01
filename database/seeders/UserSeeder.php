@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Companies\Company;
 use App\Models\Companies\CompanyHasUser;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -37,11 +36,7 @@ class UserSeeder extends Seeder
             'password' => bcrypt('1'),
         ]);
 
-        $company = new Company;
-        $company->name = 'DEFAULT COMPANY';
-        $company->code = 'DEFAULT';
-        $company->save();
-
+        $company = DatabaseSeeder::createCompany();
         foreach ($collector as $item) {
             $user = User::where('username', $item['username'])->first();
             if ($user) {

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Companies;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CompanyResource;
+use App\Http\Resources\Companies\CompanyResource;
 use App\Models\Companies\Company;
 use App\Models\Companies\CompanyHasUser;
 use App\Models\User;

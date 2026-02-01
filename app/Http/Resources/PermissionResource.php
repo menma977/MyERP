@@ -24,7 +24,6 @@ class PermissionResource extends JsonResource
             'id' => $this->ulid,
             'name' => $this->name,
             'label' => $this->label,
-            'guard_name' => $this->guard_name,
             'group' => $this->group,
             'roles' => RoleResource::collection($this->whenLoaded('roles')),
             'users' => UserResource::collection($this->whenLoaded('users')),

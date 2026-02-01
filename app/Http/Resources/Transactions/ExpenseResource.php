@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\Transactions;
 
-use App\Http\Resources\CompanyResource;
+use App\Http\Resources\Companies\CompanyResource;
 use App\Http\Resources\UserResource;
 use App\Models\Transactions\Expense;
 use Illuminate\Http\Request;

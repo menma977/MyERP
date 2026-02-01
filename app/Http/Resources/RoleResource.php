@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\Companies\CompanyResource;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -24,6 +25,7 @@ class RoleResource extends JsonResource
             'id' => $this->ulid,
             'name' => $this->name,
             'guard_name' => $this->guard_name,
+            'company' => CompanyResource::make($this->whenLoaded('company')),
             'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
             'users' => UserResource::collection($this->whenLoaded('users')),
             'created_by' => UserResource::make($this->whenLoaded('createdBy')),

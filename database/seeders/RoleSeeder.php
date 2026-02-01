@@ -29,10 +29,12 @@ class RoleSeeder extends Seeder
             'guard_name' => 'sanctum',
         ]);
 
+        $company = DatabaseSeeder::createCompany();
         foreach ($collector as $item) {
             RoleModel::updateOrCreate([
                 'name' => $item['name'],
                 'guard_name' => $item['guard_name'],
+                'company_id' => $company->id,
             ]);
         }
     }
