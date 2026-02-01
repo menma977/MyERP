@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class RoleController extends Controller
 {
@@ -66,12 +68,23 @@ class RoleController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255', 'unique:roles,name'],
-            'guard_name' => ['required', 'string', 'max:255', 'in:web,api,sanctum'],
+            'guard_name' => ['nullable', 'string', 'max:255', 'in:web,api,sanctum'],
         ]);
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Role', 'target' => 'Access'], App::getLocale()),
+            ])->status(403);
+        }
+
+        /** @var \Laravel\Sanctum\PersonalAccessToken $token */
+        $token = $user->currentAccessToken();
 
         $role = new Role;
         $role->name = $request->input('name');
-        $role->guard_name = $request->input('guard_name');
+        $role->guard_name = $request->input('guard_name', 'sanctum');
+        $role->company_id = (int) $token->getAttribute('company_id');
         $role->save();
 
         return [
@@ -96,14 +109,25 @@ class RoleController extends Controller
                 'max:255',
                 'unique:roles,name,'.FakeIdTranslationService::model(new Role)->key($request->route('id'))->translateUlid(),
             ],
-            'guard_name' => ['required', 'string', 'max:255', 'in:web,api,sanctum'],
+            'guard_name' => ['nullable', 'string', 'max:255', 'in:web,api,sanctum'],
         ]);
+
+        $user = Auth::user();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'user' => trans('messages.fail.action.cost', ['action' => 'store', 'attribute' => 'Role', 'target' => 'Access'], App::getLocale()),
+            ])->status(403);
+        }
+
+        /** @var \Laravel\Sanctum\PersonalAccessToken $token */
+        $token = $user->currentAccessToken();
 
         /** @var Role $role */
         $role = Role::findOrFail(FakeIdTranslationService::model(new Role)->key($request->route('id'))->translateUlid());
 
         $role->name = $request->input('name');
-        $role->guard_name = $request->input('guard_name');
+        $role->guard_name = $request->input('guard_name', 'sanctum');
+        $role->company_id = (int) $token->getAttribute('company_id');
         $role->save();
 
         return [
