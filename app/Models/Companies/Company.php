@@ -3,7 +3,7 @@
 namespace App\Models\Companies;
 
 use App\Abstracts\ModelAbstract;
-use App\Http\Resources\CompanyResource;
+use App\Http\Resources\Companies\CompanyResource;
 use App\Models\Customer\Customer;
 use App\Models\FileBucket;
 use App\Models\User;

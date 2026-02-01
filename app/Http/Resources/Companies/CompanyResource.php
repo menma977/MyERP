@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Companies;
 
 use App\Http\Resources\Customer\CustomerResource;
+use App\Http\Resources\FileBucketResource;
+use App\Http\Resources\UserResource;
 use App\Models\Companies\Company;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;

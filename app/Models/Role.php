@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Http\Resources\RoleResource;
+use App\Models\Companies\Company;
 use App\Observers\CreatedByObserver;
 use App\Observers\DeletedByObserver;
 use App\Observers\UpdatedByObserver;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Spatie\Permission\Models\Role as SpatieRole;
@@ -26,6 +28,7 @@ use Spatie\Permission\Models\Role as SpatieRole;
  *
  * @property int $id
  * @property string $ulid
+ * @property int $company_id
  * @property string $name
  * @property string $guard_name
  * @property int|null $created_by
@@ -63,14 +66,14 @@ use Spatie\Permission\Models\Role as SpatieRole;
  *
  * @mixin Eloquent
  */
-#[ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
-#[UseResource(RoleResource::class)]
+#[UseResource(RoleResource::class), ObservedBy([CreatedByObserver::class, UpdatedByObserver::class, DeletedByObserver::class])]
 class Role extends SpatieRole
 {
     use CreatedByTrait, DeletedByTrait, UpdatedByTrait;
     use HasUlids, SoftDeletes;
 
     protected $fillable = [
+        'company_id',
         'name',
         'guard_name',
         'team_id',
@@ -85,5 +88,13 @@ class Role extends SpatieRole
     public function uniqueIds(): array
     {
         return ['ulid'];
+    }
+
+    /**
+     * @return BelongsTo<Company, $this>
+     */
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class, 'company_id');
     }
 }
