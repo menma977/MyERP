@@ -19,23 +19,23 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      *
-     * @return array<string, array<string, Carbon|string|null>|int|string>
+     * @return array<string, UserResource|int|string>
      */
     public function login(Request $request): array
     {
         $request->validate([
-            'login' => ['required', 'string'],
+            'username' => ['required', 'string'],
             'password' => ['required', 'string'],
             'device_name' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $loginField = filter_var($request->input('login'), FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $loginField = filter_var($request->input('username'), FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        $user = User::where($loginField, $request->input('login'))->first();
+        $user = User::where($loginField, $request->input('username'))->first();
 
         if (! $user || ! Hash::check($request->input('password'), $user->password)) {
             throw ValidationException::withMessages([
-                'login' => ['The provided credentials are incorrect.'],
+                'username' => ['The provided credentials are incorrect.'],
             ]);
         }
 
@@ -51,15 +51,7 @@ class LoginController extends Controller
         $token = $tokenResult->plainTextToken;
 
         return [
-            'user' => [
-                'id' => $user->ulid,
-                'name' => $user->name,
-                'username' => $user->username,
-                'email' => $user->email,
-                'email_verified_at' => $user->email_verified_at,
-                'created_at' => $user->created_at,
-                'updated_at' => $user->updated_at,
-            ],
+            'user' => UserResource::make($user),
             'access_token' => $token,
             'token_type' => 'Bearer',
             'expires_in' => 3600,

@@ -26,7 +26,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at,
-            'avatar' => $this->whenLoaded('avatar'),
+            'avatar' => FileBucketResource::make($this->whenLoaded('avatar')),
             'roles' => RoleResource::collection($this->whenLoaded('roles')),
             'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
             'tokens' => PersonalAccessTokenResource::collection($this->whenLoaded('tokens')),
